@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dawn Dorville — Social Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Source: Figma node 23:38 "SocialMedia" (1440 x 900)
+     Content column 1320 inset 60px each side — same grid as
+     index.html / campaigns.html so the header lands on the same
+     pixels when navigating between pages.
+     ============================================================ */
+
+  :root{
+    --page-pad: 60px;
+    --content-w: 1320px;
+
+    --gray: #878787;        /* page title + kicker */
+    --nav-gray: #919191;    /* header nav */
+
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', ui-monospace, monospace;
+    --body: 'Inter', sans-serif;
+
+    --grid-line: rgba(96,96,96,0.12);   /* Figma: #606060 stroke @ 12% pattern opacity */
+    --grid-tile: 30px;                  /* Figma: 30 x 30 tile */
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ background:#000; scroll-behavior:smooth; }
+
+  body{
+    background:#000;
+    color:#fff;
+    font-family:var(--body);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  img, video{ display:block; }
+  a{ text-decoration:none; }
+
+  /* Single centered column for the whole page — same pattern as
+     campaigns.html. */
+  .page{
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin:0 auto;
+    padding:var(--page-pad) var(--page-pad) 200px;
+  }
+
+  /* ---------- Header (Figma instance 249:2451) ---------- */
+  /* Figma's Header component styles "Work" and "Resume" identically —
+     both #919191, Inter Regular, no italic and no bracket decoration.
+     The logo is sentence case at its natural tracking. */
+  .header-inner{ display:flex; align-items:center; justify-content:space-between; }
+
+  .logo{
+    font-family:var(--body);
+    font-weight:600;
+    font-size:20px;
+    color:#fff;
+  }
+
+  nav{ display:flex; align-items:center; gap:40px; }
+  nav a{ white-space:nowrap; }
+
+  /* Header (Figma node 247:1374) — Work/Resume share one style: Inter
+     Regular, #919191, uppercase, 3.2px tracking. Figma's component has no
+     hover variant, so the rollover state below (white, transitioning) is
+     ours — same treatment on both links, on every page. */
+  .nav-work,
+  .nav-resume{
+    font-family:var(--body);
+    font-weight:400;
+    font-size:16px;
+    letter-spacing:3.2px;
+    text-transform:uppercase;
+    color:var(--nav-gray);
+    transition:color .15s ease;
+  }
+  .nav-work:hover,
+  .nav-work:focus-visible,
+  .nav-resume:hover,
+  .nav-resume:focus-visible{
+    color:#fff;
+  }
+
+  /* ---------- Page intro (585:45728) ----------
+     Two columns: title + kicker at 620px on the left, the blurb in a
+     fixed 700px column on the right. Figma bottom-aligns the blurb
+     against the kicker's baseline box, hence align-items:flex-end. */
+  .intro{
+    display:flex;
+    align-items:flex-end;
+    margin-top:50px;
+  }
+
+  .intro .left{ flex:1 0 0; min-width:0; color:var(--gray); }
+
+  .intro h1{
+    font-family:var(--display);
+    font-weight:400;
+    font-size:60px;
+    line-height:1;
+  }
+
+  .intro .sub{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:20px;
+    line-height:1.4;
+    margin-top:2px;
+    letter-spacing:4px;
+    text-transform:uppercase;
+  }
+
+  .intro .blurb{
+    width:700px;
+    flex-shrink:0;
+    font-size:16px;
+    line-height:1.8;
+    color:#fff;
+  }
+
+  /* ---------- Canvas panel (585:45709) ---------- */
+  .canvas-wrap{ position:relative; margin-top:50px; }
+
+  #viewport{
+    position:relative; width:100%; height:603px; border-radius:10px;
+    background:linear-gradient(180deg, #1f211b 0%, #101010 100%);
+    overflow:hidden; cursor:grab; touch-action:none; outline:none;
+  }
+  #viewport.panning{ cursor:grabbing; }
+  #viewport:focus-visible{ box-shadow:0 0 0 2px rgba(255,255,255,0.3) inset; }
+
+  /* grid pattern — repositioned + scaled from JS so it pans and zooms
+     with the board underneath it */
+  #grid{
+    position:absolute; inset:0; pointer-events:none;
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  }
+
+  #world{
+    position:absolute; left:0; top:0; width:0; height:0;
+    transform-origin:0 0; will-change:transform;
+  }
+
+  /* the board sits 50px in from the panel's top-left, in canvas space */
+  .board{
+    position:absolute; left:50px; top:50px;
+    display:flex; flex-direction:column; align-items:flex-start; gap:100px;
+    width:2081px;
+  }
+
+  .section{ display:flex; flex-direction:column; align-items:flex-start; gap:50px; width:100%; }
+
+  .section > h2{
+    font-family:var(--display); font-weight:400;
+    font-size:23.989px; letter-spacing:2.3989px; text-transform:uppercase;
+    color:#fff; line-height:normal; height:17px;
+  }
+
+  .slot{ position:relative; flex-shrink:0; }
+  .slot img{ width:100%; height:100%; object-fit:cover; pointer-events:none; }
+
+  /* exact Figma dimensions */
+  .s-eventgeneral{ width:546px;      height:312.485px; }
+  .s-speaking   { width:842.593px;   height:250px; }
+  .s-eventcar   { width:2081px;      height:250px; }
+  .s-earnings   { width:250px;       height:250px; }
+  .s-webinars   { width:842.59px;    height:312.653px; }
+  .s-carousel   { width:3131px;      height:250px; }
+
+  /* ---------- Canvas controls ---------- */
+  .controls{
+    position:absolute; right:16px; bottom:16px; display:flex; align-items:center; gap:4px;
+    background:rgba(0,0,0,0.55); backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:5px; z-index:5;
+  }
+  .controls button{
+    background:transparent; border:none; color:#fff; font-size:16px; line-height:1;
+    width:30px; height:30px; border-radius:6px; cursor:pointer; font-family:inherit;
+  }
+  .controls button:hover{ background:rgba(255,255,255,0.12); }
+  .controls .wide{ width:auto; padding:0 10px; font-size:12px; letter-spacing:0.5px; }
+  .controls .zoom-readout{
+    min-width:50px; text-align:center; color:#c9c9c9; font-size:12px; font-variant-numeric:tabular-nums;
+  }
+
+  .canvas-hint{
+    margin-top:15px;
+    font-family:var(--mono); font-weight:400; font-size:12px;
+    letter-spacing:2.4px; text-transform:uppercase; color:var(--gray);
+  }
+
+  @media (max-width:1100px){
+    :root{ --page-pad:40px; }
+    .intro{ flex-direction:column; align-items:flex-start; gap:24px; }
+    .intro .blurb{ width:100%; }
+  }
+  @media (max-width:880px){
+    :root{ --page-pad:28px; }
+  }
+  @media (max-width:760px){
+    .page{ padding:var(--page-pad) var(--page-pad) 120px; }
+    .header-inner{ flex-wrap:wrap; gap:16px; }
+    nav{ gap:24px; }
+    .intro h1{ font-size:40px; }
+    .intro .sub{ font-size:15px; letter-spacing:3px; }
+    #viewport{ height:70vh; }
+    /* Bottom-right puts the controls under the thumb on a phone held
+       one-handed, and close to the iOS home indicator. Move them to the
+       top-right, clear of the board's section headings (which sit at the
+       50px top-left inset in canvas space). */
+    .controls{ top:16px; bottom:auto; }
+  }
+  @media (max-width:560px){
+    :root{ --page-pad:20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">Dawn Dorville</a>
+      <nav>
+        <a class="nav-work" href="index.html">Work</a>
+        <a class="nav-resume" href="resume.html">Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="intro">
+    <div class="left">
+      <h1>Social media</h1>
+      <p class="sub">Templates built to scale</p>
+    </div>
+    <p class="blurb">For a small design team, easy to use templates for repeated content can take a large
+      amount of production work off the team&rsquo;s plate. These templates were designed in Figma,
+      then built in Canva for the wider marketing team to use.</p>
+  </section>
+
+  <div class="canvas-wrap">
+    <div id="viewport" tabindex="0" role="application"
+         aria-label="Social media template canvas. Drag to pan, Ctrl or Cmd plus scroll to zoom.">
+      <div id="grid"></div>
+
+      <div id="world">
+        <div class="board">
+
+          <section class="section" data-node-id="585:45711">
+            <h2>Events</h2>
+            <div class="slot s-eventgeneral"><img src="Assets/SocialMedia/EventGeneral.webp" alt="Varonis event ad templates — general"></div>
+            <div class="slot s-speaking"><img src="Assets/SocialMedia/EventSpeakingSessions.webp" alt="Varonis speaking session ad templates"></div>
+            <div class="slot s-eventcar"><img src="Assets/SocialMedia/EventCarousel.webp" alt="Varonis event carousel template"></div>
+          </section>
+
+          <section class="section" data-node-id="585:45716">
+            <h2>Earnings</h2>
+            <div class="slot s-earnings"><img src="Assets/SocialMedia/Earnings.webp" alt="Varonis earnings ad template"></div>
+          </section>
+
+          <section class="section" data-node-id="585:45719">
+            <h2>Webinars</h2>
+            <div class="slot s-webinars"><img src="Assets/SocialMedia/Webinars.webp" alt="Varonis webinar ad templates"></div>
+          </section>
+
+          <section class="section" data-node-id="585:45722">
+            <h2>Carousels</h2>
+            <div class="slot s-carousel"><img src="Assets/SocialMedia/CarouselA.webp" alt="Varonis carousel template A"></div>
+            <div class="slot s-carousel"><img src="Assets/SocialMedia/CarouselB.webp" alt="Varonis carousel template B"></div>
+            <div class="slot s-carousel"><img src="Assets/SocialMedia/CarouselC.webp" alt="Varonis carousel template C"></div>
+          </section>
+
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="zoomOut" title="Zoom out (−)" aria-label="Zoom out">−</button>
+        <div class="zoom-readout" id="zoomReadout" aria-live="polite">100%</div>
+        <button id="zoomIn" title="Zoom in (+)" aria-label="Zoom in">+</button>
+        <button class="wide" id="zoomFit" title="Fit to content (1)">Fit</button>
+        <button class="wide" id="zoomReset" title="Reset view (0)">Reset</button>
+      </div>
+    </div>
+    <p class="canvas-hint">Drag to pan &middot; &#8984;/Ctrl + scroll to zoom</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  const viewport = document.getElementById('viewport');
+  const world    = document.getElementById('world');
+  const grid     = document.getElementById('grid');
+  const readout  = document.getElementById('zoomReadout');
+  const board    = document.querySelector('.board');
+
+  const TILE = 30, MIN_Z = 0.05, MAX_Z = 8;
+
+  let tx = 0, ty = 0, z = 1;
+
+  function apply(){
+    world.style.transform = `translate(${tx}px, ${ty}px) scale(${z})`;
+    const t = TILE * z;
+    grid.style.backgroundSize = `${t}px ${t}px, ${t}px ${t}px`;
+    grid.style.backgroundPosition = `${tx}px ${ty}px`;
+    grid.style.opacity = z < 0.3 ? 0.5 : 1;     // stop the grid going solid when far out
+    readout.textContent = Math.round(z * 100) + '%';
+  }
+
+  function zoomAt(cx, cy, factor){
+    const nz = Math.min(MAX_Z, Math.max(MIN_Z, z * factor));
+    const k = nz / z;
+    tx = cx - (cx - tx) * k;
+    ty = cy - (cy - ty) * k;
+    z = nz; apply();
+  }
+
+  const center = () => { const r = viewport.getBoundingClientRect(); return [r.width/2, r.height/2]; };
+
+  /* ---------- wheel: scroll pans, ctrl/cmd + scroll (or trackpad pinch) zooms ---------- */
+  viewport.addEventListener('wheel', e => {
+    e.preventDefault();
+    const r = viewport.getBoundingClientRect();
+    if (e.ctrlKey || e.metaKey) zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-e.deltaY * 0.01));
+    else { tx -= e.deltaX; ty -= e.deltaY; apply(); }
+  }, { passive:false });
+
+  /* ---------- pointer: drag to pan, two fingers to pinch ---------- */
+  const pointers = new Map();
+  let mode = null, panStart = null, pinchStart = null;
+
+  viewport.addEventListener('pointerdown', e => {
+    viewport.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
+
+    if (pointers.size === 2) {
+      mode = 'pinch';
+      const p = [...pointers.values()];
+      pinchStart = { d: Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y), z };
+      return;
+    }
+    mode = 'pan';
+    panStart = { x:e.clientX, y:e.clientY, tx, ty };
+    viewport.classList.add('panning');
+  });
+
+  viewport.addEventListener('pointermove', e => {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
+
+    if (mode === 'pinch' && pointers.size === 2) {
+      const p = [...pointers.values()];
+      const d = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
+      const r = viewport.getBoundingClientRect();
+      const mx = (p[0].x+p[1].x)/2 - r.left, my = (p[0].y+p[1].y)/2 - r.top;
+      const target = Math.min(MAX_Z, Math.max(MIN_Z, pinchStart.z * d / pinchStart.d));
+      zoomAt(mx, my, target / z);
+    } else if (mode === 'pan' && panStart) {
+      tx = panStart.tx + (e.clientX - panStart.x);
+      ty = panStart.ty + (e.clientY - panStart.y);
+      apply();
+    }
+  });
+
+  function endPointer(e){
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2 && mode === 'pinch') mode = null;
+    if (pointers.size === 0) {
+      mode = null; panStart = null;
+      viewport.classList.remove('panning');
+    }
+  }
+  viewport.addEventListener('pointerup', endPointer);
+  viewport.addEventListener('pointercancel', endPointer);
+
+  /* ---------- keyboard ---------- */
+  viewport.addEventListener('keydown', e => {
+    const STEP = 60;
+    if (e.key === '+' || e.key === '=') { const [x,y]=center(); zoomAt(x,y,1.2); }
+    else if (e.key === '-') { const [x,y]=center(); zoomAt(x,y,1/1.2); }
+    else if (e.key === '0') reset();
+    else if (e.key === '1') fit();
+    else if (e.key === 'ArrowLeft')  { tx += STEP; apply(); }
+    else if (e.key === 'ArrowRight') { tx -= STEP; apply(); }
+    else if (e.key === 'ArrowUp')    { ty += STEP; apply(); }
+    else if (e.key === 'ArrowDown')  { ty -= STEP; apply(); }
+    else return;
+    e.preventDefault();
+  });
+
+  /* ---------- view helpers ---------- */
+  function reset(){ tx = 0; ty = 0; z = 1; apply(); }
+
+  function fit(){
+    const r = viewport.getBoundingClientRect();
+    // The carousels (3131px) overrun the board's declared 2081px width, so
+    // measure scrollWidth too or "Fit" would crop them. +100 covers the
+    // 50px inset on each side.
+    const w = Math.max(board.offsetWidth, board.scrollWidth) + 100;
+    const h = Math.max(board.offsetHeight, board.scrollHeight) + 100;
+    z = Math.min(MAX_Z, Math.max(MIN_Z, Math.min(r.width / w, r.height / h)));
+    tx = (r.width  - w * z) / 2;
+    ty = (r.height - h * z) / 2;
+    apply();
+  }
+
+  document.getElementById('zoomIn').onclick    = () => { const [x,y]=center(); zoomAt(x,y,1.2); };
+  document.getElementById('zoomOut').onclick   = () => { const [x,y]=center(); zoomAt(x,y,1/1.2); };
+  document.getElementById('zoomReset').onclick = reset;
+  document.getElementById('zoomFit').onclick   = fit;
+
+  apply();
+})();
+</script>
+</body>
+</html>

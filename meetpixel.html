@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meet Pixel — Dawn Dorville</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --page-pad: 60px;
+    --content-w: 1320px;
+    --gray: #878787;
+    --nav-gray: #919191;
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', monospace;
+    --body: 'Inter', sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:#000;
+    color:#fff;
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x:hidden;
+  }
+  img{ display:block; }
+
+  .container{
+    width:100%;
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin:0 auto;
+    padding: 0 var(--page-pad);
+  }
+
+  /* ============ Header ============ */
+  /* `.container` sets a `padding` shorthand, and a class selector outranks a
+     bare `header` one — so the top padding has to be set at matching
+     specificity, or it gets zeroed out. */
+  header.container{ padding-top:var(--page-pad); }
+  .header-inner{
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo{
+    font-family:var(--body); font-weight:600; font-size:20px;
+    color:#fff;
+    text-decoration:none;
+  }
+  nav{ display:flex; align-items:center; gap:40px; }
+  nav a{ text-decoration:none; white-space:nowrap; }
+  /* Header (Figma node 247:1374) — Work/Resume share one style: Inter
+     Regular, #919191, uppercase, 3.2px tracking. Figma's component has no
+     hover variant, so the rollover state below (white, transitioning) is
+     ours — same treatment on both links, on every page. */
+  .nav-work,
+  .nav-resume{
+    font-family:var(--body); font-weight:400;
+    font-size:16px; letter-spacing:3.2px; text-transform:uppercase; color:var(--nav-gray);
+    transition:color .15s ease;
+  }
+  .nav-work:hover, .nav-work:focus-visible,
+  .nav-resume:hover, .nav-resume:focus-visible{
+    color:#fff;
+  }
+
+  /* ============ Project intro ============
+     Unlike the CTF page, Meet Pixel's title and subtitle sit flush against
+     each other in Figma (the subtitle's top edge is the title's bottom edge,
+     zero gap) and there is no third blurb line, so the intro block is a
+     plain stack with no extra spacing. */
+  .intro{ margin-top:50px; display:flex; flex-direction:column; }
+  .intro h1{
+    font-family:var(--display); font-weight:400;
+    font-size:60px; line-height:1; color:var(--gray);
+  }
+  .intro .sub{
+    font-family:var(--mono); font-weight:700;
+    font-size:20px; line-height:1.4; margin-top:2px; letter-spacing:4px;
+    text-transform:uppercase; color:var(--gray);
+  }
+
+  /* ============ Sections ============
+     Each section is a two-column row: a fixed 521px detail block (the
+     rotated side label, its rule, and the copy) on the left, and the
+     project media right-aligned in the remaining space. In Figma the media
+     never reaches the container's right edge — the 650px media block
+     leaves a consistent margin, which the grid reproduces on its own once
+     the 77px column gap and the media's own width are fixed, exactly as
+     laid out in the source file. */
+  main.container{ margin-top:140px; padding-bottom:160px; display:flex; flex-direction:column; gap:200px; }
+  .section-row{
+    display:grid; grid-template-columns: 521px 1fr; gap:77px; align-items:start;
+  }
+  .detail{ display:flex; gap:30px; align-items:stretch; }
+  .side-label{
+    writing-mode: vertical-rl;
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; text-transform:uppercase; color:var(--gray);
+    /* Figma's label column is the 11px cap-height of the rotated text, not
+       the 16px a full em box would give. */
+    line-height:11px; flex-shrink:0;
+  }
+  /* Zero-width vector with a 3px stroke: the stroke bleeds 1.5px either
+     side so the line sits centred on the 30px gutter. */
+  .rule{
+    width:3px; margin:0 -1.5px; background:#282621;
+    align-self:stretch; flex-shrink:0;
+  }
+  .section-text{ display:flex; flex-direction:column; gap:3px; max-width:450px; }
+  .section-text h2{
+    font-family:var(--display); font-weight:400;
+    font-size:24px; line-height:1.25; letter-spacing:2.4px;
+    text-transform:uppercase; color:#fff;
+  }
+  .section-text p{ font-size:16px; line-height:1.8; color:#fff; }
+
+  .media{ justify-self:end; width:650px; max-width:100%; }
+  .media.square{ aspect-ratio:1/1; overflow:hidden; background:#101010; }
+  .media.square img,
+  .media.square video{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  /* ============ Computer mockup ============
+     Rebuilt from the Figma "Game images" group (node 614:126300), a scaled
+     down version of the CTF page's monitor with no carousel controls. All
+     children are positioned as percentages of the 650x466 frame so the
+     whole mockup scales as one unit, the same technique the CTF page's
+     weather scene uses. */
+  .computer-box{ position:relative; width:100%; aspect-ratio:650/466; }
+  .computer-box .monitor{
+    position:absolute; left:0; top:0; width:100%; height:81.1687%;
+    background:#282621;
+  }
+  .computer-box .monitor-inner{
+    position:absolute; left:2.3277%; top:3.2467%;
+    width:95.3182%; height:74.6752%;
+    background:#000; border-radius:2px;
+  }
+  .computer-box .screen{
+    position:absolute; left:2.9228%; top:4.0584%;
+    width:94.1543%; height:73.0517%;
+    overflow:hidden; background:#000;
+  }
+  .computer-box .screen img{ width:100%; height:100%; object-fit:cover; }
+  /* The source video is vertical (shot for social/YouTube, not the landscape
+     monitor mockup), so it's letterboxed rather than cropped to keep the
+     full frame visible. */
+  .computer-box .screen video{ width:100%; height:100%; object-fit:contain; background:#000; }
+  .computer-box .stand{
+    position:absolute; left:40.6311%; top:81.0332%;
+    width:18.6214%; height:13.6142%;
+    background: linear-gradient(to bottom, #141310, #1b1a16);
+  }
+  .computer-box .base-foot{
+    position:absolute; left:32.4843%; top:94.6301%;
+    width:34.9151%; height:3.8901%;
+  }
+  .computer-box .base-foot svg{ display:block; width:100%; height:100%; }
+  .computer-box .base-bar{
+    position:absolute; left:32.4843%; top:98.5416%;
+    width:34.9151%; height:1.4586%;
+    background:#282621;
+  }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 1100px){
+    :root{ --page-pad: 40px; }
+  }
+  @media (max-width: 900px){
+    .intro h1{ font-size:40px; }
+    .intro .sub{ font-size:16px; letter-spacing:3.2px; }
+    main.container{ margin-top:110px; gap:100px; padding-bottom:120px; }
+    .section-row{ grid-template-columns:1fr; gap:32px; }
+    .media{ justify-self:stretch; width:100%; }
+    .section-text{ max-width:none; }
+    nav{ gap:24px; }
+    /* Matches the CTF page's asset-description treatment at this width:
+       tighter label/rule/copy spacing, smaller vertical label type, smaller
+       section heading. */
+    .detail{ gap:14px; }
+    .side-label{ font-size:12px; }
+    .section-text h2{ font-size:20px; }
+  }
+  @media (max-width: 880px){
+    :root{ --page-pad: 28px; }
+  }
+
+  /* Matches the CTF page: the subtitle-to-first-heading gap drops from
+     110px to 80px at this width, so it doesn't read wider than the 100px
+     gap between the sections below it. */
+  @media (max-width: 760px){
+    main.container{ margin-top:80px; }
+  }
+
+  @media (max-width: 560px){
+    :root{ --page-pad: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="container">
+  <div class="header-inner">
+    <a class="logo" href="index.html">Dawn Dorville</a>
+    <nav>
+      <a class="nav-work" href="index.html">Work</a>
+      <a class="nav-resume" href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<section class="container intro">
+  <h1>Meet Pixel</h1>
+  <p class="sub">Brand character social debut</p>
+</section>
+
+<main class="container">
+
+  <!-- ============ Section 1: Social debut ============ -->
+  <section class="section">
+    <div class="section-row">
+      <div class="detail">
+        <span class="side-label">Q3 2025</span>
+        <span class="rule"></span>
+        <div class="section-text">
+          <h2>social</h2>
+          <p>This was the first public-facing project that AI was used for. The social team came to us with an opportunity to formally introduce one of our brand characters, Pixel, to our social account in a fun way and this was the end result. The goal was to make this feel like an upbeat reality show-like character introduction. I used Nano Banana to create the first frame for each of the cuts, then dropped them into Midjourney for motion. I created the voiceover in Eleven Labs and compiled all the animated pieces together with sound effects and music.<br><br>Visuals: Nano Banana, Midjourney<br>Voiceover: Eleven Labs</p>
+        </div>
+      </div>
+
+      <div class="media square">
+        <video src="Assets/MeetPixel/Social_MeetPixel_202509.mp4" controls playsinline preload="metadata"
+               poster="Assets/MeetPixel/Social_MeetPixel_202509_V3%201.png"
+               aria-label="Pixel's social debut video, introducing the brand character as a sleek robotic cat"></video>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Section 2: Threat hunting cat game ============ -->
+  <section class="section">
+    <div class="section-row">
+      <div class="detail">
+        <span class="side-label">giveaway</span>
+        <span class="rule"></span>
+        <div class="section-text">
+          <h2>threat hunting cat game</h2>
+          <p>We wanted to take this campaign another step further and create a quick, digital giveaway. The idea was to create a screensaver that would function as a threat-hunting game for cats. Unfortunately, it wasn't possible to set a video as a screensaver so we pivoted and uploaded the video to Youtube. Cats loved it.</p>
+        </div>
+      </div>
+
+      <div class="media">
+        <div class="computer-box">
+          <div class="monitor"></div>
+          <div class="monitor-inner"></div>
+          <div class="screen">
+            <video src="Assets/MeetPixel/Pixel_BugHunting.mp4" controls playsinline preload="metadata"
+                   poster="Assets/MeetPixel/Social_MeetPixel_CatEntertainmentVideo_202509_Bugs_V2%201.png"
+                   aria-label="The threat-hunting cat game screensaver video, later uploaded to YouTube"></video>
+          </div>
+          <div class="stand"></div>
+          <!-- Flared foot of the monitor stand, geometry taken from Figma's Rectangle 2684 (node 614:126303) -->
+          <div class="base-foot">
+            <svg viewBox="0 0 226.948 18.1264" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M52.5763 0H173.994L226.948 18.1264H0L52.5763 0Z" fill="#201E19"/>
+            </svg>
+          </div>
+          <div class="base-bar"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>

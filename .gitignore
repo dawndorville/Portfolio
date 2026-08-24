@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Claude Code local session config (not part of the site)
+.claude/
+
+# Leftover raw export archives — not used by any page
+Assets/Storm.zip
+Assets/CTF.zip

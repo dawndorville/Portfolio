@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dawn Dorville — Campaigns</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Source: Figma node 221:93 "Campaigns" (1440 x 3770)
+     Content column 1320 inset 59/60px each side — same grid as
+     index.html so the header lands on the same pixels when
+     navigating between pages.
+     ============================================================ */
+
+  :root {
+    --page-pad: 60px;
+    --content-w: 1320px;
+
+    --gray: #878787;       /* captions, quarter labels, page eyebrow */
+    --nav-gray: #919191;   /* header nav */
+
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', ui-monospace, monospace;
+    --body: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { background: #000; scroll-behavior: smooth; }
+
+  body {
+    background: #000;
+    color: #fff;
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  img, video { display: block; }
+
+  /* Single centered column for the whole page — same pattern as
+     vtl-portfolio.html's .page and index.html's .container. Everything
+     (header, intro, and the campaign rows) lives inside this one wrapper
+     so nothing bleeds past it on wide screens; the drag-scroll galleries
+     still overflow their own row-track internally, but the visible
+     viewport stays bounded to the 1320px content column like every
+     other page. */
+  .page {
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin: 0 auto;
+    padding: var(--page-pad) var(--page-pad) 200px;
+  }
+
+  /* ---------- Header ---------- */
+  .header-inner { display: flex; align-items: center; justify-content: space-between; }
+
+  .logo {
+    font-family: var(--body);
+    font-weight: 600;
+    font-size: 20px;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  nav { display: flex; align-items: center; gap: 40px; }
+  nav a { text-decoration: none; white-space: nowrap; }
+
+  /* Figma's Header component styles "Work" and "Resume" identically —
+     no active/current-page distinction on this page. */
+  /* Header (Figma node 247:1374) — Work/Resume share one style: Inter
+     Regular, #919191, uppercase, 3.2px tracking. Figma's component has no
+     hover variant, so the rollover state below (white, transitioning) is
+     ours — same treatment on both links, on every page. */
+  .nav-work,
+  .nav-resume {
+    font-family: var(--body);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    text-transform: uppercase;
+    color: var(--nav-gray);
+    transition: color .15s ease;
+  }
+  .nav-work:hover,
+  .nav-work:focus-visible,
+  .nav-resume:hover,
+  .nav-resume:focus-visible {
+    color: #fff;
+  }
+
+  /* ---------- Page intro ---------- */
+  /* Title and subtitle sit flush against each other — same as
+     vtl-portfolio.html / ctf_1.html, where both are wrapped in a plain
+     div with no gap; the 15px gap on those pages only separates that
+     pair from a third blurb paragraph this page doesn't have. */
+  .intro {
+    margin-top: 50px;
+    max-width: 969px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .intro h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 60px;
+    color: var(--gray);
+    line-height: 1;
+  }
+
+  .intro .sub {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gray);
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+
+  /* ---------- Campaigns ---------- */
+  .campaigns {
+    display: flex;
+    flex-direction: column;
+    gap: 200px;
+    margin-top: 146px;
+  }
+
+  .campaign-details {
+    display: flex;
+    gap: 30px;
+    align-items: stretch;
+    margin-bottom: 40px;
+  }
+
+  /* Same rotated-label treatment as meetpixel.html / ctf_1.html: writing-mode
+     keeps the glyphs upright while the column reads top-to-bottom, and
+     line-height is pinned to the 11px cap-height (not a full 16px em box)
+     so the rule and copy don't drift out of alignment. */
+  .side-label {
+    writing-mode: vertical-rl;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    line-height: 11px;
+    flex-shrink: 0;
+  }
+
+  /* Zero-width vector with a 3px stroke: the stroke bleeds 1.5px either
+     side so the line sits centred on the 30px gutter. */
+  .rule {
+    width: 3px;
+    margin: 0 -1.5px;
+    background: #282621;
+    align-self: stretch;
+    flex-shrink: 0;
+  }
+
+  .campaign-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-width: 660px;
+  }
+
+  .campaign-copy h2 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .campaign-copy p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #fff;
+  }
+
+  /* ---------- Drag-scroll rows ---------- */
+  .scroll-row {
+    overflow-x: auto;
+    overflow-y: hidden;
+    cursor: grab;
+    scrollbar-width: none;         /* Firefox */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scroll-row::-webkit-scrollbar { display: none; }  /* Chrome/Safari */
+
+  .scroll-row.dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+    user-select: none;
+  }
+
+  .row-track {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    width: max-content;
+  }
+
+  .asset {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: none;
+  }
+
+  .asset .frame {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .asset .frame img,
+  .asset .frame video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+  /* Videos with native controls (Prosecco, Nasdaq billboard, Meet
+     Interceptor) need clicks to reach the play/volume UI — same
+     controls + sound treatment as the Meet Pixel videos. */
+  .asset .frame video[controls] {
+    pointer-events: auto;
+    -webkit-user-drag: auto;
+    user-select: auto;
+  }
+
+  .asset .caption {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    line-height: 1.8;
+    min-height: 30px;
+  }
+
+  /* Placeholder styling for slots awaiting media */
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0d0d0d;
+    color: #4a4a4a;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 20px;
+  }
+
+  /* Atlas brand-assets card: gradient frame with the artwork inset.
+     30px grid pattern (#606060 @ 12%) over the gradient — same treatment
+     as vtl-portfolio.html's .research-card, matching the Figma pattern
+     fill shared by both cards. */
+  .brand-assets-card {
+    height: 525px;
+    border-radius: 10px;
+    background-image:
+      linear-gradient(rgba(96, 96, 96, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(96, 96, 96, 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, #1f211b, #101010);
+    background-size: 30px 30px, 30px 30px, 100% 100%;
+  }
+
+  /* Needs to out-specificity ".asset .frame img" (2 classes) above, which
+     otherwise wins and forces this back to 100%/cover/inset:0. */
+  .asset .frame.brand-assets-card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .bordered-light { border: 1px solid #303030; }
+  .bordered-dark  { border: 1px solid #303030; }
+
+  /* Drag affordance hint */
+  .drag-hint {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: #4a4a4a;
+    padding-top: 14px;
+  }
+
+  @media (max-width: 1100px) {
+    :root { --page-pad: 40px; }
+    .page { padding: var(--page-pad) var(--page-pad) 120px; }
+  }
+
+  @media (max-width: 900px) {
+    .header-inner { flex-wrap: wrap; }
+    nav { gap: 24px; }
+    .intro { margin-top: 40px; }
+    .intro h1 { font-size: 40px; }
+    .intro .sub { font-size: 15px; letter-spacing: 3px; }
+    .campaigns { margin-top: 90px; gap: 120px; }
+
+    /* Same asset-description treatment as ctf_1.html / meetpixel.html /
+       vtl-portfolio.html at this width: tighter label/rule/copy spacing,
+       smaller vertical label type, smaller heading. */
+    .campaign-details { gap: 14px; }
+    .side-label { font-size: 12px; }
+    .campaign-copy h2 { font-size: 20px; }
+
+    /* Assets stack full-width instead of staying in a horizontal
+       drag-scroll row — five 400px+ tiles don't work as a scroller on a
+       phone-width screen the way they do on desktop. */
+    .scroll-row { overflow-x: visible; cursor: default; }
+    .row-track { flex-direction: column; width: auto; }
+    .row-track .asset { width: 100% !important; }
+    .drag-hint { display: none; }
+
+    /* Fixed 525px height only made sense at the card's Figma width (766px).
+       Full-width on mobile, that ratio would either stretch the artwork or
+       letterbox it badly — so the card switches to the artwork's own
+       1454:958 aspect ratio instead, matching it exactly. */
+    .brand-assets-card { height: auto; aspect-ratio: 1454 / 958; }
+
+    /* Keep a minimum 15px breathing room around the artwork instead of
+       having it hug the card edge-to-edge. img is a replaced element, so
+       inset alone won't stretch it to fill the gap the way it would a
+       div — width/height need to be sized explicitly. */
+    .asset .frame.brand-assets-card img {
+      left: 15px;
+      top: 15px;
+      width: calc(100% - 30px);
+      height: calc(100% - 30px);
+    }
+  }
+
+  @media (max-width: 880px) {
+    :root { --page-pad: 28px; }
+  }
+
+  @media (max-width: 560px) {
+    :root { --page-pad: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">Dawn Dorville</a>
+    <nav>
+      <a class="nav-work" href="index.html">Work</a>
+      <a class="nav-resume" href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<section class="intro">
+  <h1>Campaigns</h1>
+  <p class="sub">for acquisitions and product launches</p>
+</section>
+
+<div class="campaigns">
+
+  <!-- ============ Campaign 1: Atlas Product Launch ============ -->
+  <section class="campaign">
+    <div class="campaign-details">
+      <span class="side-label">Q1 2026</span>
+      <span class="rule"></span>
+      <div class="campaign-copy">
+        <h2>Atlas Product Launch</h2>
+        <p>Social posts and product branding materials for the Varonis Atlas launch (product of AllTrue.ai acquisition).</p>
+      </div>
+    </div>
+    <div class="scroll-row">
+      <div class="row-track">
+        <div class="asset" style="width:420px">
+          <div class="frame" style="aspect-ratio:800/1000">
+            <img src="Assets/Campaigns/Social_AtlasGIF_202603_V1.gif" alt="Atlas launch animated social post — brand account">
+          </div>
+          <span class="caption">Social: Brand Account</span>
+        </div>
+        <div class="asset" style="width:420px">
+          <div class="frame" style="aspect-ratio:1080/1350">
+            <img src="Assets/Campaigns/Social_AtlasLaunch_202603_FNL.png" alt="Atlas launch social post — employee advocacy">
+          </div>
+          <span class="caption">Social: employee advocacy</span>
+        </div>
+        <div class="asset" style="width:766px">
+          <div class="frame brand-assets-card">
+            <img src="Assets/Campaigns/AtlasBranding.png" alt="Atlas brand assets — logo, color and type specimens">
+          </div>
+          <span class="caption">Brand assets</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Campaign 2: AllTrue Acquisition ============ -->
+  <section class="campaign">
+    <div class="campaign-details">
+      <span class="side-label">Q1 2026</span>
+      <span class="rule"></span>
+      <div class="campaign-copy">
+        <h2>AllTrue Acquisition</h2>
+        <p>Social posts and Nasdaq billboard announcing the acquisition of AllTrue.ai. Video and image assets generated with Nano Banana / Google Veo 3. Voiceover and Nasdaq animation by Blair Dobbs.</p>
+      </div>
+    </div>
+    <div class="scroll-row">
+      <div class="row-track">
+        <div class="asset" style="width:420px">
+          <div class="frame" style="aspect-ratio:1/1">
+            <video src="Assets/Campaigns/Social_ProseccoAnimatedPost_202601_FNL.mp4" controls playsinline preload="metadata"
+                   poster="Assets/Campaigns/Social_ProseccoAnimatedPost_202601_FNL_Poster.png"
+                   aria-label="AllTrue acquisition animated Prosecco social post"></video>
+          </div>
+          <span class="caption">Social: Brand Account</span>
+        </div>
+        <div class="asset" style="width:420px">
+          <div class="frame" style="aspect-ratio:1/1">
+            <img src="Assets/Campaigns/Social_AllTrueAquisitionStatic_FNL.png" alt="AllTrue acquisition static social post">
+          </div>
+          <span class="caption">Social: employee advocacy</span>
+        </div>
+        <div class="asset" style="width:420px">
+          <div class="frame" style="aspect-ratio:1/1">
+            <video src="Assets/Campaigns/Varonis_020426_Video.mp4" autoplay muted loop playsinline aria-label="AllTrue acquisition Nasdaq billboard animation"></video>
+          </div>
+          <span class="caption">Nasdaq billboard</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Campaign 3: Interceptor Product Launch ============ -->
+  <section class="campaign">
+    <div class="campaign-details">
+      <span class="side-label">Q4 2025</span>
+      <span class="rule"></span>
+      <div class="campaign-copy">
+        <h2>Interceptor product launch</h2>
+        <p>Complete promotional package for Interceptor launch (product of SlashNext acquisition). Social video created with Google Veo 3, special effects added by Blair Dobbs.</p>
+      </div>
+    </div>
+    <div class="scroll-row">
+      <div class="row-track">
+        <div class="asset" style="width:520px">
+          <div class="frame bordered-light" style="aspect-ratio:1560/829">
+            <img src="Assets/Campaigns/Blog_Interceptor.png" alt="Interceptor blog hero">
+          </div>
+          <span class="caption">Blog hero</span>
+        </div>
+        <div class="asset" style="width:420px">
+          <div class="frame bordered-light" style="aspect-ratio:1080/1350">
+            <video src="Assets/Campaigns/Social_MeetInterceptor_FNL.mp4" controls playsinline preload="metadata"
+                   poster="Assets/Campaigns/Social_MeetInterceptor_FNL_Poster.png"
+                   aria-label="Meet Interceptor social video"></video>
+          </div>
+          <span class="caption">Social</span>
+        </div>
+        <div class="asset" style="width:420px">
+          <div class="frame" style="aspect-ratio:1080/1350">
+            <img src="Assets/Campaigns/Social_InterceptorLaunch_202509_FNL.png" alt="Interceptor launch social post">
+          </div>
+          <span class="caption">Social</span>
+        </div>
+        <div class="asset" style="width:1031px">
+          <div class="frame" style="aspect-ratio:3360/1705">
+            <img src="Assets/Campaigns/Ads_Interceptor.png" alt="Interceptor social ads">
+          </div>
+          <span class="caption">Social Ads</span>
+        </div>
+        <div class="asset" style="width:520px">
+          <div class="frame" style="aspect-ratio:1200/550">
+            <img src="Assets/Campaigns/EmailHeader_InterceptorLaunch_202509_FNL.png" alt="Interceptor launch email header">
+          </div>
+          <span class="caption">Email Header</span>
+        </div>
+      </div>
+    </div>
+    <div class="drag-hint">Drag to explore →</div>
+  </section>
+
+  <!-- ============ Campaign 4: SlashNext Acquisition ============ -->
+  <section class="campaign">
+    <div class="campaign-details">
+      <span class="side-label">Q3 2025</span>
+      <span class="rule"></span>
+      <div class="campaign-copy">
+        <h2>Slashnext acquisition</h2>
+        <p>Basic launch graphics for the acquisition of SlashNext.</p>
+      </div>
+    </div>
+    <div class="scroll-row">
+      <div class="row-track">
+        <div class="asset" style="width:420px">
+          <div class="frame bordered-dark" style="aspect-ratio:1/1">
+            <img src="Assets/Campaigns/Social_EmailSecurityAnnouncement_202506_FNL.png" alt="Email security announcement social post">
+          </div>
+          <span class="caption">Social</span>
+        </div>
+        <div class="asset" style="width:520px">
+          <div class="frame bordered-dark" style="aspect-ratio:1560/828">
+            <img src="Assets/Campaigns/Blog_Crescent_202506_V3.png" alt="Crescent blog hero">
+          </div>
+          <span class="caption">Blog hero</span>
+        </div>
+        <div class="asset" style="width:719px">
+          <div class="frame" style="aspect-ratio:1174/635">
+            <img src="Assets/Campaigns/SlashNext_Chart.png" alt="SlashNext performance chart">
+          </div>
+          <span class="caption">Performance chart</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</div>
+
+<script>
+  // Drag-to-scroll with momentum for every .scroll-row
+  document.querySelectorAll('.scroll-row').forEach(row => {
+    let isDown = false;
+    let startX = 0;
+    let startScroll = 0;
+    let lastX = 0;
+    let lastT = 0;
+    let velocity = 0;
+    let rafId = null;
+    let moved = false;
+
+    const stopMomentum = () => {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    };
+
+    row.addEventListener('pointerdown', e => {
+      // Let native touch scrolling handle itself; drag logic is for mouse/pen
+      if (e.pointerType === 'touch') return;
+      // Don't hijack clicks on a video's own play/pause/volume/scrubber —
+      // setPointerCapture below would steal them from the native controls.
+      if (e.target.closest('video[controls]')) return;
+      isDown = true;
+      moved = false;
+      stopMomentum();
+      startX = e.clientX;
+      startScroll = row.scrollLeft;
+      lastX = e.clientX;
+      lastT = performance.now();
+      velocity = 0;
+      row.classList.add('dragging');
+      row.setPointerCapture(e.pointerId);
+    });
+
+    row.addEventListener('pointermove', e => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 3) moved = true;
+      row.scrollLeft = startScroll - dx;
+
+      const now = performance.now();
+      const dt = now - lastT;
+      if (dt > 0) {
+        velocity = (e.clientX - lastX) / dt; // px per ms
+        lastX = e.clientX;
+        lastT = now;
+      }
+    });
+
+    const release = e => {
+      if (!isDown) return;
+      isDown = false;
+      row.classList.remove('dragging');
+      if (e.pointerId !== undefined && row.hasPointerCapture(e.pointerId)) {
+        row.releasePointerCapture(e.pointerId);
+      }
+
+      // Momentum glide
+      let v = velocity * 16; // convert to px per frame (~60fps)
+      const decay = 0.94;
+      const glide = () => {
+        if (Math.abs(v) < 0.4) { rafId = null; return; }
+        row.scrollLeft -= v;
+        v *= decay;
+        rafId = requestAnimationFrame(glide);
+      };
+      if (Math.abs(v) > 1) rafId = requestAnimationFrame(glide);
+    };
+
+    row.addEventListener('pointerup', release);
+    row.addEventListener('pointercancel', release);
+
+    // Prevent accidental link/image clicks after a drag
+    row.addEventListener('click', e => {
+      if (moved) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+  });
+</script>
+
+</body>
+</html>

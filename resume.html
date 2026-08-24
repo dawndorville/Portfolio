@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume — Dawn Dorville</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Source: Figma node 245:481 "Resume" (1440 x 2056)
+     Content column 1320, inset 60px each side — same grid as
+     index.html / campaigns.html / rsac.html so the header lands on
+     the same pixels when navigating between pages. Figma's frame
+     closes with a 70px bottom gap (not the 200px used on project
+     pages) since this page has no canvas/booth art to letterbox.
+     ============================================================ */
+
+  :root{
+    --page-pad: 60px;
+    --content-w: 1320px;
+
+    --gray: #878787;
+    --nav-gray: #919191;
+    /* the warm near-black used for section rules everywhere in the
+       portfolio — here it's the vertical dividers inside each panel */
+    --warm-black: #282621;
+    --panel: #101010;
+    --pink: #f956ff;
+
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', ui-monospace, monospace;
+    --body: 'Inter', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ background:#000; scroll-behavior:smooth; }
+
+  body{
+    background:#000;
+    color:#fff;
+    font-family:var(--body);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  a{ text-decoration:none; }
+
+  .page{
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin:0 auto;
+    padding:50px var(--page-pad) 70px;
+  }
+
+  /* ---------- Header (Figma instance 247:1374) ---------- */
+  .header-inner{ display:flex; align-items:center; justify-content:space-between; }
+
+  .logo{
+    font-family:var(--body);
+    font-weight:600;
+    font-size:20px;
+    color:#fff;
+  }
+
+  nav{ display:flex; align-items:center; gap:40px; }
+  nav a{ white-space:nowrap; }
+
+  /* Header (Figma node 247:1374) — Work/Resume share one style: Inter
+     Regular, #919191, uppercase, 3.2px tracking. Figma's component has no
+     hover variant, so the rollover state below (white, transitioning) is
+     ours — same treatment on both links, on every page. */
+  .nav-work,
+  .nav-resume{
+    font-family:var(--body);
+    font-weight:400;
+    font-size:16px;
+    letter-spacing:3.2px;
+    text-transform:uppercase;
+    color:var(--nav-gray);
+    transition:color .15s ease;
+  }
+  .nav-work:hover,
+  .nav-work:focus-visible,
+  .nav-resume:hover,
+  .nav-resume:focus-visible{
+    color:#fff;
+  }
+
+  /* ---------- Shared block/panel primitives ---------- */
+  main{ display:flex; flex-direction:column; gap:50px; margin-top:50px; }
+
+  .block{ display:flex; flex-direction:column; gap:30px; }
+
+  .block > h1{
+    font-family:var(--display);
+    font-weight:400;
+    font-size:44px;
+    line-height:normal;
+    color:#fff;
+  }
+
+  .panel{ background:var(--panel); }
+
+  .divider{ width:3px; flex-shrink:0; align-self:stretch; background:var(--warm-black); }
+
+  /* wide-tracked mono label — Contact / company names (5.6px tracking) */
+  .label-wide{
+    font-family:var(--mono); font-weight:700; font-size:28px;
+    letter-spacing:5.6px; text-transform:uppercase; line-height:1; color:#fff;
+  }
+
+  /* narrower mono label — Skills / Tools / school name (2.8px tracking) */
+  .label{
+    font-family:var(--mono); font-weight:700; font-size:28px;
+    letter-spacing:2.8px; text-transform:uppercase; line-height:1; color:#fff;
+  }
+
+  /* ---------- Bio (245:1221) ---------- */
+  .bio-panel{ display:flex; gap:50px; padding:50px; }
+
+  .bio-contact{ display:flex; flex-direction:column; gap:10px; width:300px; flex-shrink:0; }
+  .bio-contact a{
+    font-family:var(--body); font-weight:600; font-size:20px; line-height:1.8; color:#fff;
+  }
+
+  .bio-text{
+    flex:1 0 0; min-width:0;
+    font-family:var(--body); font-weight:400; font-size:16px; line-height:1.8;
+  }
+
+  /* ---------- Skills (245:1332) — no heading, straight into the panel ---------- */
+  .skills-panel{ display:flex; gap:62px; padding:50px; }
+
+  .skills-col{ flex:1 0 0; min-width:0; display:flex; flex-direction:column; gap:10px; }
+
+  .skills-col p{
+    font-family:var(--body); font-weight:600; font-size:20px; line-height:1.8;
+  }
+
+  /* ---------- Experience (245:1248) — three stacked rows ---------- */
+  .exp-row{ display:flex; gap:50px; align-items:center; padding:50px; }
+
+  .exp-left{
+    display:flex; flex-direction:column; gap:30px; justify-content:center;
+    width:300px; flex-shrink:0;
+  }
+
+  .exp-heading{ display:flex; flex-direction:column; gap:4px; }
+
+  .exp-date{
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; text-transform:uppercase; line-height:1.8; color:var(--nav-gray);
+  }
+
+  .exp-role{ font-family:var(--body); font-weight:600; font-size:20px; line-height:1.8; }
+
+  .exp-desc{
+    flex:1 0 0; min-width:0;
+    font-family:var(--body); font-weight:400; font-size:16px; line-height:1.8;
+  }
+
+  /* Figma placeholder copy for the Varonis row — pink, not yet written */
+  .exp-desc.placeholder{ color:var(--pink); }
+
+  /* ---------- Education (245:1280) ---------- */
+  .edu-panel{ display:flex; flex-direction:column; gap:10px; padding:50px; }
+
+  .edu-degrees{ font-family:var(--body); font-weight:600; font-size:20px; line-height:1.8; }
+  .edu-degrees .sep{ color:#3f3f3f; padding:0 6px; }
+
+  /* Mobile margins match index.html's breakpoints so --page-pad lands on
+     the same values (and the header/columns line up) when navigating
+     between pages. */
+  @media (max-width:1100px){
+    :root{ --page-pad:40px; }
+    /* index.html ties its header's top offset to --page-pad, so it
+       shrinks at each breakpoint below. .page's top padding is a flat
+       50px otherwise — pin it to --page-pad here too or the header
+       sits visibly lower on this page than on index at the same width. */
+    .page{ padding-top:var(--page-pad); }
+  }
+
+  @media (max-width:900px){
+    main{ margin-top:40px; gap:40px; }
+    .block > h1{ font-size:36px; }
+    .header-inner{ flex-wrap:wrap; gap:16px; }
+    nav{ gap:24px; }
+
+    .bio-panel, .skills-panel, .exp-row{ flex-direction:column; align-items:flex-start; gap:24px; padding:20px; }
+    .edu-panel{ padding:20px; }
+    .bio-contact, .exp-left{ width:100%; }
+    .divider{ display:none; }
+
+    .label, .label-wide{ font-size:20px; }
+  }
+
+  @media (max-width:880px){
+    :root{ --page-pad:28px; }
+    .page{ padding-top:var(--page-pad); }
+  }
+
+  @media (max-width:560px){
+    :root{ --page-pad:20px; }
+    .page{ padding-top:var(--page-pad); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">Dawn Dorville</a>
+      <nav>
+        <a class="nav-work" href="index.html">Work</a>
+        <a class="nav-resume" href="resume.html">Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="block">
+      <h1>Bio</h1>
+      <div class="panel bio-panel">
+        <div class="bio-contact">
+          <p class="label-wide">Contact</p>
+          <a href="mailto:dawnbalhorn@mac.com">dawnbalhorn@mac.com</a>
+        </div>
+        <div class="divider"></div>
+        <p class="bio-text">I am a hard working, versatile designer with extensive experience across
+          digital and print. I have a deep appreciation for thoughtful design, lettering and love how
+          the intersection of image, color, and typography can create an identity. I flourish on small
+          teams, working in a fast-paced environment, managing multiple projects spanning all types of
+          design. Problem solving and an earnest desire to jump head first into any project are my most
+          notable strengths.</p>
+      </div>
+    </section>
+
+    <div class="panel skills-panel">
+      <div class="skills-col">
+        <p class="label">Skills</p>
+        <p>Art Direction, Branding, Design systems, Template building, Illustration, Basic animation,
+          Social &amp; ad campaigns, Conference booths</p>
+      </div>
+      <div class="divider"></div>
+      <div class="skills-col">
+        <p class="label">Tools</p>
+        <p>Figma, Weavy/Figma Weave, Adobe Creative Suite [Illustrator, Photoshop, InDesign, Lightroom,
+          After Effects, Substance], Claude, Asana, Monday</p>
+      </div>
+    </div>
+
+    <section class="block">
+      <h1>Experience</h1>
+
+      <div class="panel exp-row">
+        <div class="exp-left">
+          <div class="exp-heading">
+            <p class="label-wide">Varonis</p>
+            <p class="exp-date">2021 — Present</p>
+          </div>
+          <p class="exp-role">Lead Designer</p>
+        </div>
+        <div class="divider"></div>
+        <p class="exp-desc placeholder">What do I even do?</p>
+      </div>
+
+      <div class="panel exp-row">
+        <div class="exp-left">
+          <div class="exp-heading">
+            <p class="label-wide">Forward</p>
+            <p class="exp-date">2020</p>
+          </div>
+          <p class="exp-role">UI/UX Designer</p>
+        </div>
+        <div class="divider"></div>
+        <p class="exp-desc">User interface and experience design for a mobile product agency that
+          specializes in rapid development and exceptional execution of iPhone and Android applications
+          focused on enhancing museum experiences.</p>
+      </div>
+
+      <div class="panel exp-row">
+        <div class="exp-left">
+          <div class="exp-heading">
+            <p class="label-wide">15 Degrees</p>
+            <p class="exp-date">2016 – 2020</p>
+          </div>
+          <p class="exp-role">Art Director</p>
+        </div>
+        <div class="divider"></div>
+        <p class="exp-desc">Concepted and executed multifaceted campaigns across food, financial and
+          non-profit sectors that included digital and print advertising, social content creation,
+          branding, packaging, commercials, photography, web and app design.</p>
+      </div>
+
+    </section>
+
+    <section class="block">
+      <h1>Education</h1>
+      <div class="panel edu-panel">
+        <p class="label">Parsons school of design</p>
+        <p class="edu-degrees">BFA, Communication Design <span class="sep">|</span> AAS, Fashion Design</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

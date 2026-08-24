@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog heroes &mdash; Dawn Dorville</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Source: Figma node 128:326 "Blog heroes" (1440 x 4175)
+     Same 1320 / 60px grid as index.html and rsac.html, so the
+     header lands on identical pixels when navigating between pages.
+
+     The frame is a static 6 x 29 contact sheet of 174 hero
+     illustrations. At Figma's tile size each one is 188 x 100 —
+     too small to read as artwork, so every tile is a button that
+     opens the full-resolution hero in a lightbox. The grid itself
+     is unchanged from the design.
+     ============================================================ */
+
+  :root{
+    --page-pad: 60px;
+    --content-w: 1320px;
+
+    --gray: #878787;        /* page title */
+    --nav-gray: #919191;    /* header nav */
+    /* The warm near-black used for section rules and buttons —
+       same value across every page in the portfolio. */
+    --warm-black: #282621;
+    --panel: #101010;       /* Figma: contact-sheet fill */
+
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', ui-monospace, monospace;
+    --body: 'Inter', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ background:#000; scroll-behavior:smooth; }
+  body{
+    background:#000;
+    color:#fff;
+    font-family:var(--body);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{ display:block; }
+  a{ text-decoration:none; }
+
+  .container{
+    width:100%;
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin:0 auto;
+    padding: 0 var(--page-pad);
+  }
+
+  /* ============ Header (Figma instance 259:2514) ============ */
+  /* `.container` sets a `padding` shorthand and a class selector outranks a
+     bare `header` one, so the top padding has to be applied at matching
+     specificity or the shorthand zeroes it out. */
+  header.container{ padding-top:var(--page-pad); }
+  /* Figma's Header component styles "Work" and "Resume" identically —
+     both #919191, Inter Regular, no italic and no bracket decoration. */
+  .header-inner{ display:flex; align-items:center; justify-content:space-between; }
+
+  .logo{
+    font-family:var(--body);
+    font-weight:600;
+    font-size:20px;
+    color:#fff;
+  }
+
+  nav{ display:flex; align-items:center; gap:40px; }
+  nav a{ white-space:nowrap; }
+
+  /* Header (Figma node 247:1374) — Work/Resume share one style: Inter
+     Regular, #919191, uppercase, 3.2px tracking. Figma's component has no
+     hover variant, so the rollover state below (white, transitioning) is
+     ours — same treatment on both links, on every page. */
+  .nav-work,
+  .nav-resume{
+    font-family:var(--body);
+    font-weight:400;
+    font-size:16px;
+    letter-spacing:3.2px;
+    text-transform:uppercase;
+    color:var(--nav-gray);
+    transition:color .15s ease;
+  }
+  .nav-work:hover,
+  .nav-work:focus-visible,
+  .nav-resume:hover,
+  .nav-resume:focus-visible{
+    color:#fff;
+  }
+
+
+  /* ============ Project intro (128:328) ============
+     This page has no kicker under the title — the eyebrow and blurb live in
+     the Section Details block below instead. */
+  .intro{ margin-top:50px; }
+  .intro h1{
+    font-family:var(--display); font-weight:400;
+    font-size:60px; line-height:normal; color:var(--gray);
+  }
+
+  /* ============ Section details (532:35044) ============ */
+  /* Figma: title bottom edge y=227, detail block top edge y=367.
+     Qualified with `.container` for the same reason `header.container` is:
+     `.container`'s `margin`/`padding` shorthands outrank a bare element
+     selector and would zero both of these out. */
+  main.container{ margin-top:140px; padding-bottom:160px; }
+
+  .detail{ display:flex; gap:30px; align-items:stretch; }
+  .side-label{
+    writing-mode: vertical-rl;
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; text-transform:uppercase; color:var(--gray);
+    /* Figma's label column is the 11px cap height of the rotated text,
+       not the 16px a full em box would give. */
+    line-height:11px; flex-shrink:0;
+  }
+  /* Zero-width vector with a 3px stroke: the stroke bleeds 1.5px either side
+     so the line sits centred in the 30px gutter. */
+  .rule{
+    width:3px; margin:0 -1.5px; background:var(--warm-black);
+    align-self:stretch; flex-shrink:0;
+  }
+  .section-text{ display:flex; flex-direction:column; gap:3px; max-width:660px; }
+  .section-text h2{
+    font-family:var(--display); font-weight:400;
+    font-size:24px; line-height:1.25; letter-spacing:2.4px;
+    text-transform:uppercase; color:#fff;
+  }
+  .section-text p{ font-size:16px; line-height:1.8; color:#fff; }
+
+  /* ============ Contact sheet (128:359) ============
+     Figma: 1273.96 wide, #101010, 10px radius, 20px padding, 6 columns of
+     188.365 x 99.978 tiles with a 20px gutter. The frame is inset inside the
+     1320 content column rather than filling it, so the panel keeps that
+     max-width and centres; the columns are 1fr so it degrades cleanly below
+     desktop. Tiles carry the artwork's own 1560 x 828 ratio. */
+  .sheet{
+    max-width:1274px;
+    margin:50px auto 0;
+    background:var(--panel);
+    border-radius:10px;
+    padding:20px;
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    gap:20px;
+  }
+
+  .tile{
+    display:block; position:relative;
+    width:100%; aspect-ratio:1560 / 828;
+    border:none; padding:0; margin:0;
+    background:#000; color:inherit; font:inherit;
+    cursor:zoom-in; overflow:hidden;
+  }
+  .tile img{
+    width:100%; height:100%; object-fit:cover;
+    transition: transform .35s ease;
+  }
+  @media (hover:hover){
+    .sheet .tile:hover img{ transform:scale(1.06); }
+  }
+  .tile:focus-visible{ outline:2px solid #fff; outline-offset:2px; z-index:2; }
+
+  .sheet-hint{
+    max-width:1274px;
+    margin:15px auto 0;
+    font-family:var(--mono); font-weight:400; font-size:12px;
+    letter-spacing:2.4px; text-transform:uppercase; color:var(--gray);
+  }
+
+  /* ============ Lightbox ============ */
+  .lightbox{
+    position:fixed; inset:0; z-index:50;
+    display:none; align-items:center; justify-content:center;
+    /* 100px of side padding keeps the prev/next buttons clear of the image
+       at every width, not just when the figure hits its 1200px cap. */
+    padding:60px 100px;
+    background:rgba(0,0,0,.92);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  }
+  .lightbox.is-open{ display:flex; }
+
+  .lb-figure{
+    display:flex; flex-direction:column; align-items:center; gap:20px;
+    max-width:1200px; width:100%;
+  }
+  .lb-figure img{
+    width:100%; height:auto; max-height:calc(100vh - 220px);
+    object-fit:contain; background:#000;
+  }
+  .lb-cap{
+    display:flex; align-items:center; gap:12px;
+    font-family:var(--mono); font-weight:700; font-size:12px;
+    letter-spacing:2.4px; text-transform:uppercase; color:#fff;
+    text-align:center;
+  }
+  .lb-cap .count{ color:var(--gray); font-variant-numeric:tabular-nums; }
+
+  .lb-btn{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:48px; height:48px; border-radius:50%;
+    border:1px solid rgba(255,255,255,.14);
+    background:var(--warm-black); color:#fff;
+    font-size:20px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lb-btn:hover{ background:#3a372f; }
+  .lb-btn:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
+  .lb-prev{ left:24px; }
+  .lb-next{ right:24px; }
+  .lb-close{
+    position:absolute; top:24px; right:24px;
+    transform:none; font-size:18px;
+  }
+
+  /* ============ Responsive ============ */
+  @media (max-width:1180px){
+    .sheet{ grid-template-columns:repeat(5, 1fr); }
+  }
+  @media (max-width:1100px){
+    :root{ --page-pad:40px; }
+  }
+  @media (max-width:960px){
+    .sheet{ grid-template-columns:repeat(4, 1fr); }
+    main.container{ margin-top:100px; }
+  }
+  @media (max-width:880px){
+    :root{ --page-pad:28px; }
+  }
+  @media (max-width:760px){
+    .header-inner{ flex-wrap:wrap; gap:16px; }
+    nav{ gap:24px; }
+    .intro h1{ font-size:40px; }
+    main.container{ margin-top:70px; padding-bottom:100px; }
+    /* Matches the VTL branding page's phone treatment of this block:
+       tighter gutter, smaller vertical label, smaller heading. */
+    .detail{ gap:14px; }
+    .side-label{ font-size:12px; }
+    .section-text h2{ font-size:20px; }
+    .sheet{ grid-template-columns:repeat(3, 1fr); gap:12px; padding:12px; }
+    /* There is no room to flank the image on a phone, so the arrows drop to
+       a pair under the caption instead of sitting on top of the artwork. */
+    .lightbox{ padding:24px 24px 88px; }
+    .lb-btn{ width:40px; height:40px; top:auto; bottom:24px; transform:none; }
+    .lb-prev{ left:calc(50% - 52px); }
+    .lb-next{ right:calc(50% - 52px); }
+    .lb-close{ top:24px; right:24px; bottom:auto; }
+    .lb-figure img{ max-height:calc(100vh - 240px); }
+  }
+  @media (max-width:560px){
+    :root{ --page-pad:20px; }
+  }
+  @media (max-width:480px){
+    .sheet{ grid-template-columns:repeat(2, 1fr); }
+  }
+  @media (prefers-reduced-motion:reduce){
+    .tile img{ transition:none; }
+    .sheet .tile:hover img{ transform:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="container">
+  <div class="header-inner">
+    <a class="logo" href="index.html">Dawn Dorville</a>
+    <nav>
+      <a class="nav-work" href="index.html">Work</a>
+      <a class="nav-resume" href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<section class="container intro">
+  <h1>Blog heroes</h1>
+</section>
+
+<main class="container">
+
+  <div class="detail">
+    <span class="side-label">2024 &ndash; 2026</span>
+    <span class="rule"></span>
+    <div class="section-text">
+      <h2>Hero artwork</h2>
+      <p>Though I don&rsquo;t consider myself an illustrator, I found myself owning the visual concept and creation of blog heroes since the beginning of my time at Varonis. The &ldquo;threat red&rdquo; heroes were all created for VTL research articles and everything else used core Varonis brand coloring.</p>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheet">
+        <button type="button" class="tile" data-title="Cybercrime Subscription" data-full="Assets/BlogHeroes/full/CybercrimeSubscription.webp">
+          <img src="Assets/BlogHeroes/thumb/CybercrimeSubscription.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Cybercrime Subscription">
+        </button>
+        <button type="button" class="tile" data-title="Anti-bot Services" data-full="Assets/BlogHeroes/full/AntiBotServices.webp">
+          <img src="Assets/BlogHeroes/thumb/AntiBotServices.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Anti-bot Services">
+        </button>
+        <button type="button" class="tile" data-title="SEO Poisoning" data-full="Assets/BlogHeroes/full/SEOPoisoning.webp">
+          <img src="Assets/BlogHeroes/thumb/SEOPoisoning.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: SEO Poisoning">
+        </button>
+        <button type="button" class="tile" data-title="Salesforce Log Evasion" data-full="Assets/BlogHeroes/full/SalesforceLogEvasion.webp">
+          <img src="Assets/BlogHeroes/thumb/SalesforceLogEvasion.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Salesforce Log Evasion">
+        </button>
+        <button type="button" class="tile" data-title="App Locker Microsoft Finding" data-full="Assets/BlogHeroes/full/AppLockerMicrosoftFinding.webp">
+          <img src="Assets/BlogHeroes/thumb/AppLockerMicrosoftFinding.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: App Locker Microsoft Finding">
+        </button>
+        <button type="button" class="tile" data-title="Weaponizing Outlook Add Ins" data-full="Assets/BlogHeroes/full/WeaponizingOutlookAddIns.webp">
+          <img src="Assets/BlogHeroes/thumb/WeaponizingOutlookAddIns.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Weaponizing Outlook Add Ins">
+        </button>
+        <button type="button" class="tile" data-title="Log Manipulation Vulnerability in Agentforce" data-full="Assets/BlogHeroes/full/LogManipulationVulnerabilityInAgentforce.webp">
+          <img src="Assets/BlogHeroes/thumb/LogManipulationVulnerabilityInAgentforce.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Log Manipulation Vulnerability in Agentforce">
+        </button>
+        <button type="button" class="tile" data-title="Varonis" data-full="Assets/BlogHeroes/full/Varonis.webp">
+          <img src="Assets/BlogHeroes/thumb/Varonis.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Varonis">
+        </button>
+        <button type="button" class="tile" data-title="DPRK" data-full="Assets/BlogHeroes/full/DPRK.webp">
+          <img src="Assets/BlogHeroes/thumb/DPRK.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: DPRK">
+        </button>
+        <button type="button" class="tile" data-title="Anonymous Requests in AWS" data-full="Assets/BlogHeroes/full/AnonymousRequestsInAWS.webp">
+          <img src="Assets/BlogHeroes/thumb/AnonymousRequestsInAWS.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Anonymous Requests in AWS">
+        </button>
+        <button type="button" class="tile" data-title="Devil Traff" data-full="Assets/BlogHeroes/full/DevilTraff.webp">
+          <img src="Assets/BlogHeroes/thumb/DevilTraff.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Devil Traff">
+        </button>
+        <button type="button" class="tile" data-title="Session Shark" data-full="Assets/BlogHeroes/full/SessionShark.webp">
+          <img src="Assets/BlogHeroes/thumb/SessionShark.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Session Shark">
+        </button>
+        <button type="button" class="tile" data-title="1Campaign" data-full="Assets/BlogHeroes/full/1Campaign.webp">
+          <img src="Assets/BlogHeroes/thumb/1Campaign.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: 1Campaign">
+        </button>
+        <button type="button" class="tile" data-title="MCP Deep Dive" data-full="Assets/BlogHeroes/full/MCPDeepDive.webp">
+          <img src="Assets/BlogHeroes/thumb/MCPDeepDive.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: MCP Deep Dive">
+        </button>
+        <button type="button" class="tile" data-title="Atroposia" data-full="Assets/BlogHeroes/full/Atroposia.webp">
+          <img src="Assets/BlogHeroes/thumb/Atroposia.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Atroposia">
+        </button>
+        <button type="button" class="tile" data-title="Data Exfiltration in Sharepoint" data-full="Assets/BlogHeroes/full/DataExfiltrationInSharepoint.webp">
+          <img src="Assets/BlogHeroes/thumb/DataExfiltrationInSharepoint.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Data Exfiltration in Sharepoint">
+        </button>
+        <button type="button" class="tile" data-title="Cybersecurity Awareness Month" data-full="Assets/BlogHeroes/full/CybersecurityAwarenessMonth.webp">
+          <img src="Assets/BlogHeroes/thumb/CybersecurityAwarenessMonth.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Cybersecurity Awareness Month">
+        </button>
+        <button type="button" class="tile" data-title="Ghost Sites" data-full="Assets/BlogHeroes/full/GhostSites.webp">
+          <img src="Assets/BlogHeroes/thumb/GhostSites.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Ghost Sites">
+        </button>
+        <button type="button" class="tile" data-title="Xanthorox" data-full="Assets/BlogHeroes/full/Xanthorox.webp">
+          <img src="Assets/BlogHeroes/thumb/Xanthorox.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Xanthorox">
+        </button>
+        <button type="button" class="tile" data-title="BiDi Swap" data-full="Assets/BlogHeroes/full/BiDiSwap.webp">
+          <img src="Assets/BlogHeroes/thumb/BiDiSwap.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: BiDi Swap">
+        </button>
+        <button type="button" class="tile" data-title="NPM Supply Chain Attack" data-full="Assets/BlogHeroes/full/NPMSupplyChainAttack.webp">
+          <img src="Assets/BlogHeroes/thumb/NPMSupplyChainAttack.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: NPM Supply Chain Attack">
+        </button>
+        <button type="button" class="tile" data-title="Azure" data-full="Assets/BlogHeroes/full/Azure.webp">
+          <img src="Assets/BlogHeroes/thumb/Azure.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Azure">
+        </button>
+        <button type="button" class="tile" data-title="Azure NFS Mount Privilege Escalation" data-full="Assets/BlogHeroes/full/AzureNFSMountPrivilegeEscalation.webp">
+          <img src="Assets/BlogHeroes/thumb/AzureNFSMountPrivilegeEscalation.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Azure NFS Mount Privilege Escalation">
+        </button>
+        <button type="button" class="tile" data-title="BEC Attack" data-full="Assets/BlogHeroes/full/BECAttack.webp">
+          <img src="Assets/BlogHeroes/thumb/BECAttack.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: BEC Attack">
+        </button>
+        <button type="button" class="tile" data-title="Azure AQL Server" data-full="Assets/BlogHeroes/full/AzureAQLServer.webp">
+          <img src="Assets/BlogHeroes/thumb/AzureAQLServer.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Azure AQL Server">
+        </button>
+        <button type="button" class="tile" data-title="Beacon ML Hunters" data-full="Assets/BlogHeroes/full/BeaconMLHunters.webp">
+          <img src="Assets/BlogHeroes/thumb/BeaconMLHunters.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Beacon ML Hunters">
+        </button>
+        <button type="button" class="tile" data-title="Dropbox Sign" data-full="Assets/BlogHeroes/full/DropboxSign.webp">
+          <img src="Assets/BlogHeroes/thumb/DropboxSign.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Dropbox Sign">
+        </button>
+        <button type="button" class="tile" data-title="Ivanti" data-full="Assets/BlogHeroes/full/Ivanti.webp">
+          <img src="Assets/BlogHeroes/thumb/Ivanti.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Ivanti">
+        </button>
+        <button type="button" class="tile" data-title="Kerberoasting Insights" data-full="Assets/BlogHeroes/full/KerberoastingInsights.webp">
+          <img src="Assets/BlogHeroes/thumb/KerberoastingInsights.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Kerberoasting Insights">
+        </button>
+        <button type="button" class="tile" data-title="Salesforce Link to PII" data-full="Assets/BlogHeroes/full/SalesforceLinkToPII.webp">
+          <img src="Assets/BlogHeroes/thumb/SalesforceLinkToPII.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Salesforce Link to PII">
+        </button>
+        <button type="button" class="tile" data-title="Take It Easy" data-full="Assets/BlogHeroes/full/TakeItEasy.webp">
+          <img src="Assets/BlogHeroes/thumb/TakeItEasy.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Take It Easy">
+        </button>
+        <button type="button" class="tile" data-title="Webserver Misconfiguration" data-full="Assets/BlogHeroes/full/WebserverMisconfiguration.webp">
+          <img src="Assets/BlogHeroes/thumb/WebserverMisconfiguration.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Webserver Misconfiguration">
+        </button>
+        <button type="button" class="tile" data-title="Click Fix" data-full="Assets/BlogHeroes/full/ClickFix.webp">
+          <img src="Assets/BlogHeroes/thumb/ClickFix.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Click Fix">
+        </button>
+        <button type="button" class="tile" data-title="Scattered Spider" data-full="Assets/BlogHeroes/full/ScatteredSpider.webp">
+          <img src="Assets/BlogHeroes/thumb/ScatteredSpider.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Scattered Spider">
+        </button>
+        <button type="button" class="tile" data-title="Service Now" data-full="Assets/BlogHeroes/full/ServiceNow.webp">
+          <img src="Assets/BlogHeroes/thumb/ServiceNow.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Service Now">
+        </button>
+        <button type="button" class="tile" data-title="Attackers Playbook" data-full="Assets/BlogHeroes/full/AttackersPlaybook.webp">
+          <img src="Assets/BlogHeroes/thumb/AttackersPlaybook.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Attackers Playbook">
+        </button>
+        <button type="button" class="tile" data-title="Phish WP" data-full="Assets/BlogHeroes/full/PhishWP.webp">
+          <img src="Assets/BlogHeroes/thumb/PhishWP.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Phish WP">
+        </button>
+        <button type="button" class="tile" data-title="Go Issue" data-full="Assets/BlogHeroes/full/GoIssue.webp">
+          <img src="Assets/BlogHeroes/thumb/GoIssue.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Go Issue">
+        </button>
+        <button type="button" class="tile" data-title="AWS Account ID" data-full="Assets/BlogHeroes/full/AWSAccountID.webp">
+          <img src="Assets/BlogHeroes/thumb/AWSAccountID.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AWS Account ID">
+        </button>
+        <button type="button" class="tile" data-title="How Threat Actors Use AI to Hide Malicious Sites" data-full="Assets/BlogHeroes/full/HowThreatActorsUseAIToHideMaliciousSites.webp">
+          <img src="Assets/BlogHeroes/thumb/HowThreatActorsUseAIToHideMaliciousSites.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: How Threat Actors Use AI to Hide Malicious Sites">
+        </button>
+        <button type="button" class="tile" data-title="Preventing Ransomware by Hours" data-full="Assets/BlogHeroes/full/PreventingRansomwareByHours.webp">
+          <img src="Assets/BlogHeroes/thumb/PreventingRansomwareByHours.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Preventing Ransomware by Hours">
+        </button>
+        <button type="button" class="tile" data-title="Where Are My Keys" data-full="Assets/BlogHeroes/full/WhereAreMyKeys.webp">
+          <img src="Assets/BlogHeroes/thumb/WhereAreMyKeys.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Where Are My Keys">
+        </button>
+        <button type="button" class="tile" data-title="Not2C" data-full="Assets/BlogHeroes/full/Not2C.webp">
+          <img src="Assets/BlogHeroes/thumb/Not2C.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Not2C">
+        </button>
+        <button type="button" class="tile" data-title="Reprompt" data-full="Assets/BlogHeroes/full/Reprompt.webp">
+          <img src="Assets/BlogHeroes/thumb/Reprompt.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Reprompt">
+        </button>
+        <button type="button" class="tile" data-title="Rogue Agent" data-full="Assets/BlogHeroes/full/RogueAgent.webp">
+          <img src="Assets/BlogHeroes/thumb/RogueAgent.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Rogue Agent">
+        </button>
+        <button type="button" class="tile" data-title="Claude Leak" data-full="Assets/BlogHeroes/full/ClaudeLeak.webp">
+          <img src="Assets/BlogHeroes/thumb/ClaudeLeak.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Claude Leak">
+        </button>
+        <button type="button" class="tile" data-title="Fish X Proxy Phishing Kit" data-full="Assets/BlogHeroes/full/FishXProxyPhishingKit.webp">
+          <img src="Assets/BlogHeroes/thumb/FishXProxyPhishingKit.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Fish X Proxy Phishing Kit">
+        </button>
+        <button type="button" class="tile" data-title="Worm GPT" data-full="Assets/BlogHeroes/full/WormGPT.webp">
+          <img src="Assets/BlogHeroes/thumb/WormGPT.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Worm GPT">
+        </button>
+        <button type="button" class="tile" data-title="AWS Misconfiguration" data-full="Assets/BlogHeroes/full/AWSMisconfiguration.webp">
+          <img src="Assets/BlogHeroes/thumb/AWSMisconfiguration.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AWS Misconfiguration">
+        </button>
+        <button type="button" class="tile" data-title="Success Illusion" data-full="Assets/BlogHeroes/full/SuccessIllusion.webp">
+          <img src="Assets/BlogHeroes/thumb/SuccessIllusion.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Success Illusion">
+        </button>
+        <button type="button" class="tile" data-title="AWS MCP" data-full="Assets/BlogHeroes/full/AWSMCP.webp">
+          <img src="Assets/BlogHeroes/thumb/AWSMCP.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AWS MCP">
+        </button>
+        <button type="button" class="tile" data-title="Blue Kit" data-full="Assets/BlogHeroes/full/BlueKit.webp">
+          <img src="Assets/BlogHeroes/thumb/BlueKit.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Blue Kit">
+        </button>
+        <button type="button" class="tile" data-title="Storm Stealer" data-full="Assets/BlogHeroes/full/StormStealer.webp">
+          <img src="Assets/BlogHeroes/thumb/StormStealer.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Storm Stealer">
+        </button>
+        <button type="button" class="tile" data-title="NPM Supply Chain Attack" data-full="Assets/BlogHeroes/full/NPMSupplyChainAttack2.webp">
+          <img src="Assets/BlogHeroes/thumb/NPMSupplyChainAttack2.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: NPM Supply Chain Attack">
+        </button>
+        <button type="button" class="tile" data-title="General Security" data-full="Assets/BlogHeroes/full/GeneralSecurity.webp">
+          <img src="Assets/BlogHeroes/thumb/GeneralSecurity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: General Security">
+        </button>
+        <button type="button" class="tile" data-title="Dev Data Security" data-full="Assets/BlogHeroes/full/DevDataSecurity.webp">
+          <img src="Assets/BlogHeroes/thumb/DevDataSecurity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Dev Data Security">
+        </button>
+        <button type="button" class="tile" data-title="Microsoft Perview" data-full="Assets/BlogHeroes/full/MicrosoftPerview.webp">
+          <img src="Assets/BlogHeroes/thumb/MicrosoftPerview.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Microsoft Perview">
+        </button>
+        <button type="button" class="tile" data-title="Varonis" data-full="Assets/BlogHeroes/full/Varonis2.webp">
+          <img src="Assets/BlogHeroes/thumb/Varonis2.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Varonis">
+        </button>
+        <button type="button" class="tile" data-title="2025 Big Bets" data-full="Assets/BlogHeroes/full/2025BigBets.webp">
+          <img src="Assets/BlogHeroes/thumb/2025BigBets.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: 2025 Big Bets">
+        </button>
+        <button type="button" class="tile" data-title="Manage Configuration Drift" data-full="Assets/BlogHeroes/full/ManageConfigurationDrift.webp">
+          <img src="Assets/BlogHeroes/thumb/ManageConfigurationDrift.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Manage Configuration Drift">
+        </button>
+        <button type="button" class="tile" data-title="MCP" data-full="Assets/BlogHeroes/full/MCP.webp">
+          <img src="Assets/BlogHeroes/thumb/MCP.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: MCP">
+        </button>
+        <button type="button" class="tile" data-title="MDDR" data-full="Assets/BlogHeroes/full/MDDR.webp">
+          <img src="Assets/BlogHeroes/thumb/MDDR.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: MDDR">
+        </button>
+        <button type="button" class="tile" data-title="MDDR" data-full="Assets/BlogHeroes/full/MDDR2.webp">
+          <img src="Assets/BlogHeroes/thumb/MDDR2.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: MDDR">
+        </button>
+        <button type="button" class="tile" data-title="Healthcare Data Risk Report" data-full="Assets/BlogHeroes/full/HealthcareDataRiskReport.webp">
+          <img src="Assets/BlogHeroes/thumb/HealthcareDataRiskReport.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Healthcare Data Risk Report">
+        </button>
+        <button type="button" class="tile" data-title="Interceptor Launch" data-full="Assets/BlogHeroes/full/InterceptorLaunch.webp">
+          <img src="Assets/BlogHeroes/thumb/InterceptorLaunch.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Interceptor Launch">
+        </button>
+        <button type="button" class="tile" data-title="AWS Redshift" data-full="Assets/BlogHeroes/full/AWSRedshift.webp">
+          <img src="Assets/BlogHeroes/thumb/AWSRedshift.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AWS Redshift">
+        </button>
+        <button type="button" class="tile" data-title="Gear Check Commanding Officers Guide" data-full="Assets/BlogHeroes/full/GearCheckCommandingOfficersGuide.webp">
+          <img src="Assets/BlogHeroes/thumb/GearCheckCommandingOfficersGuide.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Gear Check Commanding Officers Guide">
+        </button>
+        <button type="button" class="tile" data-title="The ROI of M365 Copilot" data-full="Assets/BlogHeroes/full/TheROIOfM365Copilot.webp">
+          <img src="Assets/BlogHeroes/thumb/TheROIOfM365Copilot.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: The ROI of M365 Copilot">
+        </button>
+        <button type="button" class="tile" data-title="MDDR EDR Integration" data-full="Assets/BlogHeroes/full/MDDREDRIntegration.webp">
+          <img src="Assets/BlogHeroes/thumb/MDDREDRIntegration.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: MDDR EDR Integration">
+        </button>
+        <button type="button" class="tile" data-title="Agentic MDDR" data-full="Assets/BlogHeroes/full/AgenticMDDR.webp">
+          <img src="Assets/BlogHeroes/thumb/AgenticMDDR.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Agentic MDDR">
+        </button>
+        <button type="button" class="tile" data-title="How Varonis DRA Works" data-full="Assets/BlogHeroes/full/HowVaronisDRAWorks.webp">
+          <img src="Assets/BlogHeroes/thumb/HowVaronisDRAWorks.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: How Varonis DRA Works">
+        </button>
+        <button type="button" class="tile" data-title="Salesforce Security Risks" data-full="Assets/BlogHeroes/full/SalesforceSecurityRisks.webp">
+          <img src="Assets/BlogHeroes/thumb/SalesforceSecurityRisks.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Salesforce Security Risks">
+        </button>
+        <button type="button" class="tile" data-title="MDDR" data-full="Assets/BlogHeroes/full/MDDR3.webp">
+          <img src="Assets/BlogHeroes/thumb/MDDR3.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: MDDR">
+        </button>
+        <button type="button" class="tile" data-title="MSFT Tech Community" data-full="Assets/BlogHeroes/full/MSFTTechCommunity.webp">
+          <img src="Assets/BlogHeroes/thumb/MSFTTechCommunity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: MSFT Tech Community">
+        </button>
+        <button type="button" class="tile" data-title="Generic AI Security" data-full="Assets/BlogHeroes/full/GenericAISecurity.webp">
+          <img src="Assets/BlogHeroes/thumb/GenericAISecurity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Generic AI Security">
+        </button>
+        <button type="button" class="tile" data-title="Shadow Database Discovery" data-full="Assets/BlogHeroes/full/ShadowDatabaseDiscovery.webp">
+          <img src="Assets/BlogHeroes/thumb/ShadowDatabaseDiscovery.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Shadow Database Discovery">
+        </button>
+        <button type="button" class="tile" data-title="Role Based Access Control" data-full="Assets/BlogHeroes/full/RoleBasedAccessControl.webp">
+          <img src="Assets/BlogHeroes/thumb/RoleBasedAccessControl.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Role Based Access Control">
+        </button>
+        <button type="button" class="tile" data-title="TGH Case Study" data-full="Assets/BlogHeroes/full/BlogTGHCaseStudy202409FNL1.webp">
+          <img src="Assets/BlogHeroes/thumb/BlogTGHCaseStudy202409FNL1.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: TGH Case Study">
+        </button>
+        <button type="button" class="tile" data-title="Shared Responsibility Model" data-full="Assets/BlogHeroes/full/SharedResponsibilityModel.webp">
+          <img src="Assets/BlogHeroes/thumb/SharedResponsibilityModel.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Shared Responsibility Model">
+        </button>
+        <button type="button" class="tile" data-title="Telemetry in Cloud Security" data-full="Assets/BlogHeroes/full/TelemetryInCloudSecurity.webp">
+          <img src="Assets/BlogHeroes/thumb/TelemetryInCloudSecurity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Telemetry in Cloud Security">
+        </button>
+        <button type="button" class="tile" data-title="HIPAA Checklist" data-full="Assets/BlogHeroes/full/HIPAAChecklist.webp">
+          <img src="Assets/BlogHeroes/thumb/HIPAAChecklist.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: HIPAA Checklist">
+        </button>
+        <button type="button" class="tile" data-title="Mission-Critical Salesforce Data" data-full="Assets/BlogHeroes/full/BlogMissionCriticalSFData202501FNL1.webp">
+          <img src="Assets/BlogHeroes/thumb/BlogMissionCriticalSFData202501FNL1.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Mission-Critical Salesforce Data">
+        </button>
+        <button type="button" class="tile" data-title="Varonis for Salesforce" data-full="Assets/BlogHeroes/full/VaronisForSalesforce.webp">
+          <img src="Assets/BlogHeroes/thumb/VaronisForSalesforce.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Varonis for Salesforce">
+        </button>
+        <button type="button" class="tile" data-title="Universal Data Connector" data-full="Assets/BlogHeroes/full/UniversalDataConnector.webp">
+          <img src="Assets/BlogHeroes/thumb/UniversalDataConnector.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Universal Data Connector">
+        </button>
+        <button type="button" class="tile" data-title="RegEx vs AI" data-full="Assets/BlogHeroes/full/RegExVsAI.webp">
+          <img src="Assets/BlogHeroes/thumb/RegExVsAI.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: RegEx vs AI">
+        </button>
+        <button type="button" class="tile" data-title="Security Strategy" data-full="Assets/BlogHeroes/full/SecurityStrategy.webp">
+          <img src="Assets/BlogHeroes/thumb/SecurityStrategy.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Security Strategy">
+        </button>
+        <button type="button" class="tile" data-title="Salesforce Shield" data-full="Assets/BlogHeroes/full/SalesforceShield.webp">
+          <img src="Assets/BlogHeroes/thumb/SalesforceShield.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Salesforce Shield">
+        </button>
+        <button type="button" class="tile" data-title="How Varonis Helps with Labeling" data-full="Assets/BlogHeroes/full/HowVaronisHelpsWithLabeling.webp">
+          <img src="Assets/BlogHeroes/thumb/HowVaronisHelpsWithLabeling.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: How Varonis Helps with Labeling">
+        </button>
+        <button type="button" class="tile" data-title="SEC Guidelines" data-full="Assets/BlogHeroes/full/SECGuidelines.webp">
+          <img src="Assets/BlogHeroes/thumb/SECGuidelines.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: SEC Guidelines">
+        </button>
+        <button type="button" class="tile" data-title="Multicloud Identities" data-full="Assets/BlogHeroes/full/MulticloudIdentities.webp">
+          <img src="Assets/BlogHeroes/thumb/MulticloudIdentities.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Multicloud Identities">
+        </button>
+        <button type="button" class="tile" data-title="How Varonis Secures School Data" data-full="Assets/BlogHeroes/full/HowVaronisSecuresSchoolData.webp">
+          <img src="Assets/BlogHeroes/thumb/HowVaronisSecuresSchoolData.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: How Varonis Secures School Data">
+        </button>
+        <button type="button" class="tile" data-title="What is IAM" data-full="Assets/BlogHeroes/full/WhatIsIAM.webp">
+          <img src="Assets/BlogHeroes/thumb/WhatIsIAM.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: What is IAM">
+        </button>
+        <button type="button" class="tile" data-title="Agentforce" data-full="Assets/BlogHeroes/full/Agentforce.webp">
+          <img src="Assets/BlogHeroes/thumb/Agentforce.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Agentforce">
+        </button>
+        <button type="button" class="tile" data-title="Microsoft Partnership" data-full="Assets/BlogHeroes/full/MicrosoftPartnership.webp">
+          <img src="Assets/BlogHeroes/thumb/MicrosoftPartnership.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Microsoft Partnership">
+        </button>
+        <button type="button" class="tile" data-title="Salesforce Misconfigurations" data-full="Assets/BlogHeroes/full/SalesforceMisconfigurations.webp">
+          <img src="Assets/BlogHeroes/thumb/SalesforceMisconfigurations.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Salesforce Misconfigurations">
+        </button>
+        <button type="button" class="tile" data-title="IaaS Azure Blob Databases" data-full="Assets/BlogHeroes/full/IaaSAzureBlobDatabases.webp">
+          <img src="Assets/BlogHeroes/thumb/IaaSAzureBlobDatabases.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: IaaS Azure Blob Databases">
+        </button>
+        <button type="button" class="tile" data-title="Agentforce" data-full="Assets/BlogHeroes/full/Agentforce2.webp">
+          <img src="Assets/BlogHeroes/thumb/Agentforce2.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Agentforce">
+        </button>
+        <button type="button" class="tile" data-title="Salesforce Public Site Exposure Remediation" data-full="Assets/BlogHeroes/full/SalesforcePublicSiteExposureRemediation.webp">
+          <img src="Assets/BlogHeroes/thumb/SalesforcePublicSiteExposureRemediation.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Salesforce Public Site Exposure Remediation">
+        </button>
+        <button type="button" class="tile" data-title="AWS New Accounts" data-full="Assets/BlogHeroes/full/AWSNewAccounts.webp">
+          <img src="Assets/BlogHeroes/thumb/AWSNewAccounts.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AWS New Accounts">
+        </button>
+        <button type="button" class="tile" data-title="Identity Needed in DSPs" data-full="Assets/BlogHeroes/full/IdentityNeededInDSPs.webp">
+          <img src="Assets/BlogHeroes/thumb/IdentityNeededInDSPs.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Identity Needed in DSPs">
+        </button>
+        <button type="button" class="tile" data-title="AI Classification" data-full="Assets/BlogHeroes/full/AIClassification.webp">
+          <img src="Assets/BlogHeroes/thumb/AIClassification.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AI Classification">
+        </button>
+        <button type="button" class="tile" data-title="AWS Remediation" data-full="Assets/BlogHeroes/full/AWSRemediation.webp">
+          <img src="Assets/BlogHeroes/thumb/AWSRemediation.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AWS Remediation">
+        </button>
+        <button type="button" class="tile" data-title="AI Classification" data-full="Assets/BlogHeroes/full/AIClassification2.webp">
+          <img src="Assets/BlogHeroes/thumb/AIClassification2.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AI Classification">
+        </button>
+        <button type="button" class="tile" data-title="AI Shield" data-full="Assets/BlogHeroes/full/AIShield.webp">
+          <img src="Assets/BlogHeroes/thumb/AIShield.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AI Shield">
+        </button>
+        <button type="button" class="tile" data-title="Automated DSPM" data-full="Assets/BlogHeroes/full/AutomatedDSPM.webp">
+          <img src="Assets/BlogHeroes/thumb/AutomatedDSPM.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Automated DSPM">
+        </button>
+        <button type="button" class="tile" data-title="AWS Bucket Naming" data-full="Assets/BlogHeroes/full/AWSBucketNaming.webp">
+          <img src="Assets/BlogHeroes/thumb/AWSBucketNaming.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AWS Bucket Naming">
+        </button>
+        <button type="button" class="tile" data-title="Cloud Data Security" data-full="Assets/BlogHeroes/full/CloudDataSecurity.webp">
+          <img src="Assets/BlogHeroes/thumb/CloudDataSecurity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Cloud Data Security">
+        </button>
+        <button type="button" class="tile" data-title="OAuth Connected App Control" data-full="Assets/BlogHeroes/full/OAuthConnectedAppControl.webp">
+          <img src="Assets/BlogHeroes/thumb/OAuthConnectedAppControl.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: OAuth Connected App Control">
+        </button>
+        <button type="button" class="tile" data-title="Custom and Flexible AI Classification" data-full="Assets/BlogHeroes/full/CustomAndFlexibleAIClassification.webp">
+          <img src="Assets/BlogHeroes/thumb/CustomAndFlexibleAIClassification.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Custom and Flexible AI Classification">
+        </button>
+        <button type="button" class="tile" data-title="Data Access Governance" data-full="Assets/BlogHeroes/full/DataAccessGovernance.webp">
+          <img src="Assets/BlogHeroes/thumb/DataAccessGovernance.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Data Access Governance">
+        </button>
+        <button type="button" class="tile" data-title="Compliance" data-full="Assets/BlogHeroes/full/Compliance.webp">
+          <img src="Assets/BlogHeroes/thumb/Compliance.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Compliance">
+        </button>
+        <button type="button" class="tile" data-title="Copilot Security Scan" data-full="Assets/BlogHeroes/full/CopilotSecurityScan.webp">
+          <img src="Assets/BlogHeroes/thumb/CopilotSecurityScan.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Copilot Security Scan">
+        </button>
+        <button type="button" class="tile" data-title="Creating a Secure GPT at Work" data-full="Assets/BlogHeroes/full/CreatingASecureGPTAtWork.webp">
+          <img src="Assets/BlogHeroes/thumb/CreatingASecureGPTAtWork.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Creating a Secure GPT at Work">
+        </button>
+        <button type="button" class="tile" data-title="Crowdstrike" data-full="Assets/BlogHeroes/full/Crowdstrike.webp">
+          <img src="Assets/BlogHeroes/thumb/Crowdstrike.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Crowdstrike">
+        </button>
+        <button type="button" class="tile" data-title="DAM" data-full="Assets/BlogHeroes/full/DAM.webp">
+          <img src="Assets/BlogHeroes/thumb/DAM.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: DAM">
+        </button>
+        <button type="button" class="tile" data-title="Data Discovery and Classification" data-full="Assets/BlogHeroes/full/DataDiscoveryAndClassification.webp">
+          <img src="Assets/BlogHeroes/thumb/DataDiscoveryAndClassification.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Data Discovery and Classification">
+        </button>
+        <button type="button" class="tile" data-title="Multicloud Security" data-full="Assets/BlogHeroes/full/MulticloudSecurity.webp">
+          <img src="Assets/BlogHeroes/thumb/MulticloudSecurity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Multicloud Security">
+        </button>
+        <button type="button" class="tile" data-title="Insider Risk Management Solutions" data-full="Assets/BlogHeroes/full/InsiderRiskManagementSolutions.webp">
+          <img src="Assets/BlogHeroes/thumb/InsiderRiskManagementSolutions.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Insider Risk Management Solutions">
+        </button>
+        <button type="button" class="tile" data-title="Data Discovery and Classification" data-full="Assets/BlogHeroes/full/DataDiscoveryAndClassification2.webp">
+          <img src="Assets/BlogHeroes/thumb/DataDiscoveryAndClassification2.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Data Discovery and Classification">
+        </button>
+        <button type="button" class="tile" data-title="Sensitive Data in Salesforce" data-full="Assets/BlogHeroes/full/SensitiveDataInSalesforce.webp">
+          <img src="Assets/BlogHeroes/thumb/SensitiveDataInSalesforce.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Sensitive Data in Salesforce">
+        </button>
+        <button type="button" class="tile" data-title="Data Integrity" data-full="Assets/BlogHeroes/full/DataIntegrity.webp">
+          <img src="Assets/BlogHeroes/thumb/DataIntegrity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Data Integrity">
+        </button>
+        <button type="button" class="tile" data-title="Data Governance in Healthcare" data-full="Assets/BlogHeroes/full/DataGovernanceInHealthcare.webp">
+          <img src="Assets/BlogHeroes/thumb/DataGovernanceInHealthcare.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Data Governance in Healthcare">
+        </button>
+        <button type="button" class="tile" data-title="Why Compliance Does Not Equal Security" data-full="Assets/BlogHeroes/full/WhyComplianceDoesNotEqualSecurity.webp">
+          <img src="Assets/BlogHeroes/thumb/WhyComplianceDoesNotEqualSecurity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Why Compliance Does Not Equal Security">
+        </button>
+        <button type="button" class="tile" data-title="Varonis Data Fabric" data-full="Assets/BlogHeroes/full/VaronisDataFabric.webp">
+          <img src="Assets/BlogHeroes/thumb/VaronisDataFabric.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Varonis Data Fabric">
+        </button>
+        <button type="button" class="tile" data-title="DLP" data-full="Assets/BlogHeroes/full/DLP.webp">
+          <img src="Assets/BlogHeroes/thumb/DLP.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: DLP">
+        </button>
+        <button type="button" class="tile" data-title="Data Masking" data-full="Assets/BlogHeroes/full/DataMasking.webp">
+          <img src="Assets/BlogHeroes/thumb/DataMasking.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Data Masking">
+        </button>
+        <button type="button" class="tile" data-title="Data Leaks" data-full="Assets/BlogHeroes/full/DataLeaks.webp">
+          <img src="Assets/BlogHeroes/thumb/DataLeaks.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Data Leaks">
+        </button>
+        <button type="button" class="tile" data-title="Deepseek" data-full="Assets/BlogHeroes/full/Deepseek.webp">
+          <img src="Assets/BlogHeroes/thumb/Deepseek.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Deepseek">
+        </button>
+        <button type="button" class="tile" data-title="AI Champions Program" data-full="Assets/BlogHeroes/full/AIChampionsProgram.webp">
+          <img src="Assets/BlogHeroes/thumb/AIChampionsProgram.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AI Champions Program">
+        </button>
+        <button type="button" class="tile" data-title="Gartner Top Vendor" data-full="Assets/BlogHeroes/full/GartnerTopVendor.webp">
+          <img src="Assets/BlogHeroes/thumb/GartnerTopVendor.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Gartner Top Vendor">
+        </button>
+        <button type="button" class="tile" data-title="CISO DSPM Tips" data-full="Assets/BlogHeroes/full/CISODSPMTips.webp">
+          <img src="Assets/BlogHeroes/thumb/CISODSPMTips.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: CISO DSPM Tips">
+        </button>
+        <button type="button" class="tile" data-title="DSPM" data-full="Assets/BlogHeroes/full/DSPM.webp">
+          <img src="Assets/BlogHeroes/thumb/DSPM.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: DSPM">
+        </button>
+        <button type="button" class="tile" data-title="Tribal Nations Targeted by Cyberattacks" data-full="Assets/BlogHeroes/full/TribalNationsTargetedByCyberattacks.webp">
+          <img src="Assets/BlogHeroes/thumb/TribalNationsTargetedByCyberattacks.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Tribal Nations Targeted by Cyberattacks">
+        </button>
+        <button type="button" class="tile" data-title="DSPM" data-full="Assets/BlogHeroes/full/DSPM2.webp">
+          <img src="Assets/BlogHeroes/thumb/DSPM2.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: DSPM">
+        </button>
+        <button type="button" class="tile" data-title="Cloud Security Risks" data-full="Assets/BlogHeroes/full/CloudSecurityRisks.webp">
+          <img src="Assets/BlogHeroes/thumb/CloudSecurityRisks.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Cloud Security Risks">
+        </button>
+        <button type="button" class="tile" data-title="LLM Risks" data-full="Assets/BlogHeroes/full/LLMRisks.webp">
+          <img src="Assets/BlogHeroes/thumb/LLMRisks.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: LLM Risks">
+        </button>
+        <button type="button" class="tile" data-title="LLM Data Classification" data-full="Assets/BlogHeroes/full/LLMDataClassification.webp">
+          <img src="Assets/BlogHeroes/thumb/LLMDataClassification.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: LLM Data Classification">
+        </button>
+        <button type="button" class="tile" data-title="Gartner Email Reprint" data-full="Assets/BlogHeroes/full/GartnerEmailReprint.webp">
+          <img src="Assets/BlogHeroes/thumb/GartnerEmailReprint.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Gartner Email Reprint">
+        </button>
+        <button type="button" class="tile" data-title="Gen AI as Business" data-full="Assets/BlogHeroes/full/GenAIAsBusiness.webp">
+          <img src="Assets/BlogHeroes/thumb/GenAIAsBusiness.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Gen AI as Business">
+        </button>
+        <button type="button" class="tile" data-title="What is DSPM" data-full="Assets/BlogHeroes/full/WhatIsDSPM.webp">
+          <img src="Assets/BlogHeroes/thumb/WhatIsDSPM.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: What is DSPM">
+        </button>
+        <button type="button" class="tile" data-title="Varonis in the Cloud" data-full="Assets/BlogHeroes/full/VaronisInTheCloud.webp">
+          <img src="Assets/BlogHeroes/thumb/VaronisInTheCloud.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Varonis in the Cloud">
+        </button>
+        <button type="button" class="tile" data-title="EU-AI-Act" data-full="Assets/BlogHeroes/full/EUAIAct.webp">
+          <img src="Assets/BlogHeroes/thumb/EUAIAct.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: EU-AI-Act">
+        </button>
+        <button type="button" class="tile" data-title="FedRAMP Announcement" data-full="Assets/BlogHeroes/full/FedRAMPAnnouncement.webp">
+          <img src="Assets/BlogHeroes/thumb/FedRAMPAnnouncement.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: FedRAMP Announcement">
+        </button>
+        <button type="button" class="tile" data-title="General Security" data-full="Assets/BlogHeroes/full/GeneralSecurity2.webp">
+          <img src="Assets/BlogHeroes/thumb/GeneralSecurity2.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: General Security">
+        </button>
+        <button type="button" class="tile" data-title="Generative AI Security" data-full="Assets/BlogHeroes/full/GenerativeAISecurity.webp">
+          <img src="Assets/BlogHeroes/thumb/GenerativeAISecurity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Generative AI Security">
+        </button>
+        <button type="button" class="tile" data-title="Fed CMMC" data-full="Assets/BlogHeroes/full/FedCMMC.webp">
+          <img src="Assets/BlogHeroes/thumb/FedCMMC.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Fed CMMC">
+        </button>
+        <button type="button" class="tile" data-title="German Channel Award" data-full="Assets/BlogHeroes/full/GermanChannelAward.webp">
+          <img src="Assets/BlogHeroes/thumb/GermanChannelAward.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: German Channel Award">
+        </button>
+        <button type="button" class="tile" data-title="High Risk Permissions" data-full="Assets/BlogHeroes/full/HighRiskPermissions.webp">
+          <img src="Assets/BlogHeroes/thumb/HighRiskPermissions.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: High Risk Permissions">
+        </button>
+        <button type="button" class="tile" data-title="Gen AI Security" data-full="Assets/BlogHeroes/full/GenAISecurity.webp">
+          <img src="Assets/BlogHeroes/thumb/GenAISecurity.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Gen AI Security">
+        </button>
+        <button type="button" class="tile" data-title="Cyber Resiliency Assessment" data-full="Assets/BlogHeroes/full/CyberResiliencyAssessment.webp">
+          <img src="Assets/BlogHeroes/thumb/CyberResiliencyAssessment.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Cyber Resiliency Assessment">
+        </button>
+        <button type="button" class="tile" data-title="Preventing PII Exposure in Box" data-full="Assets/BlogHeroes/full/PreventingPIIExposureInBox.webp">
+          <img src="Assets/BlogHeroes/thumb/PreventingPIIExposureInBox.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Preventing PII Exposure in Box">
+        </button>
+        <button type="button" class="tile" data-title="XZUtil" data-full="Assets/BlogHeroes/full/XZUtil.webp">
+          <img src="Assets/BlogHeroes/thumb/XZUtil.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: XZUtil">
+        </button>
+        <button type="button" class="tile" data-title="Model Poisoning" data-full="Assets/BlogHeroes/full/ModelPoisoning.webp">
+          <img src="Assets/BlogHeroes/thumb/ModelPoisoning.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Model Poisoning">
+        </button>
+        <button type="button" class="tile" data-title="Ransom Hub" data-full="Assets/BlogHeroes/full/RansomHub.webp">
+          <img src="Assets/BlogHeroes/thumb/RansomHub.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Ransom Hub">
+        </button>
+        <button type="button" class="tile" data-title="Ransomware in AWS" data-full="Assets/BlogHeroes/full/RansomwareInAWS.webp">
+          <img src="Assets/BlogHeroes/thumb/RansomwareInAWS.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Ransomware in AWS">
+        </button>
+        <button type="button" class="tile" data-title="What is MDDR" data-full="Assets/BlogHeroes/full/WhatIsMDDR.webp">
+          <img src="Assets/BlogHeroes/thumb/WhatIsMDDR.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: What is MDDR">
+        </button>
+        <button type="button" class="tile" data-title="RMM Tools" data-full="Assets/BlogHeroes/full/RMMTools.webp">
+          <img src="Assets/BlogHeroes/thumb/RMMTools.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: RMM Tools">
+        </button>
+        <button type="button" class="tile" data-title="NTLM Brute Force Attack" data-full="Assets/BlogHeroes/full/NTLMBruteForceAttack.webp">
+          <img src="Assets/BlogHeroes/thumb/NTLMBruteForceAttack.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: NTLM Brute Force Attack">
+        </button>
+        <button type="button" class="tile" data-title="Salesforce LPA" data-full="Assets/BlogHeroes/full/SalesforceLPA.webp">
+          <img src="Assets/BlogHeroes/thumb/SalesforceLPA.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Salesforce LPA">
+        </button>
+        <button type="button" class="tile" data-title="Unmasking Advanced Phishing Tactics" data-full="Assets/BlogHeroes/full/UnmaskingAdvancedPhishingTactics.webp">
+          <img src="Assets/BlogHeroes/thumb/UnmaskingAdvancedPhishingTactics.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Unmasking Advanced Phishing Tactics">
+        </button>
+        <button type="button" class="tile" data-title="Azure Firewall" data-full="Assets/BlogHeroes/full/AzureFirewall.webp">
+          <img src="Assets/BlogHeroes/thumb/AzureFirewall.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Azure Firewall">
+        </button>
+        <button type="button" class="tile" data-title="Apex Vulnerabilities in Salesforce" data-full="Assets/BlogHeroes/full/ApexVulnerabilitiesInSalesforce.webp">
+          <img src="Assets/BlogHeroes/thumb/ApexVulnerabilitiesInSalesforce.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Apex Vulnerabilities in Salesforce">
+        </button>
+        <button type="button" class="tile" data-title="AWS Ransomware" data-full="Assets/BlogHeroes/full/AWSRansomware.webp">
+          <img src="Assets/BlogHeroes/thumb/AWSRansomware.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AWS Ransomware">
+        </button>
+        <button type="button" class="tile" data-title="New M365 Feature and Risk" data-full="Assets/BlogHeroes/full/NewM365FeatureAndRisk.webp">
+          <img src="Assets/BlogHeroes/thumb/NewM365FeatureAndRisk.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: New M365 Feature and Risk">
+        </button>
+        <button type="button" class="tile" data-title="Cookie Bite" data-full="Assets/BlogHeroes/full/CookieBite.webp">
+          <img src="Assets/BlogHeroes/thumb/CookieBite.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Cookie Bite">
+        </button>
+        <button type="button" class="tile" data-title="Cloud Security Risks" data-full="Assets/BlogHeroes/full/CloudSecurityRisks2.webp">
+          <img src="Assets/BlogHeroes/thumb/CloudSecurityRisks2.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Cloud Security Risks">
+        </button>
+        <button type="button" class="tile" data-title="SVG Email Attack" data-full="Assets/BlogHeroes/full/SVGEmailAttack.webp">
+          <img src="Assets/BlogHeroes/thumb/SVGEmailAttack.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: SVG Email Attack">
+        </button>
+        <button type="button" class="tile" data-title="FBI IC3" data-full="Assets/BlogHeroes/full/FBIIC3.webp">
+          <img src="Assets/BlogHeroes/thumb/FBIIC3.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: FBI IC3">
+        </button>
+        <button type="button" class="tile" data-title="URL Rewriting Vendor Cloud Abuse" data-full="Assets/BlogHeroes/full/URLRewritingVendorCloudAbuse.webp">
+          <img src="Assets/BlogHeroes/thumb/URLRewritingVendorCloudAbuse.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: URL Rewriting Vendor Cloud Abuse">
+        </button>
+        <button type="button" class="tile" data-title="MS Direct Send Attacks" data-full="Assets/BlogHeroes/full/MSDirectSendAttacks.webp">
+          <img src="Assets/BlogHeroes/thumb/MSDirectSendAttacks.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: MS Direct Send Attacks">
+        </button>
+        <button type="button" class="tile" data-title="AI Identity Theft" data-full="Assets/BlogHeroes/full/AIIdentityTheft.webp">
+          <img src="Assets/BlogHeroes/thumb/AIIdentityTheft.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: AI Identity Theft">
+        </button>
+        <button type="button" class="tile" data-title="Deel Rippling" data-full="Assets/BlogHeroes/full/DeelRippling.webp">
+          <img src="Assets/BlogHeroes/thumb/DeelRippling.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Deel Rippling">
+        </button>
+        <button type="button" class="tile" data-title="Identity Crisis Report" data-full="Assets/BlogHeroes/full/IdentityCrisisReport.webp">
+          <img src="Assets/BlogHeroes/thumb/IdentityCrisisReport.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Identity Crisis Report">
+        </button>
+        <button type="button" class="tile" data-title="Mind Games" data-full="Assets/BlogHeroes/full/MindGames.webp">
+          <img src="Assets/BlogHeroes/thumb/MindGames.webp" width="400" height="212" loading="lazy" decoding="async" alt="Blog hero illustration: Mind Games">
+        </button>
+  </div>
+  <p class="sheet-hint">174 heroes &middot; Select one to view it full size</p>
+
+</main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Blog hero viewer" hidden>
+  <button type="button" class="lb-btn lb-close" id="lbClose" aria-label="Close viewer">&#10005;</button>
+  <button type="button" class="lb-btn lb-prev" id="lbPrev" aria-label="Previous hero">&#8249;</button>
+  <button type="button" class="lb-btn lb-next" id="lbNext" aria-label="Next hero">&#8250;</button>
+  <figure class="lb-figure">
+    <img id="lbImg" src="" alt="">
+    <figcaption class="lb-cap">
+      <span id="lbTitle"></span>
+      <span class="count" id="lbCount"></span>
+    </figcaption>
+  </figure>
+</div>
+
+<script>
+/* ============================================================
+   Contact-sheet lightbox
+   Every tile is a button carrying its own full-resolution source
+   and title, so the grid still works with JS off — this only adds
+   the enlarged view on top of it.
+   ============================================================ */
+(function(){
+  const sheet  = document.getElementById('sheet');
+  const box    = document.getElementById('lightbox');
+  const img    = document.getElementById('lbImg');
+  const title  = document.getElementById('lbTitle');
+  const count  = document.getElementById('lbCount');
+  const tiles  = Array.from(sheet.querySelectorAll('.tile'));
+
+  let index = -1;
+  let lastFocus = null;
+
+  function show(i){
+    index = (i + tiles.length) % tiles.length;
+    const t = tiles[index];
+    img.src = t.dataset.full;
+    img.alt = 'Blog hero illustration: ' + t.dataset.title;
+    title.textContent = t.dataset.title;
+    count.textContent = (index + 1) + ' / ' + tiles.length;
+  }
+
+  function open(i){
+    lastFocus = document.activeElement;
+    show(i);
+    box.hidden = false;
+    box.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lbClose').focus();
+  }
+
+  function close(){
+    box.classList.remove('is-open');
+    box.hidden = true;
+    document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+
+  tiles.forEach((t, i) => t.addEventListener('click', () => open(i)));
+
+  document.getElementById('lbClose').onclick = close;
+  document.getElementById('lbPrev').onclick  = () => show(index - 1);
+  document.getElementById('lbNext').onclick  = () => show(index + 1);
+
+  /* Clicking the backdrop closes; clicking the image or a control does not. */
+  box.addEventListener('click', e => { if (e.target === box) close(); });
+
+  document.addEventListener('keydown', e => {
+    if (box.hidden) return;
+    if (e.key === 'Escape')     { close(); }
+    else if (e.key === 'ArrowLeft')  { show(index - 1); }
+    else if (e.key === 'ArrowRight') { show(index + 1); }
+    else if (e.key === 'Tab') {
+      /* Keep focus inside the dialog while it is open. */
+      const f = box.querySelectorAll('button');
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { first.focus(); }
+      else return;
+    }
+    else return;
+    e.preventDefault();
+  });
+})();
+</script>
+</body>
+</html>

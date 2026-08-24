@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dawn Dorville — Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Source: Figma node 23:2 "Work" (1440 x 3936)
+
+     Frame 1440 wide, content column 1320 inset 60px each side.
+     (Figma draws the content frame at 1322 / inset 59 — the extra
+     2px is a stray in the file; 1320/60 is used here so the header
+     lands on the same pixels as ctf_1.html when navigating.)
+
+     Vertical rhythm inside the content column is uniform: every
+     project row is separated by exactly 100px.
+     ============================================================ */
+
+  :root{
+    --page-pad: 60px;
+    --content-w: 1320px;
+
+    --gray: #878787;
+    --nav-gray: #919191;
+
+    /* Every thumbnail frame shares this treatment */
+    --card-radius: 10px;
+    --card-bg: linear-gradient(180deg, #1f211b 0%, #101010 100%);
+    --card-flat: #101010;
+
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', ui-monospace, monospace;
+    --body: 'Inter', sans-serif;
+
+    /* Project titles are set solid in Figma (leading-none) */
+    --title-lh: 1;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:#000;
+    color:#fff;
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x:hidden;   /* the Meet Pixel dragonfly bleeds past the left margin */
+  }
+  img{ display:block; }
+
+  .container{
+    width:100%;
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin:0 auto;
+    padding: 0 var(--page-pad);
+  }
+
+  /* ============ Header ============ */
+  /* `.container` sets a `padding` shorthand, and a class selector outranks a
+     bare `header` one — so the top padding has to be set at matching
+     specificity or it gets zeroed out. Same trap as `main.container` below. */
+  header.container{ padding-top:var(--page-pad); }
+  .header-inner{ display:flex; align-items:center; justify-content:space-between; }
+  .logo{
+    font-family:var(--body); font-weight:600; font-size:20px;
+    color:#fff; text-decoration:none;
+  }
+  nav{ display:flex; align-items:center; gap:40px; }
+  nav a{ text-decoration:none; white-space:nowrap; }
+  /* Header (Figma node 247:1374) — Work/Resume share one style: Inter
+     Regular, #919191, uppercase, 3.2px tracking. Figma's component has no
+     hover variant, so the rollover state below (white, transitioning) is
+     ours — same treatment on both links, on every page. */
+  .nav-work,
+  .nav-resume{
+    font-family:var(--body); font-weight:400;
+    font-size:16px; letter-spacing:3.2px; text-transform:uppercase; color:var(--nav-gray);
+    transition:color .15s ease;
+  }
+  .nav-work:hover, .nav-work:focus-visible,
+  .nav-resume:hover, .nav-resume:focus-visible{
+    color:#fff;
+  }
+
+  /* ============ Content column ============ */
+  /* Header bottom sits 50px above the content frame. */
+  main.container{
+    margin-top:50px;
+    padding-bottom:222px;      /* frame height 3936 - content bottom 3714 */
+    display:flex; flex-direction:column; gap:100px;
+  }
+
+  /* ---- Intro ---- */
+  .intro{ display:flex; flex-direction:column; gap:10px; text-align:center; }
+  .intro h1{
+    font-family:var(--display); font-weight:400;
+    font-size:44px; line-height:var(--title-lh); color:#fff;
+    letter-spacing:4.4px; text-transform:uppercase;
+  }
+  .intro p{ font-size:20px; line-height:1.8; color:#fff; }
+
+  /* ============ Shared text block ============ */
+  .proj-text{ display:flex; flex-direction:column; gap:20px; }
+  .proj-head{ display:flex; flex-direction:column; gap:4px; }
+  .proj-head h2{
+    font-family:var(--display); font-weight:400;
+    font-size:44px; line-height:var(--title-lh); color:#fff;
+  }
+  .eyebrow{
+    font-family:var(--mono); font-weight:700; font-size:16px; line-height:1.8;
+    letter-spacing:3.2px; text-transform:uppercase; color:var(--gray);
+  }
+  .proj-text > p{ font-size:20px; line-height:1.8; color:var(--gray); }
+
+  /* ============ Row layouts ============ */
+  /* Wide row: 374 text + 40 gap + 908 image. Text is vertically centred
+     against the image in every instance in the file. */
+  .row-wide{
+    display:grid; grid-template-columns:374px 1fr; gap:40px;
+    align-items:center;
+  }
+  /* Card row: two equal cards, 42px apart. */
+  .row-cards{ display:grid; grid-template-columns:1fr 1fr; gap:42px; }
+  .card{ display:flex; flex-direction:column; gap:20px; }
+  .card-cap{ display:flex; flex-direction:column; gap:4px; }
+  .card-cap h2{
+    font-family:var(--display); font-weight:400;
+    font-size:44px; line-height:var(--title-lh); color:#fff;
+  }
+
+  /* ============ Thumbnail frames ============ */
+  .thumb{
+    position:relative;
+    border-radius:var(--card-radius);
+    background:var(--card-bg);
+    overflow:hidden;
+  }
+  .thumb-wide{ aspect-ratio:908 / 438; }
+  .thumb-card{ aspect-ratio:640 / 438; background:var(--card-flat); }
+
+  /* Inner artwork is positioned in percentages of the frame so the whole
+     composition scales with the column. Percentages are the Figma pixel
+     offsets divided by the frame size. */
+  .thumb .fill{ position:absolute; }
+  .thumb .fill img,
+  .thumb .fill video{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+
+  /* -- VTL Branding: 1320x700 image pinned top-left of a 908x438 window --
+     object-position pins the crop itself to the top-left corner too. On
+     desktop the box's aspect exactly matches the source image's, so cover
+     never actually has anything to crop; on mobile, where the box's aspect
+     no longer matches, this is what stops the crop from eating into the
+     left edge (object-fit's default is to crop from the centre). */
+  .art-vtl{ left:0; top:0; width:145.3744%; height:159.8174%; }
+  .art-vtl img{ object-position:left top; }
+
+  /* -- Social media: 1609x525 image at (40,40) -- */
+  .art-social{ left:4.4053%; top:9.1324%; width:177.2026%; height:119.8630%; }
+
+  /* -- RSAC: 908x605 image pulled up 114px -- */
+  .art-rsac{ left:0; top:-26.0274%; width:100%; height:138.1279%; }
+
+  /* -- Ad templates: 640x438, exact fit -- */
+  .art-ad{ inset:0; width:100%; height:100%; }
+
+  /* -- Campaigns: video fills the card -- */
+  .art-campaigns{ inset:0; width:100%; height:100%; }
+
+  /* ============ Meet Pixel ============
+     The video is clipped to the card, but the three insects are siblings
+     of the clip and deliberately overhang it. The Campaigns card that
+     follows paints over the butterfly's right edge — same as in Figma,
+     where Page_Campaign2 is the later sibling. */
+  .thumb-pixel{ overflow:visible; background:transparent; }
+  .pixel-clip{
+    position:absolute; inset:0;
+    border-radius:var(--card-radius);
+    background:var(--card-flat);
+    overflow:hidden;
+  }
+  .art-pixel{ left:-44.5313%; top:-1.3699%; width:189.0625%; height:155.4795%; }
+
+  /* Each insect is an unrotated box (matching the Figma bounding box)
+     wrapping a smaller rotated square holding the artwork. */
+  .bug{ position:absolute; display:flex; align-items:center; justify-content:center; }
+  .bug > span{ display:block; }
+  .bug img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .bug-ladybug{ width:31.3914%; height:45.8687%; right:-9.6734%; bottom:18.2854%; }
+  .bug-ladybug > span{ width:75.6656%; aspect-ratio:1; transform:rotate(24.15deg); }
+
+  .bug-dragonfly{ width:46.0613%; height:67.3041%; left:-17.3438%; top:-12.7854%; }
+  .bug-dragonfly > span{ width:71.7357%; aspect-ratio:1; transform:rotate(35.3deg); }
+
+  .bug-butterfly{ width:57.9620%; height:84.6934%; right:-17.4938%; bottom:-30.8128%; }
+  .bug-butterfly > span{ width:77.8003%; aspect-ratio:1; transform:rotate(-20.35deg); }
+
+  /* ============ Blog heroes ============
+     Eight cross-fading illustrations. The sources are 1560x828 (wider than
+     the 640x438 frame), so object-fit:cover scales them to the frame's full
+     height and trims the sides evenly — no vertical crop at all. That is
+     also exactly what Figma does: an 825-wide layer centred in a 640 window. */
+  .art-blog{
+    inset:0; width:100%; height:100%;
+    opacity:0; transition:opacity .9s ease;
+  }
+  .art-blog.is-on{ opacity:1; }
+
+  /* ============ CTF thumbnail (parallax storm scene) ============
+     Built from the Figma StormyWeather group (node 524:6395). The frame
+     clips to a 908x438 visible area; every placement below is a
+     percentage of that area, taken from each node's render bounds.
+     Artwork is exported at 2x and lives in Assets/Storm. */
+  .storm{ position:absolute; inset:0; background:#000; }
+  .storm-stage{ position:absolute; inset:0; will-change:transform; }
+  .storm .depth{ position:absolute; inset:0; will-change:transform; }
+  .storm .depth img{
+    position:absolute; display:block; width:100%; height:100%;
+    image-rendering:pixelated;
+  }
+  .storm .obj{ position:absolute; }
+
+  /* -- back -- */
+  .storm .g-back{ z-index:1; }
+  .storm .sky{
+    position:absolute;
+    left:-4.6256%; top:-10.9589%; width:109.2511%; height:80%;
+    background:linear-gradient(180deg,
+      #000000 0%, #01201B 41.3%, #085A53 82.6%, #0DB76E 125%);
+  }
+  .storm .cloud-left { left:0%;       top:0%; width:35.0584%; height:19.7283%; }
+  .storm .cloud-right{ left:57.1586%; top:0%; width:42.8414%; height:21.1644%; }
+
+  .storm .bolt-2{ left:16.2996%; top:13.4703%; width:8.0396%;  height:33.3333%; opacity:0;
+                  animation:storm-flash-a 8s ease-in-out infinite 1.4s; }
+  .storm .bolt-3{ left:60.3932%; top:16.8379%; width:11.2852%; height:27.0890%; opacity:0;
+                  animation:storm-flash-b 6.5s ease-in-out infinite; }
+
+  @keyframes storm-flash-a{ 0%,90%,100%{opacity:0;} 91%{opacity:1;} 92%{opacity:.15;} 93%{opacity:1;} 94.5%{opacity:0;} }
+  @keyframes storm-flash-b{ 0%,92%,100%{opacity:0;} 93%{opacity:1;} 94%{opacity:.2;}  95%{opacity:1;} 96.5%{opacity:0;} }
+
+  /* One sky wash per bolt, on that bolt's exact timing, sitting behind the
+     clouds so they stay dark silhouettes lit from behind. */
+  .storm .sky-flash{
+    position:absolute; left:0; top:0; width:100%; height:60%;
+    background:#cfeee0; opacity:0; pointer-events:none; mix-blend-mode:screen;
+  }
+  .storm .sky-flash.for-bolt-2{ animation:storm-sky-a 8s ease-in-out infinite 1.4s; }
+  .storm .sky-flash.for-bolt-3{ animation:storm-sky-b 6.5s ease-in-out infinite; }
+
+  @keyframes storm-sky-a{ 0%,90%,100%{opacity:0;} 91%{opacity:.18;} 92%{opacity:.05;} 93%{opacity:.16;} 94.5%{opacity:0;} }
+  @keyframes storm-sky-b{ 0%,92%,100%{opacity:0;} 93%{opacity:.20;} 94%{opacity:.06;} 95%{opacity:.18;} 96.5%{opacity:0;} }
+
+  /* -- middle -- */
+  .storm .g-middle{ z-index:5; }
+  .storm .ocean{
+    position:absolute; left:-4.6256%; top:46.8037%;
+    width:109.2511%; height:40%;
+    background:#0C372D; overflow:hidden;
+  }
+  .storm .ocean::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(255,255,255,.05), transparent 45%);
+    animation:storm-shimmer 5s ease-in-out infinite;
+  }
+  @keyframes storm-shimmer{ 0%,100%{opacity:.35;} 50%{opacity:.85;} }
+
+  /* -- front -- */
+  .storm .g-front{ z-index:10; }
+  .storm .beach{
+    position:absolute; left:-4.6256%; top:66.6667%;
+    width:109.2511%; height:52%;
+    background:#424A25;
+  }
+  /* Rocks sit in front of the sand, each nudged 30px (3.304%) further
+     outboard than its Figma x so the outer silhouette always bleeds past
+     the frame edge across the layer's full 22px of travel. */
+  .storm .rocks-left { left:-3.3040%; top:30.4680%; width:27.5330%; height:61.6438%; }
+  .storm .rocks-right{ left:71.5859%; top:22.8744%; width:31.7181%; height:67.1050%; }
+
+  /* -- most front -- */
+  .storm .g-mostfront{ z-index:20; }
+  .storm .crab-b { left:72.1366%; top:76.2557%; width:14.5517%; height:11.6973%; }
+  .storm .bottle { left:59.3612%; top:64.1553%; width:12.4729%; height:17.8537%; }
+  .storm .crab-a { left:46.2555%; top:77.1689%; width:14.5517%; height:11.6973%; }
+  .storm .crab-c { left:60.6828%; top:83.7900%; width:14.5517%; height:11.6973%; }
+  .storm .pixel  { left:25.7945%; top:53.8813%; width:17.1498%; height:36.4414%; }
+
+  /* ============ Link affordance ============ */
+  a.thumb-link{
+    display:block; text-decoration:none; color:inherit;
+    transition:transform .45s cubic-bezier(.2,.7,.3,1);
+  }
+  a.thumb-link:focus-visible{ outline:2px solid #0DB76E; outline-offset:6px; border-radius:12px; }
+
+  /* ============ Responsive ============ */
+  @media (max-width:1100px){
+    :root{ --page-pad:40px; }
+    .row-wide{ grid-template-columns:300px 1fr; gap:32px; }
+  }
+  @media (max-width:880px){
+    :root{ --page-pad:28px; }
+    .header-inner{ flex-wrap:wrap; gap:16px; }
+    nav{ gap:24px; }
+    .row-wide{ grid-template-columns:1fr; gap:24px; }
+    .row-cards{ grid-template-columns:1fr; gap:64px; }
+    main.container{ gap:80px; padding-bottom:120px; }
+    .intro h1, .proj-head h2, .card-cap h2{ font-size:32px; }
+    .intro p, .proj-text > p{ font-size:17px; }
+    /* Thumbnail leads, title follows; the longer blurb is dropped entirely
+       so the mobile card reads as image + title + eyebrow only. Visual
+       order only (via `order`) — DOM order is untouched, so the title
+       still comes right after the image for anyone reading linearly. */
+    .row-wide .thumb-wide,
+    .row-wide > a.thumb-link{ order:-1; }
+    .proj-text > p{ display:none; }
+    /* Match the wide thumbnails (VTL Branding, Breach at the Beach, Social
+       media, RSAC) to the same 640:438 frame the card thumbnails already
+       use, so every thumbnail on mobile is the same shape. */
+    .thumb-wide{ aspect-ratio:640 / 438; }
+    /* The storm scene is a pixel-art composition, not a photo — its sprites
+       are plain width/height:100% (no object-fit), positioned as percentages
+       of a 908:438 box. Simply stretching the frame taller would stretch
+       every sprite with it. Instead the scene keeps its native 908:438 shape
+       and is centred at the frame's full height; the frame's overflow:hidden
+       crops the sides, same effect as object-fit:cover but for the whole
+       composition rather than a single image. */
+    .storm{
+      inset:auto; top:0; left:50%; transform:translateX(-50%);
+      height:100%; aspect-ratio:908 / 438;
+    }
+    /* Rocks pulled 110px (of the scene's 908px design width) in toward the
+       centre in total: the original 60px, plus 50px more. */
+    .storm .rocks-left { left:8.8105%; }
+    .storm .rocks-right{ left:59.4714%; }
+    /* VTL Branding artwork fills the frame's full width, still pinned to
+       the top-left corner. Height keeps the same height:width proportion
+       as the base rule (159.8174/145.3744 ≈ 1.0994) so the crop framing
+       matches desktop, just scaled up to fill the narrower mobile frame. */
+    .art-vtl{ width:100%; height:109.94%; }
+    /* The insects stay anchored to the thumbnail frame's edges, same as
+       desktop — on mobile that means they're allowed to bleed off the
+       edge of the screen rather than being pulled inward to stay clear
+       of it. */
+  }
+  @media (max-width:560px){
+    :root{ --page-pad:20px; }
+    .intro h1, .proj-head h2, .card-cap h2{ font-size:26px; }
+    .eyebrow{ font-size:13px; letter-spacing:2.4px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .storm .bolt-2, .storm .bolt-3,
+    .storm .sky-flash, .storm .ocean::after{ animation:none; }
+    .storm .bolt-2, .storm .bolt-3{ opacity:1; }
+    .art-blog{ transition:none; }
+    a.thumb-link{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="container">
+  <div class="header-inner">
+    <a class="logo" href="index.html">Dawn Dorville</a>
+    <nav>
+      <a class="nav-work" href="index.html">Work</a>
+      <a class="nav-resume" href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ============ Intro ============ -->
+  <section class="intro">
+    <h1>Multi-disciplinary designer</h1>
+    <p>with a focus on problem solving, building systems, and expanding creative opportunities.</p>
+  </section>
+
+  <!-- ============ VTL Branding ============ -->
+  <section class="row-wide">
+    <div class="proj-text">
+      <div class="proj-head">
+        <h2>VTL Branding</h2>
+        <p class="eyebrow">Branding for Varonis Threat Labs</p>
+      </div>
+      <p>Branding for the internal threat research team differentiates it from the Varonis universe.</p>
+    </div>
+    <a class="thumb-link" href="vtl-portfolio.html" aria-label="VTL Branding — case study">
+      <div class="thumb thumb-wide">
+        <div class="fill art-vtl">
+          <img src="Assets/Work/VTLBrandElements.png" alt="Varonis Threat Labs brand elements — logo lockups, colour and type specimens.">
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ============ Breach at the Beach (CTF) ============ -->
+  <section class="row-wide">
+    <div class="proj-text">
+      <div class="proj-head">
+        <h2>Breach at the Beach</h2>
+        <p class="eyebrow">CTF game</p>
+      </div>
+      <p>A fun beach-themed Capture the Flag game that features Pixel, the VTL mascot.</p>
+    </div>
+
+    <a class="thumb-link" href="ctf_1.html" aria-label="Breach at the Beach — CTF game case study">
+      <div class="thumb thumb-wide">
+        <div class="storm" id="storm">
+          <div class="storm-stage" id="stormStage">
+
+            <!-- back: sky -> flashes -> bolts -> clouds -->
+            <div class="depth g-back" data-depth="5">
+              <div class="sky"></div>
+              <div class="sky-flash for-bolt-2"></div>
+              <div class="sky-flash for-bolt-3"></div>
+              <div class="obj bolt-2"      data-asset="bolt2"></div>
+              <div class="obj bolt-3"      data-asset="bolt3"></div>
+              <div class="obj cloud-left"  data-asset="cloudLeft"></div>
+              <div class="obj cloud-right" data-asset="cloudRight"></div>
+            </div>
+
+            <div class="depth g-middle" data-depth="20">
+              <div class="ocean"></div>
+            </div>
+
+            <div class="depth g-front" data-depth="44">
+              <div class="beach"></div>
+              <div class="obj rocks-left"  data-asset="rocksLeft"></div>
+              <div class="obj rocks-right" data-asset="rocksRight"></div>
+            </div>
+
+            <div class="depth g-mostfront" data-depth="72">
+              <div class="obj crab-b" data-asset="crab"></div>
+              <div class="obj bottle" data-asset="bottle"></div>
+              <div class="obj crab-a" data-asset="crab"></div>
+              <div class="obj crab-c" data-asset="crab"></div>
+              <div class="obj pixel"  data-asset="pixel"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ============ Meet Pixel + Campaigns ============ -->
+  <section class="row-cards">
+    <div class="card">
+      <a class="thumb-link" href="meetpixel.html" aria-label="Meet Pixel — brand character social debut case study">
+        <div class="thumb thumb-card thumb-pixel">
+          <div class="pixel-clip">
+            <div class="fill art-pixel">
+              <video src="Assets/Work/Pixel.mp4" autoplay muted loop playsinline
+                     aria-label="Pixel, the Varonis Threat Labs mascot, animated in a lab setting"></video>
+            </div>
+          </div>
+          <span class="bug bug-ladybug"><span><img src="Assets/Work/Insect_Ladybug.png" alt=""></span></span>
+          <span class="bug bug-dragonfly"><span><img src="Assets/Work/Insect_Dragonfly.png" alt=""></span></span>
+          <span class="bug bug-butterfly"><span><img src="Assets/Work/Insect_Butterfly.png" alt=""></span></span>
+        </div>
+      </a>
+      <div class="card-cap">
+        <h2>Meet Pixel</h2>
+        <p class="eyebrow">Social activation</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <a class="thumb-link" href="campaigns.html" aria-label="Campaigns — for acquisitions + product launches case study">
+        <div class="thumb thumb-card">
+          <div class="fill art-campaigns">
+            <video src="Assets/Work/Thumbnail_Campaigns.mp4" autoplay muted loop playsinline
+                   aria-label="Campaign key visuals for acquisitions and product launches"></video>
+          </div>
+        </div>
+      </a>
+      <div class="card-cap">
+        <h2>Campaigns</h2>
+        <p class="eyebrow">For acquisitions + product launches</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Social media ============ -->
+  <section class="row-wide">
+    <div class="proj-text">
+      <div class="proj-head">
+        <h2>Social media</h2>
+        <p class="eyebrow">Templates built to scale</p>
+      </div>
+      <p>Easy to use templates built in Canva for frequently posted content, alleviating production work for the creative team.</p>
+    </div>
+    <a class="thumb-link" href="social-media.html" aria-label="Social media — templates built to scale case study">
+      <div class="thumb thumb-wide">
+        <div class="fill art-social">
+          <img src="Assets/Work/SocialMedia.png" alt="A grid of social media templates for webinars, quotes and case studies.">
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ============ RSAC ============ -->
+  <section class="row-wide">
+    <div class="proj-text">
+      <div class="proj-head">
+        <h2>RSAC</h2>
+        <p class="eyebrow">Flagship booth graphics</p>
+      </div>
+      <p>Graphics for the 2024 &ndash; 2026 flagship booths.</p>
+    </div>
+    <a class="thumb-link" href="rsac.html" aria-label="RSAC — flagship booth graphics case study">
+      <div class="thumb thumb-wide">
+        <div class="fill art-rsac">
+          <img src="Assets/Work/RSAC.jpg" alt="The Varonis flagship booth at RSA Conference.">
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ============ Blog heroes + Ad templates ============ -->
+  <section class="row-cards">
+    <div class="card">
+      <a class="thumb-link" href="blog-heroes.html" aria-label="Blog heroes — custom illustrations case study">
+      <div class="thumb thumb-card" id="blogThumb">
+        <div class="fill art-blog is-on"><img src="Assets/Work/Blog_StormStealer.png" alt="Blog hero illustration: Storm Stealer."></div>
+        <div class="fill art-blog"><img src="Assets/Work/Blog_WhatIsIAM.png" alt=""></div>
+        <div class="fill art-blog"><img src="Assets/Work/Blog_Agentforce.png" alt=""></div>
+        <div class="fill art-blog"><img src="Assets/Work/Blog_Telemetry.png" alt=""></div>
+        <div class="fill art-blog"><img src="Assets/Work/Blog_DirectSend.png" alt=""></div>
+        <div class="fill art-blog"><img src="Assets/Work/Blog_GoIssue.png" alt=""></div>
+        <div class="fill art-blog"><img src="Assets/Work/Blog_CloudRisks.png" alt=""></div>
+        <div class="fill art-blog"><img src="Assets/Work/Blog_BigBets2025.png" alt=""></div>
+      </div>
+      </a>
+      <div class="card-cap">
+        <h2>Blog heroes</h2>
+        <p class="eyebrow">Custom illustrations</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <a class="thumb-link" href="ad-templates.html" aria-label="Ad templates — Figma Buzz templates case study">
+        <div class="thumb thumb-card">
+          <div class="fill art-ad">
+            <img src="Assets/Work/AdTemplates.png" alt="Figma Buzz ad templates.">
+          </div>
+        </div>
+      </a>
+      <div class="card-cap">
+        <h2>Ad templates</h2>
+        <p class="eyebrow">Figma Buzz Templates</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ============================================================
+   CTF thumbnail — parallax storm scene
+   Artwork exported from Figma at 2x, living in Assets/Storm.
+   ============================================================ */
+(function(){
+  const ASSET_BASE = 'Assets/Storm/';
+  const ASSETS = {
+    cloudLeft  : ASSET_BASE + 'Storm_Cloud_Left.png',
+    cloudRight : ASSET_BASE + 'Storm_Cloud_Right.png',
+    bolt2      : ASSET_BASE + 'Storm_Lightning2.png',
+    bolt3      : ASSET_BASE + 'Storm_Lightning3.png',
+    rocksLeft  : ASSET_BASE + 'Storm_Rocks_Left.png',
+    rocksRight : ASSET_BASE + 'Stormy_Rocks_Right.png',
+    pixel      : ASSET_BASE + 'Pixel_Sunglasses.png',
+    crab       : ASSET_BASE + 'Crab1.png',
+    bottle     : ASSET_BASE + 'Bottle.png'
+  };
+
+  document.querySelectorAll('.storm .obj[data-asset]').forEach(el => {
+    const img = document.createElement('img');
+    img.alt = '';
+    img.decoding = 'async';
+    img.src = ASSETS[el.dataset.asset];
+    el.appendChild(img);
+  });
+
+  /* Pointer (desktop) / tilt (mobile) gives x+y offset; the frame's scroll
+     position through the viewport adds more y. Both feed the same per-layer
+     depth value, so they combine smoothly. */
+  const wrap   = document.getElementById('storm');
+  const stage  = document.getElementById('stormStage');
+  if (!wrap || !stage) return;
+
+  const layers = Array.from(wrap.querySelectorAll('.depth'));
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const SCROLL_STRENGTH = 0.34;
+  const POINTER_Y_SCALE = 0.55;
+
+  let targetX = 0, targetY = 0, curX = 0, curY = 0;
+  let curScroll = 0;
+
+  /* -1 below the viewport, 0 centred, +1 scrolled above. */
+  function scrollProgress(){
+    const r  = wrap.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const centre = r.top + r.height / 2;
+    const p = (vh / 2 - centre) / (vh / 2 + r.height / 2);
+    return Math.max(-1, Math.min(1, p));
+  }
+
+  function frame(){
+    curX      += (targetX - curX) * 0.08;
+    curY      += (targetY - curY) * 0.08;
+    curScroll += (scrollProgress() - curScroll) * 0.10;
+
+    layers.forEach(layer => {
+      const d  = parseFloat(layer.dataset.depth || '0');
+      const tx = curX * d;
+      const ty = curY * d * POINTER_Y_SCALE + curScroll * d * SCROLL_STRENGTH;
+      layer.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+    });
+
+    stage.style.transform =
+      `perspective(1200px) rotateX(${-curY * 2}deg) rotateY(${curX * 2}deg)`;
+
+    requestAnimationFrame(frame);
+  }
+
+  wrap.addEventListener('mousemove', e => {
+    const r = wrap.getBoundingClientRect();
+    targetX = ((e.clientX - r.left) / r.width)  - 0.5;
+    targetY = ((e.clientY - r.top)  / r.height) - 0.5;
+  });
+  wrap.addEventListener('mouseleave', () => { targetX = 0; targetY = 0; });
+
+  if (window.DeviceOrientationEvent){
+    window.addEventListener('deviceorientation', e => {
+      if (e.gamma === null || e.beta === null) return;
+      targetX = Math.max(-0.5, Math.min(0.5, e.gamma / 45));
+      targetY = Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 45));
+    });
+  }
+
+  if (!reduce){
+    frame();
+  } else {
+    curScroll = scrollProgress();
+    layers.forEach(layer => {
+      const d = parseFloat(layer.dataset.depth || '0');
+      layer.style.transform = `translate3d(0, ${curScroll * d * SCROLL_STRENGTH}px, 0)`;
+    });
+  }
+})();
+
+/* ============================================================
+   Blog heroes — cross-fade the eight illustrations
+   ============================================================ */
+(function(){
+  const thumb = document.getElementById('blogThumb');
+  if (!thumb) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const slides = Array.from(thumb.querySelectorAll('.art-blog'));
+  if (slides.length < 2) return;
+
+  let i = 0, timer = null;
+
+  function advance(){
+    slides[i].classList.remove('is-on');
+    i = (i + 1) % slides.length;
+    slides[i].classList.add('is-on');
+  }
+
+  /* Only run while the card is actually on screen. */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !timer){
+        timer = setInterval(advance, 2600);
+      } else if (!entry.isIntersecting && timer){
+        clearInterval(timer);
+        timer = null;
+      }
+    });
+  }, { threshold: 0.25 });
+
+  io.observe(thumb);
+})();
+
+/* ============================================================
+   Videos — pause off-screen so two loops aren't always decoding
+   ============================================================ */
+(function(){
+  const vids = Array.from(document.querySelectorAll('main video'));
+  if (!vids.length || !('IntersectionObserver' in window)) return;
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const v = entry.target;
+      if (entry.isIntersecting){
+        const p = v.play();
+        if (p && p.catch) p.catch(() => {});
+      } else {
+        v.pause();
+      }
+    });
+  }, { threshold: 0.1 });
+
+  vids.forEach(v => io.observe(v));
+})();
+</script>
+
+</body>
+</html>

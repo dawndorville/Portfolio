@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VTL Capture the Flag — Dawn Dorville</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --page-pad: 60px;
+    --content-w: 1320px;
+    --gray: #878787;
+    --nav-gray: #919191;
+    --frame-bg: #292922;
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', monospace;
+    --body: 'Inter', sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:#000;
+    color:#fff;
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x:hidden;
+  }
+  img{ display:block; }
+
+  .container{
+    width:100%;
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin:0 auto;
+    padding: 0 var(--page-pad);
+  }
+
+  /* ============ Header ============ */
+  /* `.container` sets a `padding` shorthand, and a class selector outranks a
+     bare `header` one — so the top padding has to be set at matching
+     specificity or the shorthand zeroes it and the header sits flush against
+     the top edge. Same fix as `main.container`'s margin-top below. */
+  header.container{ padding-top:var(--page-pad); }
+  .header-inner{
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo{
+    font-family:var(--body); font-weight:600; font-size:20px;
+    color:#fff;
+    text-decoration:none;
+  }
+  nav{ display:flex; align-items:center; gap:40px; }
+  nav a{ text-decoration:none; white-space:nowrap; }
+  /* Header (Figma node 247:1374) — Work/Resume share one style: Inter
+     Regular, #919191, uppercase, 3.2px tracking. Figma's component has no
+     hover variant, so the rollover state below (white, transitioning) is
+     ours — same treatment on both links, on every page. */
+  .nav-work,
+  .nav-resume{
+    font-family:var(--body); font-weight:400;
+    font-size:16px; letter-spacing:3.2px; text-transform:uppercase; color:var(--nav-gray);
+    transition:color .15s ease;
+  }
+  .nav-work:hover, .nav-work:focus-visible,
+  .nav-resume:hover, .nav-resume:focus-visible{
+    color:#fff;
+  }
+
+  /* ============ Project intro ============ */
+  .intro{ margin-top:50px; display:flex; flex-direction:column; gap:15px; }
+  .intro h1{
+    font-family:var(--display); font-weight:400;
+    font-size:60px; line-height:1; color:var(--gray);
+  }
+  .intro .sub{
+    font-family:var(--mono); font-weight:700;
+    font-size:20px; line-height:1.4; margin-top:2px; letter-spacing:4px;
+    text-transform:uppercase; color:var(--gray);
+  }
+  .intro .blurb{
+    font-size:16px; line-height:1.8; color:#fff; max-width:700px;
+  }
+
+  /* ============ Sections ============ */
+  /* main also carries .container, whose `margin:0 auto` shorthand outranks a bare
+     `main` selector — so the top margin has to be set at matching specificity. */
+  main.container{ margin-top:140px; padding-bottom:200px; display:flex; flex-direction:column; gap:200px; }
+  .section{ display:flex; flex-direction:column; gap:40px; }
+  .section-details{ display:flex; gap:30px; align-items:stretch; }
+  .side-label{
+    writing-mode: vertical-rl;
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; text-transform:uppercase; color:var(--gray);
+    /* In vertical writing mode line-height sets the column's width. Figma's
+       label column is 11px (the cap-height of the rotated text), not the 16px
+       a full em box would give — the extra 5px pushed the rule and the whole
+       text column out of alignment. */
+    line-height:11px; flex-shrink:0;
+  }
+  /* Figma draws this as a zero-width vector with a 3px stroke, so the stroke
+     bleeds 1.5px either side and the line sits centred on the 30px gutter
+     rather than consuming width of its own. */
+  .rule{
+    width:3px; margin:0 -1.5px; background:#282621;
+    align-self:stretch; flex-shrink:0;
+  }
+  .section-text{ display:flex; flex-direction:column; gap:3px; max-width:660px; }
+  .section-text h2{
+    font-family:var(--display); font-weight:400;
+    /* 1.25 == Figma's 30px title box at 24px. Pinned rather than left as
+       `normal`, which resolves off the font metrics and drifts by platform. */
+    font-size:24px; line-height:1.25; letter-spacing:2.4px;
+    text-transform:uppercase; color:#fff;
+  }
+  .section-text p{ font-size:16px; line-height:1.8; color:#fff; }
+
+  /* ============ Section 1: Weather scene ============
+     Rebuilt from the Figma WeatherScene (node 240:61610). Two complete,
+     pixel-identical scenes — SunnyWeather and StormyWeather — are stacked and
+     cross-faded; every sprite pair shares a viewBox, so each element dissolves
+     into its counterpart in place. Rain and lightning ride on top of the
+     stormy layer. Art is 1340x515 bleeding past a 1320x500 frame, exactly as
+     in the Figma file. */
+  .weather-frame{
+    position:relative; width:100%; aspect-ratio:1320/500;
+    border-radius:10px; overflow:hidden;
+    background:#292922; user-select:none;
+  }
+  /* The art layer, 1340x515, offset so it bleeds 10px each side and 3px on top */
+  .wx{
+    position:absolute; left:-0.7576%; top:-0.6%; width:101.5152%; height:103%;
+    transition: opacity 3s ease;
+  }
+  .wx-sunny{ opacity:1; }
+  .wx-stormy{ opacity:0; }
+  .weather-frame.stormy .wx-sunny{ opacity:0; }
+  .weather-frame.stormy .wx-stormy{ opacity:1; }
+
+  .wx .band, .wx .el{ position:absolute; }
+  .wx .band{ left:0; width:100%; }
+  .wx .el{ display:block; }
+  /* Vector pixel art: never smooth it when it scales */
+  .wx .el img{ width:100%; height:100%; display:block; image-rendering:pixelated; }
+
+  /* Flat bands: sky, ocean, sand */
+  .wx .sky{ top:0.0000%; height:58.8350%; }
+  .wx .ocean{ top:49.1262%; height:23.6893%; }
+  .wx .sand{ top:66.0194%; height:33.9806%; }
+
+  .wx-sunny .sky{ background:linear-gradient(180deg,#2CB59B 0%,#6EE5A1 33%,#9AF983 66%,#C9FED4 100%); }
+  .wx-sunny .ocean{ background:#1D907F; }
+  .wx-sunny .sand{ background:#DEB771; }
+  .wx-stormy .sky{ background:linear-gradient(180deg,#000 0%,#01201B 33%,#085A53 66%,#0DB76E 100%); }
+  .wx-stormy .ocean{ background:#0C372D; }
+  .wx-stormy .sand{ background:#424A25; }
+
+  /* Sun — kept from the original scene, lives in the sunny sky. Core and glow
+     are one radial gradient sized in percent (rather than a px box-shadow) so
+     the sun scales with the rest of the scene instead of ballooning when the
+     frame narrows. */
+  .wx-sunny .sun{
+    position:absolute; left:66.5672%; top:-18.02%;
+    width:20.8955%; aspect-ratio:1; border-radius:50%;
+    background: radial-gradient(circle,
+      #e5fdef 0%, #e5fdef 27%,
+      rgba(229,253,239,.55) 34%,
+      rgba(229,253,239,.18) 50%,
+      rgba(229,253,239,0) 70%);
+  }
+
+  /* Sprite placement — absolute Figma coordinates from the WeatherScene
+     rebuild, as percentages of the 1340x515 art layer so the scene scales
+     as one unit. */
+  .wx .cloud-left{ left:0.0000%; top:5.1546%; width:26.2687%; height:20.9709%; }
+  .wx .cloud-right{ right:0.7463%; top:0.6167%; width:43.6567%; height:26.7961%; }
+  .wx .bolt-2{ left:14.2537%; top:20.7767%; width:5.4478%; height:28.3495%; }
+  .wx .bolt-3{ left:57.7886%; top:24.0289%; width:7.6469%; height:23.0383%; }
+  .wx .rocks-left{ left:0.0000%; top:29.9905%; width:21.6418%; height:62.9126%; }
+  .wx .rocks-right{ right:0.7463%; top:23.0674%; width:25.8955%; height:68.5437%; }
+  .wx .crab-a{ left:40.7015%; top:73.2383%; width:11.8328%; height:11.9379%; }
+  .wx .crab-b{ left:61.7463%; top:72.3062%; width:11.8328%; height:11.9379%; }
+  /* Crab3 centred horizontally between Crab1 and Crab2 (its own centre on the
+     midpoint of theirs); vertical position untouched. All three are the same
+     width, so the gap between 1 and 2 is narrower than the crab itself — it is
+     centred on them rather than tucked in the space between. */
+  .wx .crab-c{ left:51.2239%; top:79.9955%; width:11.8328%; height:11.9379%; }
+  .wx .bottle{ left:51.3582%; top:59.9567%; width:10.1493%; height:18.2524%; }
+  .wx .pixel{ left:23.8060%; top:51.8014%; width:13.9552%; height:37.2816%; }
+
+  /* Lightning — the bolts sit in the sky, behind the ocean and rocks, and are
+     flashed on individually by the storm loop. */
+  .lightning-bolt{ opacity:0; transition:opacity .02s ease; }
+  .lightning-bolt.visible{ opacity:1; }
+
+  /* Rain */
+  .rain-container{
+    position:absolute; inset:0; pointer-events:none;
+    opacity:0; transition: opacity 2s ease; z-index:55;
+  }
+  .rain-container.active{ opacity:1; }
+  .rain-drop{
+    position:absolute; width:2px; height:20px;
+    background: linear-gradient(180deg, transparent, rgba(32, 228, 234, 0.8));
+    /* `backwards` matters: each drop is given a delay, and without a fill mode
+       it would sit at its untransformed position — top:0 — until the delay
+       elapsed, which stacked every drop against the top edge of the frame on
+       load. With `backwards` it holds the 0% keyframe (above the frame)
+       instead. The JS also uses negative delays so the rain starts mid-flow. */
+    animation: rain-fall 0.8s linear infinite backwards;
+  }
+  @keyframes rain-fall{
+    0%{ transform: translateY(-100px); opacity:1; }
+    100%{ transform: translateY(600px); opacity:0.3; }
+  }
+
+  /* Sky flash — fires with the bolts so the whole scene catches the light.
+     Weighted to the sky at the top and tinted to the storm's green, with a
+     fast attack and a slower decay so it reads as a strike rather than a
+     blink. */
+  .sky-flash{
+    position:absolute; inset:0; pointer-events:none; z-index:56;
+    opacity:0; transition: opacity .22s ease-out;
+    background: linear-gradient(180deg,
+      rgba(203,255,224,.62) 0%,
+      rgba(157,246,196,.34) 30%,
+      rgba(140,240,180,.12) 55%,
+      rgba(140,240,180,0) 100%);
+  }
+  .sky-flash.on{ opacity:1; transition-duration:.03s; }
+  /* ============ Section 2: Computer carousel ============ */
+  .stage-wrap{ width:100%; }
+  .stage{ transform-origin: top left; position:relative; }
+  .computer-stage{ width:1320px; height:616px; }
+  .computer{
+    position:absolute; left:230.5px; top:0; width:859px; height:616px;
+  }
+  .monitor{
+    position:absolute; left:0; top:0; width:859px; height:500px;
+    background:#282621;
+  }
+  .monitor-inner{
+    position:absolute; left:20px; top:20px; width:819px; height:460px;
+    background:#000; border-radius:2px;
+  }
+  .screen{
+    position:absolute; left:25px; top:25px; width:809px; height:450px;
+    overflow:hidden; background:#000;
+  }
+  .screen .slide{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; opacity:0; transition: opacity .55s ease;
+  }
+  .screen .slide.active{ opacity:1; }
+  .stand{
+    position:absolute; left:349px; top:499px; width:160px; height:84px;
+    background: linear-gradient(to bottom, #141310, #1b1a16);
+  }
+  .base-img{
+    position:absolute; left:279px; top:583px; width:300px; height:24px;
+  }
+  .base-img svg{ display:block; width:100%; height:100%; }
+  .base-bar{
+    position:absolute; left:279px; top:607px; width:300px; height:9px;
+    background:#282621;
+  }
+  .carousel-arrow{
+    position:absolute; top:516px; width:50px; height:50px;
+    /* #282621 is the same warm near-black the section rules use */
+    border-radius:50%; background:#282621; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: transform .15s ease, background .2s ease;
+    z-index:5;
+  }
+  .carousel-arrow:hover{ background:#3b382f; transform:scale(1.06); }
+  .carousel-arrow:active{ transform:scale(.96); }
+  .carousel-arrow:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+  .carousel-arrow.prev{ left:510px; }
+  .carousel-arrow.next{ left:760px; }
+  .carousel-arrow svg{ display:block; }
+
+  /* ============ Section 3 & 4: square rows ============ */
+  /* Always three across, scaling fluidly with the container. Widths are the
+     Figma tile widths expressed as a share of the 1320px content column
+     (410/1320, 328/1320) with the 40px gutter as 40/1320, so the row keeps
+     the design's proportions at any screen size instead of wrapping. */
+  .square-row{
+    display:flex; flex-wrap:nowrap; justify-content:flex-start; align-items:flex-start;
+    width:100%; gap:3.0303%;
+  }
+  .square{
+    width:31.0606%; flex:0 0 31.0606%; aspect-ratio:1/1;
+    position:relative; overflow:hidden;
+  }
+  .square img{ width:100%; height:100%; object-fit:cover; }
+  .square.square-bottom img{ object-position:bottom; }
+  .vegas-square{
+    width:24.8485%; flex:0 0 24.8485%; aspect-ratio:328/410;
+    position:relative; overflow:hidden;
+  }
+  .vegas-square img{ width:100%; height:100%; object-fit:cover; }
+
+  .event-photo-frame{
+    width:100%; height:646px; background:var(--frame-bg);
+    position:relative; overflow:hidden;
+  }
+  .coming-soon-fallback{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--display); font-weight:400; font-size:24px;
+    letter-spacing:2.4px; text-transform:uppercase; color:#fff; text-align:center;
+  }
+  .event-photo-crop{
+    position:absolute; left:0; top:-58px; width:100%; height:713px; overflow:hidden;
+  }
+  .event-photo-crop img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .event-media{ display:flex; flex-direction:column; gap:40px; }
+
+  /* ============ Section 5: Certificate & badges ============ */
+  .cert-stage{ width:1320px; height:568px; }
+  .cert-frame{
+    position:absolute; inset:0;
+    border-radius:10px;
+    background: linear-gradient(to bottom, #1f211b, #101010);
+    display:flex; align-items:center; padding:70px;
+  }
+  .cert-frame::before{
+    content:''; position:absolute; inset:0; border-radius:inherit;
+    background-image:
+      repeating-linear-gradient(to right, rgba(96,96,96,.12) 0px, rgba(96,96,96,.12) 1px, transparent 1px, transparent 30px),
+      repeating-linear-gradient(to bottom, rgba(96,96,96,.12) 0px, rgba(96,96,96,.12) 1px, transparent 1px, transparent 30px);
+    pointer-events:none;
+  }
+  .certificate{
+    width:642px; height:428px; flex-shrink:0; position:relative; z-index:1;
+  }
+  .certificate img{ width:100%; height:100%; object-fit:cover; }
+  .badge{
+    position:absolute; width:200px; height:200px;
+    cursor:grab; touch-action:none; z-index:2;
+    transition: filter .2s ease;
+    will-change: left, top;
+  }
+  /* Resting positions, moved off the elements so a breakpoint can restack
+     them. The drag script writes inline left/top, which outranks both. */
+  .badge-1{ left:782px;  top:26px;  }
+  .badge-2{ left:934px;  top:113px; }
+  .badge-3{ left:1016px; top:334px; }
+  .badge-4{ left:796px;  top:236px; }
+  .badge img{
+    width:100%; height:100%; object-fit:cover; pointer-events:none;
+    transition: transform .2s ease;
+  }
+  .badge.dragging{ cursor:grabbing; z-index:10; }
+  .badge.dragging img{
+    transform: scale(1.05) rotate(2deg);
+    filter: drop-shadow(0 14px 22px rgba(0,0,0,.5));
+  }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 1100px){
+    :root{ --page-pad: 40px; }
+  }
+  @media (max-width: 900px){
+    .intro h1{ font-size:40px; }
+    .intro .sub{ font-size:16px; letter-spacing:3.2px; }
+    main.container{ margin-top:140px; gap:120px; }
+    /* The image rows stay three across at every size — they scale, never stack. */
+    .event-photo-frame{ height:auto; aspect-ratio:1320/646; }
+    .event-photo-crop{ top:0; height:100%; }
+    nav{ gap:24px; }
+    .section-details{ gap:14px; }
+    .side-label{ font-size:12px; }
+    .section-text h2{ font-size:20px; }
+  }
+  @media (max-width: 880px){
+    :root{ --page-pad: 28px; }
+  }
+
+  /* Matches the VTL branding page, which drops the summary-to-first-heading
+     gap from 146px to 80px at this width (vtl-portfolio.html, .campaigns).
+     Holding 140px here left the gap wider than the 120px between the sections
+     below it, so the spacing read bigger than the hierarchy warranted. */
+  @media (max-width: 760px){
+    main.container{ margin-top:80px; }
+  }
+
+  /* ============ Mobile ============
+     700px is where the three-up image rows stop holding their own — each tile
+     lands under ~200px — so the phone layout takes over here. */
+  @media (max-width: 700px){
+    /* 1. Beach scene sits in a fixed 200px band. The art keeps its own
+       1340:515 aspect and is sized to *cover* that band, so it crops at the
+       edges instead of squashing: max() takes whichever of the two
+       dimensions needs to drive. 536.06px == 206px (103% of 200) x 1340/515,
+       the width required to cover the band from its height. */
+    .weather-frame{ height:200px; aspect-ratio:auto; }
+    .wx{
+      left:50%; top:50%; transform:translate(-50%,-50%);
+      width:max(101.5152%, 536.06px); height:auto;
+      aspect-ratio:1340/515;
+    }
+
+    /* Rock stacks come inward, in the same 1340-unit space the desktop
+       placement uses: the left stack 160px (11.9403%), the right 110px
+       (8.9553% total inset). At this width the scene is cropped to cover the
+       200px band, so roughly 93px of art is lost off each side — the left
+       stack is the wider of the two and needs the extra 50px to stay in
+       frame. */
+    .wx .rocks-left{ left:11.9403%; }
+    .wx .rocks-right{ right:8.9553%; }
+
+    /* 2. Computer fills the page: the stage crops to the computer's own 859px
+       instead of the full 1320 board, so the scaler maps it edge to edge. The
+       arrows are stage children, so they shift by the same 230.5px. */
+    .computer-stage{ width:859px; }
+    .computer{ left:0; }
+    .carousel-arrow.prev{ left:279.5px; }
+    .carousel-arrow.next{ left:529.5px; }
+
+    /* 3. Promo posts stack. Each keeps its own aspect ratio. */
+    .square-row.promo-row{ flex-wrap:wrap; gap:20px; }
+    .promo-row .square,
+    .promo-row .vegas-square{ flex:0 0 100%; width:100%; }
+
+    /* 4. Certificate over badges. The stage goes portrait, the certificate
+       grows to 88% of the frame width (vs 49% on desktop) and centres, and the
+       badges drop into a 2x2 grid beneath it — still draggable, since the drag
+       script writes inline left/top which outranks these rules. */
+    .cert-stage{ width:660px; height:930px; }
+    .cert-frame{ display:block; padding:40px; }
+    .certificate{ width:580px; height:387px; margin:0 auto; }
+    .badge-1{ left:120px; top:467px; }
+    .badge-2{ left:340px; top:467px; }
+    .badge-3{ left:120px; top:687px; }
+    .badge-4{ left:340px; top:687px; }
+  }
+
+  @media (max-width: 560px){
+    :root{ --page-pad: 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration:.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.2s !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="container">
+  <div class="header-inner">
+    <a class="logo" href="index.html">Dawn Dorville</a>
+    <nav>
+      <a class="nav-work" href="index.html">Work</a>
+      <a class="nav-resume" href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<section class="container intro">
+  <div>
+    <h1>VTL Capture the Flag</h1>
+    <p class="sub">campaign for the Varonis threat research team game</p>
+  </div>
+  <p class="blurb">Breach at the Beach is a story-driven CTF created by Varonis Threat Labs that drops security practitioners into a real-world cloud identity breach investigation.</p>
+</section>
+
+<main class="container">
+
+  <!-- ============ Section 1: Storm Scene Transition ============ -->
+  <section class="section">
+    <div class="section-details">
+      <span class="side-label">visuals</span>
+      <span class="rule"></span>
+      <div class="section-text">
+        <h2>Storm scene transition</h2>
+        <p>This scene was the basis for the look of the game. In this scene, Pixel (VTL team mascot and threat hunter), is visiting the beach when a storm rolls in. The characters were drawn pixel by pixel and the more complex scenery elements were created with Nano Banana, then running the visuals through a Figma Make program I created that would turn them into vectorized pixels and provide SVG downloads.</p>
+      </div>
+    </div>
+
+    <div class="weather-frame" id="weatherFrame" role="img" aria-label="Pixel-art beach scene that cycles between sunny weather and a rolling storm">
+      <!-- Sunny scene -->
+      <div class="wx wx-sunny" id="wxSunny">
+        <div class="band sky"><div class="sun"></div></div>
+        <div class="el cloud-left"><img src="Assets/Storm/Sunny_Cloud_Left.svg" alt=""></div>
+        <div class="el cloud-right"><img src="Assets/Storm/Sunny_Cloud_Right.svg" alt=""></div>
+        <div class="band ocean"></div>
+        <div class="band sand"></div>
+        <div class="el rocks-right"><img src="Assets/Storm/Sunny_Rocks_Right.svg" alt=""></div>
+        <div class="el rocks-left"><img src="Assets/Storm/Sunny_Rocks_Left.svg" alt=""></div>
+        <div class="el crab-b"><img src="Assets/Storm/Sunny_Crab2.svg" alt=""></div>
+        <div class="el bottle"><img src="Assets/Storm/Sunny_Bottle.svg" alt=""></div>
+        <div class="el crab-a"><img src="Assets/Storm/Sunny_Crab1.svg" alt=""></div>
+        <div class="el crab-c"><img src="Assets/Storm/Sunny_Crab3.svg" alt=""></div>
+        <div class="el pixel"><img src="Assets/Storm/Sunny_Pixel_Sunglasses.svg" alt="Pixel the cat"></div>
+      </div>
+
+      <!-- Stormy scene -->
+      <div class="wx wx-stormy" id="wxStormy">
+        <div class="band sky"></div>
+        <div class="el lightning-bolt bolt-2" id="bolt2"><img src="Assets/Storm/Stormy_Lightning2.svg" alt=""></div>
+        <div class="el lightning-bolt bolt-3" id="bolt3"><img src="Assets/Storm/Stormy_Lightning3.svg" alt=""></div>
+        <div class="el cloud-left"><img src="Assets/Storm/Stormy_Cloud_Left.svg" alt=""></div>
+        <div class="el cloud-right"><img src="Assets/Storm/Stormy_Cloud_Right.svg" alt=""></div>
+        <div class="band ocean"></div>
+        <div class="band sand"></div>
+        <div class="el rocks-right"><img src="Assets/Storm/Stormy_Rocks_Right.svg" alt=""></div>
+        <div class="el rocks-left"><img src="Assets/Storm/Stormy_Rocks_Left.svg" alt=""></div>
+        <div class="el crab-b"><img src="Assets/Storm/Stormy_Crab2.svg" alt=""></div>
+        <div class="el bottle"><img src="Assets/Storm/Stormy_Bottle.svg" alt=""></div>
+        <div class="el crab-a"><img src="Assets/Storm/Stormy_Crab1.svg" alt=""></div>
+        <div class="el crab-c"><img src="Assets/Storm/Stormy_Crab3.svg" alt=""></div>
+        <div class="el pixel"><img src="Assets/Storm/Stormy_Pixel_Sunglasses.svg" alt="Pixel the cat"></div>
+      </div>
+
+      <!-- Rain, over both scenes -->
+      <div class="rain-container" id="rain"></div>
+      <!-- Lightning flash, over everything -->
+      <div class="sky-flash" id="skyFlash"></div>
+    </div>
+  </section>
+
+  <!-- ============ Section 2: Game Branding ============ -->
+  <section class="section">
+    <div class="section-details">
+      <span class="side-label">UI</span>
+      <span class="rule"></span>
+      <div class="section-text">
+        <h2>Game branding</h2>
+        <p>Breach at the Beach featured a fully designed game experience complete with characters and it's own maze chase arcade style mini game.</p>
+      </div>
+    </div>
+
+    <div class="stage-wrap" id="computerWrap">
+      <div class="stage computer-stage">
+        <div class="computer">
+          <div class="monitor">
+            <div class="monitor-inner"></div>
+            <div class="screen" id="screen">
+              <img class="slide active" src="Assets/CTF/CTF_CrabDash_Game%201.png" alt="Crab Dash game screen">
+              <img class="slide" src="Assets/CTF/CTF_CrabDash_Challenges%201.png" alt="Crab Dash challenges screen">
+              <img class="slide" src="Assets/CTF/CTF_PopUp%201.png" alt="CTF pop-up screen">
+              <img class="slide" src="Assets/CTF/CTF_Challenges%201.png" alt="CTF challenges screen">
+            </div>
+          </div>
+          <div class="stand"></div>
+          <!-- Rectangle 2684 — the flared foot of the monitor stand (Figma node 221:189858) -->
+          <div class="base-img">
+            <svg viewBox="0 0 300 23.9611" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M69.5 0H230L300 23.9611H0L69.5 0Z" fill="#201E19"/>
+            </svg>
+          </div>
+          <div class="base-bar"></div>
+        </div>
+        <!-- Chevron geometry is Figma's Vector 1983 verbatim (nodes 345:52984 /
+             345:52986): 12x24 in the button's 50x50 box, 5px white stroke with
+             default butt caps and a mitred apex — that hard point is what gives
+             the arrow its shape. -->
+        <button type="button" class="carousel-arrow prev" id="prevBtn" aria-label="Previous screen">
+          <svg viewBox="0 0 50 50" width="50" height="50" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+            <path d="M31 13L19 24.6394L31 37" stroke="#fff" stroke-width="5" fill="none"/>
+          </svg>
+        </button>
+        <button type="button" class="carousel-arrow next" id="nextBtn" aria-label="Next screen">
+          <svg viewBox="0 0 50 50" width="50" height="50" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 13L31 24.6394L19 37" stroke="#fff" stroke-width="5" fill="none"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Section 3: Promo posts ============ -->
+  <section class="section">
+    <div class="section-details">
+      <span class="side-label">social</span>
+      <span class="rule"></span>
+      <div class="section-text">
+        <h2>Promo posts</h2>
+        <p>Animated social posts carried the 8bit game style through the promotional assets.</p>
+      </div>
+    </div>
+
+    <div class="square-row promo-row">
+      <div class="square">
+        <img src="Assets/CTF/Social_VTLBreachattheBeach_GameAnnouncement_202606_FNL.png" alt="Breach at the Beach game announcement post">
+      </div>
+      <div class="square">
+        <img src="Assets/CTF/Social_VTLBreachattheBeach_GrandPrize_202606_FNL.gif" alt="Breach at the Beach grand prize post">
+      </div>
+      <div class="vegas-square">
+        <img src="Assets/CTF/Social_VTLBreachattheBeach_Vegas_202606_FNL.png" alt="Pixel is coming to Las Vegas post">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Section 4: CTF @ Black Hat ============ -->
+  <section class="section">
+    <div class="section-details">
+      <span class="side-label">event</span>
+      <span class="rule"></span>
+      <div class="section-text">
+        <h2>CTF @ Black Hat</h2>
+        <p>The CTF was available to play at Black Hat and was shown in the space with a table wrap, staff t-shirts, floor decals, and themed swag including a "breach" towel.</p>
+      </div>
+    </div>
+
+    <div class="event-media">
+      <div class="event-photo-frame">
+        <p class="coming-soon-fallback">coming soon</p>
+        <div class="event-photo-crop">
+          <img src="Assets/CTF/CTFatBlackHat.png" alt="Event photo from the CTF at Black Hat">
+        </div>
+      </div>
+      <div class="square-row">
+        <div class="square">
+          <img src="Assets/CTF/Shirt.png" alt="Breach at the Beach staff t-shirt">
+        </div>
+        <div class="square">
+          <img src="Assets/CTF/Towel.png" alt="Breach at the Beach towel mockup">
+        </div>
+        <div class="square square-bottom">
+          <img src="Assets/CTF/Sticker.png" alt="Breach at the Beach sticker mocked up on a laptop">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Section 5: Certificate & Badges ============ -->
+  <section class="section">
+    <div class="section-details">
+      <span class="side-label">earnings</span>
+      <span class="rule"></span>
+      <div class="section-text">
+        <h2>Certificate &amp; Badges</h2>
+        <p>Players received themed badges for each level of the CTF they completed and a certificate once they made it through the entire game.</p>
+      </div>
+    </div>
+
+    <div class="stage-wrap" id="certWrap">
+      <div class="stage cert-stage">
+        <div class="cert-frame" id="certFrame">
+          <div class="certificate">
+            <img src="Assets/CTF/Certificate_BreachAtTheBeach_202606_FNL%201.png" alt="Breach at the Beach completion certificate">
+          </div>
+          <div class="badge badge-1">
+            <img src="Assets/CTF/Badge_Oceanographer_FNL%201.png" alt="Oceanographer badge" draggable="false">
+          </div>
+          <div class="badge badge-2">
+            <img src="Assets/CTF/Badge_TreasureHunter_FNL%201.png" alt="Treasure Hunter badge" draggable="false">
+          </div>
+          <div class="badge badge-3">
+            <img src="Assets/CTF/Badge_UltimateCrabber_FNL%201.png" alt="Ultimate Crabber badge" draggable="false">
+          </div>
+          <div class="badge badge-4">
+            <img src="Assets/CTF/Badge_OceanExplorer_FNL%201.png" alt="Ocean Explorer badge" draggable="false">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  /* ============ Weather scene — automatic sunny <-> stormy loop ============
+     The two scenes are complete stacked copies that cross-fade into each
+     other (see the .wx rules). This drives the cycle: hold sunny, dissolve
+     to stormy while the rain fades up and the lightning starts, hold, then
+     dissolve back. Rain and lightning are the only things that are not just
+     a palette swap, so they are timed against the 3s cross-fade.
+     ====================================================================== */
+  (function(){
+    const frame = document.getElementById('weatherFrame');
+    const rain  = document.getElementById('rain');
+    const flash = document.getElementById('skyFlash');
+    const bolts = [document.getElementById('bolt2'), document.getElementById('bolt3')];
+
+    const CROSSFADE = 3000;  // must match the .wx opacity transition
+    const HOLD      = 5000;  // time held fully settled in each state
+    /* Each leg is the dissolve plus the hold that follows it, so the scene sits
+       fully sunny for HOLD, dissolves, sits fully stormy for HOLD, dissolves. */
+    const LEG = CROSSFADE + HOLD;
+
+    let isStormy = false;
+    let timers = [];
+    const later = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
+    const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
+
+    /* Rain drops. The delay is negative on purpose — it offsets each drop to a
+       random point already inside its own cycle, so the rain is in full flow
+       the instant it fades up instead of starting as one flat rank of drops. */
+    for (let i = 0; i < 100; i++){
+      const drop = document.createElement('div');
+      const duration = 0.5 + Math.random() * 0.5;
+      drop.className = 'rain-drop';
+      drop.style.left = Math.random() * 100 + '%';
+      drop.style.animationDuration = duration + 's';
+      drop.style.animationDelay = (-Math.random() * duration) + 's';
+      rain.appendChild(drop);
+    }
+
+    /* Lightning — the original strike logic, looped while it stays stormy */
+    function flashBolt(bolt, duration){
+      bolt.classList.add('visible');
+      setTimeout(() => bolt.classList.remove('visible'), duration);
+    }
+    /* Light the sky for as long as a bolt is up */
+    function flashSky(duration){
+      flash.classList.add('on');
+      setTimeout(() => flash.classList.remove('on'), duration);
+    }
+    function randomFlash(){
+      const shuffled = bolts.slice().sort(() => Math.random() - 0.5);
+      const selected = shuffled.slice(0, Math.random() > 0.4 ? 1 : 2);
+      const first = 60 + Math.random() * 60;
+      selected.forEach(b => flashBolt(b, first));
+      flashSky(first);
+      setTimeout(() => {
+        const second = 40 + Math.random() * 40;
+        selected.forEach(b => flashBolt(b, second));
+        flashSky(second);
+      }, 100 + Math.random() * 80);
+    }
+    function triggerLightning(){
+      let fired = 0;
+      const totalStrikes = 5 + Math.floor(Math.random() * 3);
+      (function scheduleNext(){
+        if (!isStormy || fired >= totalStrikes) return;
+        fired++;
+        randomFlash();
+        later(scheduleNext, fired < 3 ? 150 + Math.random() * 200 : 400 + Math.random() * 500);
+      })();
+    }
+    function lightningLoop(){
+      if (!isStormy) return;
+      triggerLightning();
+      later(lightningLoop, 5000 + Math.random() * 4000);
+    }
+
+    function goStormy(){
+      clearTimers();
+      isStormy = true;
+      frame.classList.add('stormy');   // starts the cross-fade
+      rain.classList.add('active');
+      later(lightningLoop, CROSSFADE * 0.6);
+      later(goSunny, LEG);
+    }
+
+    function goSunny(){
+      clearTimers();
+      isStormy = false;
+      frame.classList.remove('stormy');
+      rain.classList.remove('active');
+      bolts.forEach(b => b.classList.remove('visible'));
+      flash.classList.remove('on');
+      later(goStormy, LEG);
+    }
+
+    /* Only run while the scene is on screen, and pause in a background tab. */
+    let running = false;
+    /* Open on the settled sunny scene and hold it before the first storm. */
+    const start = () => { if (!running){ running = true; later(goStormy, HOLD); } };
+    const stop  = () => { if (running){ running = false; clearTimers(); } };
+
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(entries => {
+        entries.forEach(e => e.isIntersecting ? start() : stop());
+      }, { threshold: 0.15 }).observe(frame);
+    } else {
+      start();
+    }
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
+  })();
+
+  /* ============ Computer carousel: auto every 3s, arrows reset the timer ============ */
+  (function(){
+    const slides = Array.from(document.querySelectorAll('#screen .slide'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let idx = 0;
+    let timer = null;
+
+    function show(i){
+      idx = (i + slides.length) % slides.length;
+      slides.forEach((s, n) => s.classList.toggle('active', n === idx));
+    }
+    function startAuto(){
+      stopAuto();
+      timer = setInterval(() => show(idx + 1), 3000);
+    }
+    function stopAuto(){
+      if (timer){ clearInterval(timer); timer = null; }
+    }
+    prevBtn.addEventListener('click', () => { show(idx - 1); startAuto(); });
+    nextBtn.addEventListener('click', () => { show(idx + 1); startAuto(); });
+
+    startAuto();
+    document.addEventListener('visibilitychange', () => {
+      document.hidden ? stopAuto() : startAuto();
+    });
+  })();
+
+  /* ============ Draggable sticker badges (max 30px past the frame edge) ============ */
+  (function(){
+    const frame = document.getElementById('certFrame');
+    const badges = Array.from(frame.querySelectorAll('.badge'));
+    const OVERHANG = 30;
+    const SIZE = 200;
+
+    badges.forEach(badge => {
+      let dragging = false;
+      let offX = 0, offY = 0;
+
+      badge.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        badge.setPointerCapture(e.pointerId);
+        const scale = frame.getBoundingClientRect().width / frame.offsetWidth;
+        const br = badge.getBoundingClientRect();
+        offX = (e.clientX - br.left) / scale;
+        offY = (e.clientY - br.top) / scale;
+        dragging = true;
+        badge.classList.add('dragging');
+      });
+
+      badge.addEventListener('pointermove', e => {
+        if (!dragging) return;
+        const fr = frame.getBoundingClientRect();
+        const scale = fr.width / frame.offsetWidth;
+        let x = (e.clientX - fr.left) / scale - offX;
+        let y = (e.clientY - fr.top) / scale - offY;
+        x = Math.max(-OVERHANG, Math.min(frame.offsetWidth - SIZE + OVERHANG, x));
+        y = Math.max(-OVERHANG, Math.min(frame.offsetHeight - SIZE + OVERHANG, y));
+        badge.style.left = x + 'px';
+        badge.style.top = y + 'px';
+      });
+
+      function release(e){
+        if (!dragging) return;
+        dragging = false;
+        badge.classList.remove('dragging');
+        if (badge.hasPointerCapture && badge.hasPointerCapture(e.pointerId)){
+          badge.releasePointerCapture(e.pointerId);
+        }
+      }
+      badge.addEventListener('pointerup', release);
+      badge.addEventListener('pointercancel', release);
+    });
+  })();
+
+  /* ============ Fixed-size stage scaler (computer + certificate) ============ */
+  (function(){
+    /* Measures each stage's own CSS box rather than assuming a 1320-wide
+       design, so a breakpoint can re-size a stage (the computer hugs its own
+       859px on mobile, the certificate goes portrait) and the scaling and the
+       wrapper height follow automatically. offsetWidth/Height are layout
+       values, so the existing scale transform doesn't perturb the reading. */
+    function fit(){
+      document.querySelectorAll('.stage-wrap').forEach(wrap => {
+        const stage = wrap.querySelector('.stage');
+        const w = stage.offsetWidth, h = stage.offsetHeight;
+        if (!w || !h) return;
+        const s = Math.min(1, wrap.clientWidth / w);
+        stage.style.transform = s < 1 ? `scale(${s})` : '';
+        wrap.style.height = (h * s) + 'px';
+      });
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('load', fit);
+    fit();
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSAC — Dawn Dorville</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --page-pad: 60px;
+    --content-w: 1320px;
+    --gray: #878787;
+    --nav-gray: #919191;
+    /* The warm near-black used for section rules, arrow buttons and the
+       phone bezel — same value across every page in the portfolio. */
+    --warm-black: #282621;
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', monospace;
+    --body: 'Inter', sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:#000;
+    color:#fff;
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x:hidden;
+  }
+  img{ display:block; }
+  a{ text-decoration:none; }
+
+  .container{
+    width:100%;
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin:0 auto;
+    padding: 0 var(--page-pad);
+  }
+
+  /* ============ Header (Figma instance 247:1374) ============ */
+  /* `.container` sets a `padding` shorthand and a class selector outranks a
+     bare `header` one, so the top padding has to be applied at matching
+     specificity or the shorthand zeroes it out. */
+  header.container{ padding-top:var(--page-pad); }
+  /* Figma's Header component styles "Work" and "Resume" identically —
+     both #919191, Inter Regular, no italic and no bracket decoration.
+     The logo is sentence case at its natural tracking. */
+  .header-inner{ display:flex; align-items:center; justify-content:space-between; }
+
+  .logo{
+    font-family:var(--body);
+    font-weight:600;
+    font-size:20px;
+    color:#fff;
+  }
+
+  nav{ display:flex; align-items:center; gap:40px; }
+  nav a{ white-space:nowrap; }
+
+  /* Header (Figma node 247:1374) — Work/Resume share one style: Inter
+     Regular, #919191, uppercase, 3.2px tracking. Figma's component has no
+     hover variant, so the rollover state below (white, transitioning) is
+     ours — same treatment on both links, on every page. */
+  .nav-work,
+  .nav-resume{
+    font-family:var(--body);
+    font-weight:400;
+    font-size:16px;
+    letter-spacing:3.2px;
+    text-transform:uppercase;
+    color:var(--nav-gray);
+    transition:color .15s ease;
+  }
+  .nav-work:hover,
+  .nav-work:focus-visible,
+  .nav-resume:hover,
+  .nav-resume:focus-visible{
+    color:#fff;
+  }
+
+  /* ============ Project intro ============
+     Title and subtitle sit flush in Figma (subtitle top edge == title bottom
+     edge), so the intro is a plain stack with no gap, same as Meet Pixel. */
+  .intro{ margin-top:50px; display:flex; flex-direction:column; }
+  .intro h1{
+    font-family:var(--display); font-weight:400;
+    font-size:60px; line-height:1; color:var(--gray);
+  }
+  .intro .sub{
+    font-family:var(--mono); font-weight:700;
+    font-size:20px; line-height:1.4; margin-top:2px; letter-spacing:4px;
+    text-transform:uppercase; color:var(--gray);
+  }
+
+  /* ============ Sections ============ */
+  /* `main` is deliberately NOT a `.container`: the booth rail has to break
+     out to the full viewport width so the third card can bleed off the right
+     edge the way it does in Figma. Text blocks get their own `.container`. */
+  main{
+    /* 143, not 146: the leading-normal pill makes the header 3px taller than
+       the line-height:1 version, and this keeps the first section on Figma's
+       y=412 rather than pushing the whole grid down with it. */
+    margin-top:143px; padding-bottom:160px;
+    display:flex; flex-direction:column; gap:200px;
+  }
+  .proj-section{ display:flex; flex-direction:column; gap:50px; }
+
+  .detail{ display:flex; gap:30px; align-items:stretch; }
+  .side-label{
+    writing-mode: vertical-rl;
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; text-transform:uppercase; color:var(--gray);
+    /* Figma's label column is the 11px cap height of the rotated text,
+       not the 16px a full em box would give. */
+    line-height:11px; flex-shrink:0;
+  }
+  /* Zero-width vector with a 3px stroke: the stroke bleeds 1.5px either side
+     so the line sits centred in the 30px gutter. */
+  .rule{
+    width:3px; margin:0 -1.5px; background:var(--warm-black);
+    align-self:stretch; flex-shrink:0;
+  }
+  .section-text{ display:flex; flex-direction:column; gap:3px; max-width:660px; }
+  .section-text h2{
+    font-family:var(--display); font-weight:400;
+    font-size:24px; line-height:1.25; letter-spacing:2.4px;
+    text-transform:uppercase; color:#fff;
+  }
+  .section-text p{ font-size:16px; line-height:1.8; color:#fff; }
+
+  /* ============ Booth rail ============
+     Three 750x500 cards with 30px gutters overrun the 1320px column by a wide
+     margin — in Figma the row simply bleeds off the right edge. Here the row
+     is a full-width horizontal scroller whose left padding is computed to
+     land exactly on the content column's left edge, so it lines up with the
+     copy above it while staying reachable (the third card is unreachable if
+     the overflow is merely clipped). */
+  .rail{
+    display:flex; gap:30px;
+    padding-left: max(var(--page-pad), calc((100% - var(--content-w)) / 2));
+    padding-right: var(--page-pad);
+    overflow-x:auto; overflow-y:hidden;
+    scroll-snap-type: x proximity;
+    /* Snapping aligns to the scrollport's padding box, so without a matching
+       scroll-padding the first card snaps flush to the viewport edge and eats
+       the alignment with the copy above it. */
+    scroll-padding-left: max(var(--page-pad), calc((100% - var(--content-w)) / 2));
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--warm-black) transparent;
+  }
+  .rail::-webkit-scrollbar{ height:8px; }
+  .rail::-webkit-scrollbar-track{ background:transparent; }
+  .rail::-webkit-scrollbar-thumb{ background:var(--warm-black); border-radius:4px; }
+
+  /* Each card holds the SketchUp rendering and the photo of the built booth
+     from the same camera angle, stacked exactly as they are in Figma. The
+     photo is on top; hovering (or clicking, for touch and keyboard) crossfades
+     to the rendering underneath — "the 3d mockup and realized booth" the copy
+     promises, without doubling the row's length. */
+  .booth-card{
+    position:relative; flex:0 0 auto;
+    width:750px; height:500px;
+    scroll-snap-align:start;
+    border:none; padding:0; margin:0;
+    background:#0b0b0b; color:inherit; font:inherit;
+    cursor:pointer; overflow:hidden;
+    display:block;
+  }
+  .booth-card img{
+    position:absolute; inset:0;
+    width:100%; height:100%; object-fit:cover;
+    transition: opacity .45s ease;
+  }
+  .booth-card .render{ opacity:0; }
+  .booth-card .live{ opacity:1; }
+  .booth-card.is-render .render{ opacity:1; }
+  .booth-card.is-render .live{ opacity:0; }
+  .booth-card:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+
+  .booth-chip{
+    position:absolute; left:20px; bottom:20px; z-index:2;
+    display:flex; align-items:center; gap:8px;
+    padding:9px 14px; border-radius:30px;
+    background:rgba(10,10,10,.72);
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+    font-family:var(--mono); font-weight:700; font-size:11px;
+    letter-spacing:2.2px; text-transform:uppercase; color:#fff;
+    white-space:nowrap; pointer-events:none;
+    transition: background .2s ease;
+  }
+  .booth-card:hover .booth-chip{ background:rgba(20,20,20,.86); }
+  .booth-chip .swap{ color:var(--gray); font-weight:700; }
+
+  /* ============ Social: device carousel ============
+     The stage is the 1320x966 Figma frame. It keeps its full width at every
+     breakpoint (the dimmed neighbouring posts are meant to bleed past the
+     phone) and is centred on the column with a negative margin, then scaled
+     down only when the 469px device itself no longer fits. */
+  .stage-wrap{
+    display:flex; justify-content:center;
+    height:966px; overflow:hidden;
+  }
+  .device-stage{
+    position:relative; flex:0 0 1320px;
+    width:1320px; height:966px;
+    overflow:hidden;
+    transform-origin: top center;
+  }
+
+  .device-bg{
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:13px; width:441px; height:940px;
+    background:#141414; border-radius:63px;
+  }
+  .device-outer{
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:0; width:469px; height:966px;
+    border:7px solid var(--warm-black); border-radius:76px;
+    pointer-events:none; z-index:3;
+  }
+  .device-inner{
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:7px; width:453px; height:952px;
+    border:6px solid #000; border-radius:69px;
+    pointer-events:none; z-index:3;
+  }
+  .side-btn{
+    position:absolute; width:3px; z-index:2;
+    background: linear-gradient(180deg,
+      rgb(20,19,16) 0%, rgb(111,111,111) 3.7%, rgb(203,203,203) 6.2%,
+      rgb(102,101,101) 9.3%, rgb(40,38,33) 94.2%, rgb(27,26,22) 100%);
+  }
+  .side-btn.l1{ left:calc(50% - 237px); bottom:741px; height:40px; }
+  .side-btn.l2{ left:calc(50% - 237px); bottom:643px; height:65px; }
+  .side-btn.l3{ left:calc(50% - 237px); bottom:558px; height:65px; }
+  .side-btn.r1{ left:calc(50% + 235px); bottom:580px; height:106px; }
+
+  .screen{
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:244px; width:443px; height:554px;
+    overflow:visible; /* dimmed neighbours show beyond the frame, per design */
+    z-index:1;
+  }
+
+  /* ---------- Glow layer ----------
+     Figma puts a 90px #183d46 shadow on the active post. Rendering that on
+     the slide itself would spill the glow over the dimmed neighbours, so it
+     lives on its own element inside a clip shaped like the phone body: the
+     glow stays inside the device while the neighbours, which sit in the
+     unclipped .screen strip, stay visible. */
+  @property --glow {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: #183d46;
+  }
+  .glow-clip{
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:13px; width:441px; height:940px;
+    border-radius:63px; overflow:hidden;
+    pointer-events:none;
+    z-index:0; /* behind the screen strip, above the body panel */
+  }
+  .glow-screen{
+    /* mirrors .screen, but in .glow-clip coordinates */
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:231px; /* the stage's 244px minus the clip's own 13px offset */
+    width:443px; height:554px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .glow{
+    width:443px; height:443px;
+    --glow: #183d46;
+    box-shadow: 0 0 90px 0 var(--glow);
+    transition: --glow .65s ease, height .65s ease;
+  }
+  .glow.tall{ height:554px; }
+
+  .strip{
+    position:absolute; left:0; top:0; height:554px;
+    display:flex; align-items:center; gap:60px;
+    transition: transform .65s cubic-bezier(.22, 1, .36, 1);
+    will-change: transform;
+  }
+  .strip .group{ display:flex; align-items:center; flex-shrink:0; }
+  .strip .slide{
+    flex-shrink:0; position:relative;
+    width:443px; height:443px;
+    opacity:.3; transition: opacity .65s ease;
+  }
+  .strip .slide.tall{ height:554px; }
+  .strip .slide.active{ opacity:1; }
+  .strip .slide img{
+    position:absolute; inset:0;
+    width:100%; height:100%; object-fit:cover;
+    pointer-events:none;
+  }
+
+  /* ---------- Nav arrows ---------- */
+  .carousel-nav{
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:154px; display:flex; align-items:center; gap:26px;
+    z-index:4;
+  }
+  .carousel-nav button{
+    width:50px; height:50px; border-radius:50%;
+    background:var(--warm-black); border:none; padding:0;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition: transform .15s ease, background .2s ease;
+  }
+  .carousel-nav button:hover{ background:#3b382f; transform:scale(1.06); }
+  .carousel-nav button:active{ transform:scale(.96); }
+  .carousel-nav button:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+  .carousel-nav button svg{ display:block; }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 1100px){
+    :root{ --page-pad: 40px; }
+    .booth-card{ width:600px; height:400px; }
+  }
+  @media (max-width: 900px){
+    .intro h1{ font-size:40px; }
+    .intro .sub{ font-size:16px; letter-spacing:3.2px; }
+    main{ margin-top:110px; gap:120px; padding-bottom:120px; }
+    .header-inner{ flex-wrap:wrap; gap:16px; }
+    nav{ gap:24px; }
+    .booth-card{ width:min(84vw, 600px); height:auto; aspect-ratio:750/500; }
+  }
+  @media (max-width: 880px){
+    :root{ --page-pad: 28px; }
+  }
+  @media (max-width: 560px){
+    :root{ --page-pad: 20px; }
+    /* Below this the 469px device no longer clears the 20px page padding,
+       so the whole stage scales down as one unit. */
+    .stage-wrap{ height:773px; }         /* 966 * .80 */
+    .device-stage{ transform:scale(.80); }
+    .booth-chip{ left:12px; bottom:12px; font-size:10px; letter-spacing:1.6px; }
+  }
+  @media (max-width: 430px){
+    .stage-wrap{ height:657px; }         /* 966 * .68 */
+    .device-stage{ transform:scale(.68); }
+  }
+  @media (max-width: 360px){
+    .stage-wrap{ height:551px; }         /* 966 * .57 */
+    .device-stage{ transform:scale(.57); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .strip, .strip .slide, .glow, .booth-card img{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="container">
+  <div class="header-inner">
+    <a class="logo" href="index.html">Dawn Dorville</a>
+    <nav>
+      <a class="nav-work" href="index.html">Work</a>
+      <a class="nav-resume" href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<section class="container intro">
+  <h1>RSAC</h1>
+  <p class="sub">Flagship booth graphics</p>
+</section>
+
+<main>
+
+  <!-- ============ Section 1: Booth design ============ -->
+  <section class="proj-section">
+    <div class="container">
+      <div class="detail">
+        <span class="side-label">2024 &ndash; 2026</span>
+        <span class="rule"></span>
+        <div class="section-text">
+          <h2>Booth design</h2>
+          <p>This updated booth design ran from 2024 &ndash; 2026. Panel graphics were created in Illustrator to scale, then added to the 3d structure in Sketchup for a better understanding of how they&rsquo;d translate to the new booth design. The 3d mockup and realized booth is shown below.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rail" id="boothRail">
+      <button type="button" class="booth-card">
+        <img class="render" src="Assets/RSAC/RSAC1_Rendering.webp" alt="SketchUp rendering of the Varonis booth from the front left, showing the angled &lsquo;The Leader in Data Security&rsquo; header panels over the X-frame structure.">
+        <img class="live" src="Assets/RSAC/RSAC1_Live.webp" alt="The built Varonis booth on the RSAC show floor from the front left, header panels lit in blue and green.">
+        <span class="booth-chip"><span class="state">Built booth</span> <span class="swap">&middot; see 3d mockup</span></span>
+      </button>
+
+      <button type="button" class="booth-card">
+        <img class="render" src="Assets/RSAC/RSAC2_Rendering.webp" alt="SketchUp rendering of the Varonis booth from the corner, with the cylindrical tower, demo counter and secondary screen.">
+        <img class="live" src="Assets/RSAC/RSAC2_Live.webp" alt="The built Varonis booth from the corner, the tower lit and a green &lsquo;Stop by for a Copilot security demo&rsquo; screen running.">
+        <span class="booth-chip"><span class="state">Built booth</span> <span class="swap">&middot; see 3d mockup</span></span>
+      </button>
+
+      <button type="button" class="booth-card">
+        <img class="render" src="Assets/RSAC/RSAC3_Rendering.webp" alt="SketchUp rendering of the Varonis booth from the right, with the white Varonis banner and the meeting-room wall.">
+        <img class="live" src="Assets/RSAC/RSAC3_Live.webp" alt="The built Varonis booth from the right, white Varonis banner overhead and seating cubes on the floor.">
+        <span class="booth-chip"><span class="state">Built booth</span> <span class="swap">&middot; see 3d mockup</span></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ Section 2: Social ============ -->
+  <section class="proj-section">
+    <div class="container">
+      <div class="detail">
+        <span class="side-label">2026</span>
+        <span class="rule"></span>
+        <div class="section-text">
+          <h2>social</h2>
+          <p>Various social promotion for the 2026 RSAC conference.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="stage-wrap">
+        <div class="device-stage">
+          <div class="device-bg"></div>
+
+          <div class="glow-clip">
+            <div class="glow-screen">
+              <div class="glow tall" id="glowLayer"></div>
+            </div>
+          </div>
+
+          <div class="side-btn l1"></div>
+          <div class="side-btn l2"></div>
+          <div class="side-btn l3"></div>
+          <div class="side-btn r1"></div>
+
+          <div class="screen">
+            <!--
+              data-glow values are hand-picked approximations of each post's
+              average colour, used until the canvas pass below computes the
+              real average. The assets are same-origin, so it does.
+            -->
+            <div class="strip" id="strip">
+              <div class="slide tall" data-glow="#16324a">
+                <img src="Assets/RSAC/Social_RSAC_MeetUsAt.webp" alt="Social post: Meet us at RSAC 2026 Conference, March 23 to 26, 2026, Booth #N-5457.">
+              </div>
+              <div class="group">
+                <div class="slide" data-glow="#183d46">
+                  <img src="Assets/RSAC/Social_RSAC_VTLGuide_Pg1.webp" alt="Carousel cover: Varonis Threat Labs @ RSAC, with the VTL robot cat on a rocky landscape.">
+                </div>
+                <div class="slide" data-glow="#17333a">
+                  <img src="Assets/RSAC/Social_RSAC_VTLGuide_Pg2.webp" alt="Session card: May the Force Be With You &mdash; 5 Salesforce Attacks and How to Stop Them, with Tamir Yehuda and Daniel Reyhanian.">
+                </div>
+                <div class="slide" data-glow="#16303a">
+                  <img src="Assets/RSAC/Social_RSAC_VTLGuide_Pg4.webp" alt="Booth session card: Scaling Identity Threat Detection with ML and LLMs, with Dor Yardeni.">
+                </div>
+                <div class="slide" data-glow="#1b3340">
+                  <img src="Assets/RSAC/Social_RSAC_VTLGuide_Pg7.webp" alt="Post: Hang with VTL in the Cloud Village, announcing the newest CTF and VTL prizes.">
+                </div>
+              </div>
+              <div class="group">
+                <div class="slide" data-glow="#16362f">
+                  <img src="Assets/RSAC/Social_VaronisGuide_Pg1.webp" alt="Carousel cover: The Varonis Guide to RSAC, with a starfighter over a dark landscape.">
+                </div>
+                <div class="slide" data-glow="#14262e">
+                  <img src="Assets/RSAC/Social_VaronisGuide_Pg2.webp" alt="Know before you go: dates March 23 to 26, Moscone North Hall, Booth #5457.">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="device-inner"></div>
+          <div class="device-outer"></div>
+
+          <div class="carousel-nav">
+            <button type="button" id="prevBtn" aria-label="Previous post">
+              <svg width="50" height="50" viewBox="0 0 50 50" fill="none" aria-hidden="true">
+                <path d="M31 13L19 24.6394L31 37" stroke="#fff" stroke-width="5"/>
+              </svg>
+            </button>
+            <button type="button" id="nextBtn" aria-label="Next post">
+              <svg width="50" height="50" viewBox="0 0 50 50" fill="none" aria-hidden="true">
+                <path d="M19 13L31 24.6394L19 37" stroke="#fff" stroke-width="5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ============ Booth cards: rendering / built-booth crossfade ============
+   Hover previews the SketchUp rendering on pointer devices; a click pins it
+   so touch and keyboard users get the same reveal. Pinning and hovering are
+   tracked separately so leaving a pinned card doesn't snap it back. */
+(function(){
+  const cards = Array.from(document.querySelectorAll('.booth-card'));
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  cards.forEach((card) => {
+    const state = card.querySelector('.state');
+    const swap  = card.querySelector('.swap');
+    let pinned = false;
+    let hovering = false;
+
+    function paint(){
+      const showRender = pinned !== hovering; // XOR: hovering flips the pinned state
+      card.classList.toggle('is-render', showRender);
+      state.textContent = showRender ? '3d mockup' : 'Built booth';
+      swap.textContent  = showRender ? '· see built booth' : '· see 3d mockup';
+      card.setAttribute('aria-pressed', String(pinned));
+    }
+
+    card.addEventListener('click', () => { pinned = !pinned; paint(); });
+    if (canHover){
+      card.addEventListener('mouseenter', () => { hovering = true;  paint(); });
+      card.addEventListener('mouseleave', () => { hovering = false; paint(); });
+    }
+    paint();
+  });
+})();
+
+/* ============ Social carousel ============
+   Layout mirrors Figma exactly: a 554px-tall post, then a flush group of four
+   square posts, then a flush group of two, with 60px between the groups. The
+   strip slides so the active post lands in the 443px screen; its neighbours
+   stay visible at 30% either side. */
+(function(){
+  const strip   = document.getElementById('strip');
+  const slides  = Array.from(strip.querySelectorAll('.slide'));
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const glowLayer = document.getElementById('glowLayer');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const GAP = 60;       // gap between the three flex groups
+  const SLIDE_W = 443;  // every post, and the screen, is 443px wide
+
+  /* Left offset of each post within the strip:
+     [tall] gap [group of 4, flush] gap [group of 2, flush] */
+  const offsets = slides.map((_, i) => {
+    if (i === 0) return 0;
+    if (i <= 4)  return SLIDE_W + GAP + (i - 1) * SLIDE_W;
+    return SLIDE_W + GAP + 4 * SLIDE_W + GAP + (i - 5) * SLIDE_W;
+  });
+
+  const glowColors = slides.map((s) => s.dataset.glow);
+  let current = 0;
+  let timer = null;
+
+  function refreshGlow(){
+    glowLayer.style.setProperty('--glow', glowColors[current]);
+    glowLayer.classList.toggle('tall', current === 0);
+  }
+
+  function show(i){
+    current = (i + slides.length) % slides.length;
+    strip.style.transform = 'translateX(' + (-offsets[current]) + 'px)';
+    slides.forEach((s, n) => s.classList.toggle('active', n === current));
+    refreshGlow();
+  }
+
+  /* ---- Average-colour glow ----
+     Figma hard-codes one #183d46 shadow for the active post. Sampling each
+     image instead keeps that idea but tints the glow to whatever is on
+     screen. The assets are same-origin, so the canvas isn't tainted; if a
+     read ever fails the data-glow fallback stands. */
+  function setGlow(index, r, g, b){
+    // These posts are dark, so a true average lands near black and reads as
+    // no glow at all on #000. Lift the brightness, preserving the hue.
+    const max = Math.max(r, g, b, 1);
+    if (max < 110){
+      const k = 110 / max;
+      r = Math.min(255, r * k); g = Math.min(255, g * k); b = Math.min(255, b * k);
+    }
+    glowColors[index] = 'rgb(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ')';
+    if (index === current) refreshGlow();
+  }
+
+  slides.forEach((slide, index) => {
+    const probe = new Image();
+    probe.crossOrigin = 'anonymous';
+    probe.onload = function(){
+      try {
+        const S = 32;
+        const c = document.createElement('canvas');
+        c.width = S; c.height = S;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(probe, 0, 0, S, S);
+        const d = ctx.getImageData(0, 0, S, S).data;
+        let r = 0, g = 0, b = 0, n = 0;
+        for (let i = 0; i < d.length; i += 4){ r += d[i]; g += d[i+1]; b += d[i+2]; n++; }
+        setGlow(index, r / n, g / n, b / n);
+      } catch (e){ /* canvas tainted — keep the fallback */ }
+    };
+    probe.onerror = function(){ /* keep the fallback */ };
+    probe.src = slide.querySelector('img').src;
+  });
+
+  /* ---- Auto every 3s, arrows reset the timer (same as the CTF carousel) ---- */
+  function startAuto(){
+    if (reducedMotion) return;
+    stopAuto();
+    timer = setInterval(() => show(current + 1), 3000);
+  }
+  function stopAuto(){
+    if (timer){ clearInterval(timer); timer = null; }
+  }
+
+  prevBtn.addEventListener('click', () => { show(current - 1); startAuto(); });
+  nextBtn.addEventListener('click', () => { show(current + 1); startAuto(); });
+
+  show(0);
+  startAuto();
+  document.addEventListener('visibilitychange', () => {
+    document.hidden ? stopAuto() : startAuto();
+  });
+})();
+</script>
+
+</body>
+</html>

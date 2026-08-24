@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dawn Dorville — Varonis Threat Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page-pad: 60px;
+    --content-w: 1320px;
+    --gray: #878787;
+    --nav-gray: #919191;
+    --frame-bg: #292922;
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', monospace;
+    --body: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: #000;
+    color: #fff;
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .page {
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin: 0 auto;
+    padding: var(--page-pad) var(--page-pad) 200px;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .logo {
+    font-family: var(--body);
+    font-weight: 600;
+    font-size: 20px;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  nav a {
+    text-decoration: none;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: color .15s ease;
+  }
+
+  /* Header (Figma node 247:1374) — Work/Resume share one style: Inter
+     Regular, #919191, uppercase, 3.2px tracking. No bracket/italic emphasis
+     and no "In" badge in the current design; both links share one plain,
+     understated treatment with the same rollover state. */
+  .nav-work,
+  .nav-resume {
+    font-family: var(--body);
+    color: var(--nav-gray);
+    font-weight: 400;
+  }
+
+  .nav-work:hover, .nav-work:focus-visible,
+  .nav-resume:hover, .nav-resume:focus-visible { color: #fff; }
+
+  /* ---------- Project intro ---------- */
+  .intro {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 1248px;
+  }
+
+  .intro h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 60px;
+    line-height: 1;
+    color: var(--gray);
+  }
+
+  .intro .subtitle {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 4px;
+    line-height: 1.4;
+    margin-top: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  .intro .summary {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #fff;
+    max-width: 700px;
+  }
+
+  /* ---------- Campaign sections ---------- */
+  .campaigns {
+    margin-top: 146px;
+    display: flex;
+    flex-direction: column;
+    gap: 200px;
+  }
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .item-swag { gap: 34px; }
+
+  .details {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+  }
+
+  .quarter {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+    /* In vertical writing mode line-height sets the column's width. Figma's
+       label column is 11px (the cap-height of the rotated text), not the
+       16px a full em box would give. */
+    line-height: 11px;
+    flex-shrink: 0;
+  }
+
+  /* Figma draws this as a zero-width vector with a 3px stroke, so the stroke
+     bleeds 1.5px either side and the line sits centred on the 30px gutter
+     rather than consuming width of its own. */
+  .rule {
+    width: 3px;
+    margin: 0 -1.5px;
+    background: #282621;
+    align-self: stretch;
+    flex-shrink: 0;
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 660px;
+  }
+
+  .heading h2 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    line-height: normal;
+  }
+
+  /* Trim leading above the cap height so the heading sits flush with the rule's top */
+  @supports (text-box: trim-both cap alphabetic) {
+    .heading h2 { text-box: trim-both cap alphabetic; }
+  }
+  @supports not (text-box: trim-both cap alphabetic) {
+    .heading h2 { margin-top: -6px; }
+  }
+
+  .heading p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #fff;
+  }
+
+  img { display: block; }
+
+  .caption {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    line-height: 1.8;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  /* Item 1 — brand elements */
+  .brand-img {
+    width: 100%;
+    aspect-ratio: 2640 / 1400;
+    object-fit: cover;
+  }
+
+  /* Item 2 — swag hoodie (single front+back render) */
+  .hoodie-img {
+    width: 622px;
+    max-width: 100%;
+  }
+  .hoodie-img img { width: 100%; height: auto; }
+
+  /* Item 3 — research releases */
+  .research-card {
+    /* 30px grid pattern (#606060 @ 12%) over the gradient, matching the Figma pattern fill */
+    background-image:
+      linear-gradient(rgba(96, 96, 96, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(96, 96, 96, 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, #1f211b, #101010);
+    background-size: 30px 30px, 30px 30px, 100% 100%;
+    border-radius: 10px;
+    padding: 40px;
+    width: 100%;
+  }
+
+  .research-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 40px;
+    row-gap: 100px;
+    align-items: start;
+  }
+
+  .research-col {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
+
+  .asset {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .asset img { width: 100%; height: auto; }
+
+  .asset-narrow { max-width: 318px; }
+
+  /* Item 4 — threat report */
+  /* Always three across — widths are the Figma tile widths (403/384/393)
+     expressed as a share of the 1240px asset row, with the 30px gutter as
+     a matching percentage, so the row scales as one unit instead of
+     wrapping at narrow widths. */
+  .report-assets {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 2.4194%;
+  }
+
+  .report-pdf {
+    width: 32.5000%;
+    flex: 0 0 32.5000%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+  }
+
+  .report-pdf-box {
+    background: var(--frame-bg);
+    height: 528px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .report-pdf-label {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    line-height: 1.8;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-align: center;
+    max-width: 167px;
+  }
+
+  /* PDF flip-through viewer */
+  .pdf-viewer {
+    background: var(--frame-bg);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+  }
+
+  .pdf-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 612 / 792;
+    overflow: hidden;
+  }
+
+  .pdf-stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .pdf-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #1a1a15;
+  }
+
+  .pdf-btn {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    text-transform: uppercase;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+
+  .pdf-btn:hover:not(:disabled) { color: #ff4d1c; }
+  .pdf-btn:disabled { color: #55554a; cursor: default; }
+  .pdf-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  .pdf-counter {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    color: var(--gray);
+  }
+
+  .report-social { width: 30.9677%; flex: 0 0 30.9677%; }
+  .report-paid { width: 31.6935%; flex: 0 0 31.6935%; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1100px) {
+    :root { --page-pad: 40px; }
+    .page { padding: var(--page-pad) var(--page-pad) 120px; }
+    .intro h1 { font-size: 46px; }
+    .research-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 880px) {
+    :root { --page-pad: 28px; }
+  }
+
+  @media (max-width: 760px) {
+    header { flex-wrap: wrap; gap: 16px; }
+    nav { gap: 24px; }
+    .intro { margin-top: 64px; }
+    .intro h1 { font-size: 32px; }
+    .intro .subtitle { font-size: 16px; }
+    .campaigns { margin-top: 80px; gap: 120px; }
+    .research-grid { grid-template-columns: 1fr; row-gap: 50px; }
+    .research-card { padding: 20px; }
+    .details { gap: 14px; }
+    .quarter { font-size: 12px; }
+    .heading h2 { font-size: 20px; }
+    .report-assets { flex-wrap: wrap; gap: 30px; }
+    .report-pdf, .report-social, .report-paid { width: 100%; flex: 1 1 100%; }
+  }
+
+  @media (max-width: 560px) {
+    :root { --page-pad: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <a class="logo" href="index.html">Dawn Dorville</a>
+    <nav>
+      <a class="nav-work" href="index.html">Work</a>
+      <a class="nav-resume" href="resume.html">Resume</a>
+    </nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <h1>Varonis Threat Labs</h1>
+      <p class="subtitle">Branding for the Varonis threat research team</p>
+    </div>
+    <p class="summary">Branding for the internal threat research team differentiates it from the Varonis universe.</p>
+  </section>
+
+  <div class="campaigns">
+
+    <!-- Item 1: Brand elements -->
+    <section class="item">
+      <div class="details">
+        <span class="quarter">q2 2026</span>
+        <span class="rule"></span>
+        <div class="heading">
+          <h2>Brand elements</h2>
+          <p>The VTL sub-brand has it's own color palette, imagery, and unique graphics. The branding evokes a sense of urgency, depth, and mystery — common themes in VTL research.</p>
+        </div>
+      </div>
+      <img class="brand-img" src="Assets/VTL/VTLBrandElements_1.png" alt="Varonis Threat Labs brand elements overview">
+    </section>
+
+    <!-- Item 2: Swag -->
+    <section class="item item-swag">
+      <div class="details">
+        <span class="quarter">q1 2026</span>
+        <span class="rule"></span>
+        <div class="heading">
+          <h2>Swag</h2>
+        </div>
+      </div>
+      <div class="hoodie-img">
+        <img src="Assets/VTL/Hoodie1.png" alt="Threat Labs hoodie, back and front views">
+      </div>
+    </section>
+
+    <!-- Item 3: Research releases -->
+    <section class="item">
+      <div class="details">
+        <span class="quarter">q1/2 2026</span>
+        <span class="rule"></span>
+        <div class="heading">
+          <h2>Research releases</h2>
+          <p>Varonis Threat Labs research moves quickly and often requires custom graphics featuring blog heroes, social posts, and diagrams.</p>
+        </div>
+      </div>
+      <div class="research-card">
+        <div class="research-grid">
+          <!-- Row 1 -->
+          <div class="research-col">
+            <div class="asset">
+              <img src="Assets/VTL/Social_VTL-SearchLeak_202606_FNL2_1.png" alt="Search Leak social post">
+              <span class="caption">Social</span>
+            </div>
+            <div class="asset">
+              <img src="Assets/VTL/Blog_VTL-SearchLeak_202606_FNL2_1.png" alt="Search Leak blog hero">
+              <span class="caption">Blog Hero</span>
+            </div>
+          </div>
+          <div class="research-col">
+            <div class="asset">
+              <img src="Assets/VTL/Blog_VTL-SearchLeak_Diagram_202606_FNL_1.png" alt="Search Leak blog diagram">
+              <span class="caption">Blog diagram</span>
+            </div>
+          </div>
+          <div class="research-col">
+            <div class="asset">
+              <img src="Assets/VTL/VideoThumbnail_1.png" alt="Search Leak video thumbnail">
+              <span class="caption">Video thumbnail</span>
+            </div>
+            <div class="asset asset-narrow">
+              <img src="Assets/VTL/SearchLeak_VideoDiagram_1.png" alt="Search Leak social diagram">
+              <span class="caption">Social diagram</span>
+            </div>
+          </div>
+          <!-- Row 2 -->
+          <div class="asset">
+            <img src="Assets/VTL/Reprompt_Social_1.png" alt="Reprompt social post">
+            <span class="caption">Social</span>
+          </div>
+          <div class="asset">
+            <img src="Assets/VTL/Reprompt_Diagram_1.png" alt="Reprompt blog diagram">
+            <span class="caption">Blog diagram</span>
+          </div>
+          <div class="asset">
+            <img src="Assets/VTL/Reprompt_BlogHero_1.png" alt="Reprompt blog hero">
+            <span class="caption">Blog Hero</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Item 4: Threat report -->
+    <section class="item">
+      <div class="details">
+        <span class="quarter">Q4 2025</span>
+        <span class="rule"></span>
+        <div class="heading">
+          <h2>Threat Report</h2>
+          <p>Though VTL research is usually focused around blog articles, deeper topics are released as reports that require corresponding promotional assets.</p>
+        </div>
+      </div>
+      <div class="report-assets">
+        <div class="report-pdf">
+          <div class="pdf-viewer" id="pdfViewer" tabindex="0" role="region" aria-label="The Attacker's Playbook — interactive report, use arrow keys to change pages">
+            <div class="pdf-stage">
+              <img id="pdfPage" src="" alt="The Attacker's Playbook — page 1">
+            </div>
+            <div class="pdf-controls">
+              <button class="pdf-btn" id="pdfPrev" aria-label="Previous page">&lt;</button>
+              <span class="pdf-counter" id="pdfCounter">01 / 10</span>
+              <button class="pdf-btn" id="pdfNext" aria-label="Next page">&gt;</button>
+            </div>
+          </div>
+          <span class="caption">Interactive PDF</span>
+        </div>
+        <div class="asset report-social">
+          <img src="Assets/VTL/Social_AttackersPlaybook_202512_Var1_FNL_1.png" alt="Attacker's Playbook organic social post">
+          <span class="caption">Organic social</span>
+        </div>
+        <div class="asset report-paid">
+          <img src="Assets/VTL/Social_AttackersPlaybook_202512_Var2B_FNL_1.png" alt="Attacker's Playbook paid social ad">
+          <span class="caption">Paid social</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+<script>
+(function () {
+  var pages = [
+"Assets/VTL/AttackersPlaybook_Page01.jpg",
+"Assets/VTL/AttackersPlaybook_Page02.jpg",
+"Assets/VTL/AttackersPlaybook_Page03.jpg",
+"Assets/VTL/AttackersPlaybook_Page04.jpg",
+"Assets/VTL/AttackersPlaybook_Page05.jpg",
+"Assets/VTL/AttackersPlaybook_Page06.jpg",
+"Assets/VTL/AttackersPlaybook_Page07.jpg",
+"Assets/VTL/AttackersPlaybook_Page08.jpg",
+"Assets/VTL/AttackersPlaybook_Page09.jpg",
+"Assets/VTL/AttackersPlaybook_Page10.jpg"
+  ];
+  var i = 0;
+  var img = document.getElementById('pdfPage');
+  var counter = document.getElementById('pdfCounter');
+  var prev = document.getElementById('pdfPrev');
+  var next = document.getElementById('pdfNext');
+  var viewer = document.getElementById('pdfViewer');
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function render() {
+    img.src = pages[i];
+    img.alt = "The Attacker's Playbook \u2014 page " + (i + 1);
+    counter.textContent = pad(i + 1) + ' / ' + pad(pages.length);
+    prev.disabled = i === 0;
+    next.disabled = i === pages.length - 1;
+  }
+
+  function go(delta) {
+    var n = i + delta;
+    if (n < 0 || n >= pages.length) return;
+    i = n;
+    render();
+  }
+
+  prev.addEventListener('click', function () { go(-1); });
+  next.addEventListener('click', function () { go(1); });
+  viewer.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') { go(-1); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { go(1); e.preventDefault(); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

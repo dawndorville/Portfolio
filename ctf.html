@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VTL Capture the Flag — Dawn Dorville</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --page-pad: 60px;
+    --content-w: 1320px;
+    --gray: #878787;
+    --nav-gray: #919191;
+    --frame-bg: #292922;
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', monospace;
+    --body: 'Inter', sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:#000;
+    color:#fff;
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x:hidden;
+  }
+  img{ display:block; }
+
+  .container{
+    width:100%;
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin:0 auto;
+    padding: 0 var(--page-pad);
+  }
+
+  /* ============ Header ============ */
+  header{ padding-top:50px; }
+  .header-inner{
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo{
+    font-family:var(--body); font-weight:600; font-size:20px;
+    letter-spacing:4px; text-transform:uppercase; color:#fff;
+    text-decoration:none;
+  }
+  nav{ display:flex; align-items:center; gap:39px; }
+  nav a{ text-decoration:none; white-space:nowrap; }
+  .nav-work{
+    font-family:var(--body); font-weight:600; font-style:italic;
+    font-size:16px; letter-spacing:3.2px; text-transform:uppercase; color:#fff;
+  }
+  .nav-resume{
+    font-family:var(--body); font-weight:400;
+    font-size:16px; letter-spacing:3.2px; text-transform:uppercase; color:var(--nav-gray);
+  }
+  .nav-in{
+    background:#d9d9d9; border-radius:30px; padding:15px;
+    font-family:var(--body); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; text-transform:uppercase; color:#000; line-height:1;
+  }
+
+  /* ============ Project intro ============ */
+  .intro{ margin-top:55px; display:flex; flex-direction:column; gap:15px; }
+  .intro h1{
+    font-family:var(--display); font-weight:400;
+    font-size:60px; line-height:normal; color:var(--gray);
+  }
+  .intro .sub{
+    font-family:var(--mono); font-weight:700;
+    font-size:20px; line-height:1.8; letter-spacing:4px;
+    text-transform:uppercase; color:var(--gray);
+  }
+  .intro .blurb{
+    font-size:16px; line-height:1.8; color:#fff; max-width:700px;
+  }
+
+  /* ============ Sections ============ */
+  main{ margin-top:146px; padding-bottom:200px; display:flex; flex-direction:column; gap:200px; }
+  .section{ display:flex; flex-direction:column; gap:40px; }
+  .section-details{ display:flex; gap:30px; align-items:stretch; }
+  .side-label{
+    writing-mode: vertical-rl;
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; text-transform:uppercase; color:var(--gray);
+    line-height:1; flex-shrink:0;
+  }
+  .rule{ width:1px; background:#fff; align-self:stretch; flex-shrink:0; }
+  .section-text{ display:flex; flex-direction:column; gap:9px; max-width:660px; }
+  .section-text h2{
+    font-family:var(--display); font-weight:400;
+    font-size:24px; line-height:1; letter-spacing:2.4px;
+    text-transform:uppercase; color:#fff;
+  }
+  .section-text p{ font-size:16px; line-height:1.8; color:#fff; }
+
+  /* ============ Section 1: Weather scene ============ */
+  .weather-frame{
+    position:relative; width:100%; height:500px;
+    border-radius:10px; overflow:hidden;
+    background:#292922;
+    user-select:none;
+  }
+  .weather-frame .layer{ position:absolute; inset:0; }
+
+  .sky-sunny{
+    background: linear-gradient(to bottom, #5fb9df 0%, #a5dcee 55%, #d8f0f6 100%);
+    opacity:1; transition: opacity 1.4s ease;
+  }
+  .sky-storm{
+    background: linear-gradient(to bottom, #1e2229 0%, #333a44 60%, #46505b 100%);
+    opacity:0; transition: opacity 1.4s ease;
+  }
+  .stormy .sky-sunny{ opacity:0; }
+  .stormy .sky-storm{ opacity:1; }
+
+  .sun{
+    position:absolute; left:11%; top:52px; width:92px; height:92px;
+    border-radius:50%;
+    background: radial-gradient(circle at 40% 35%, #fff3c4, #ffd75e 65%, #ffc93c);
+    box-shadow: 0 0 60px 24px rgba(255, 214, 90, 0.45);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+    animation: sun-pulse 6s ease-in-out infinite;
+  }
+  @keyframes sun-pulse{
+    0%,100%{ box-shadow:0 0 60px 24px rgba(255,214,90,.45); }
+    50%{ box-shadow:0 0 76px 32px rgba(255,214,90,.6); }
+  }
+  .stormy .sun{ opacity:0; transform: translateY(-30px); }
+
+  .cloud{
+    position:absolute;
+    transition: opacity 1.4s ease;
+  }
+  .cloud svg path{ fill:#ffffff; transition: fill 1.4s ease; }
+  .cloud.c1{ left:22%; top:56px; animation: drift 46s linear infinite; }
+  .cloud.c2{ left:58%; top:110px; transform:scale(.72); animation: drift 62s linear infinite reverse; }
+  .cloud.c3{ left:78%; top:40px; transform:scale(.9); animation: drift 54s linear infinite; }
+  @keyframes drift{
+    0%{ margin-left:0; } 50%{ margin-left:60px; } 100%{ margin-left:0; }
+  }
+  .stormy .cloud svg path{ fill:#4b525c; }
+  .storm-cloud{
+    position:absolute; opacity:0; transition: opacity 1.4s ease;
+  }
+  .storm-cloud svg path{ fill:#2c323b; }
+  .storm-cloud.s1{ left:8%; top:24px; }
+  .storm-cloud.s2{ left:42%; top:12px; transform:scale(1.2); }
+  .storm-cloud.s3{ left:72%; top:64px; transform:scale(.85); }
+  .stormy .storm-cloud{ opacity:1; animation: drift 40s linear infinite; }
+
+  .bolt{
+    position:absolute; opacity:0; pointer-events:none;
+    filter: drop-shadow(0 0 10px rgba(255, 232, 115, .9));
+  }
+  .bolt.b1{ left:30%; top:96px; }
+  .bolt.b2{ left:66%; top:118px; transform:scale(.75); }
+  .stormy .bolt.b1{ animation: bolt-flash 5s linear infinite .8s; }
+  .stormy .bolt.b2{ animation: bolt-flash 7s linear infinite 3.2s; }
+  @keyframes bolt-flash{
+    0%, 3.4%, 100%{ opacity:0; }
+    1%, 2.6%{ opacity:1; }
+    1.8%{ opacity:.4; }
+  }
+  .flash{
+    background:#fff; opacity:0; pointer-events:none;
+  }
+  .stormy .flash{ animation: sky-flash 5s linear infinite .8s; }
+  @keyframes sky-flash{
+    0%, 3.4%, 100%{ opacity:0; }
+    1%{ opacity:.22; }
+    2%{ opacity:.05; }
+    2.6%{ opacity:.16; }
+  }
+
+  .sea{
+    position:absolute; left:0; right:0; bottom:78px; height:150px;
+  }
+  .sea svg{ position:absolute; bottom:0; left:0; width:200%; height:100%; }
+  .wave-back path{ fill:#57b8da; transition: fill 1.4s ease; }
+  .wave-front path{ fill:#2e9bc4; transition: fill 1.4s ease; }
+  .wave-back{ animation: roll 14s linear infinite; }
+  .wave-front{ animation: roll 9s linear infinite reverse; bottom:-6px; }
+  @keyframes roll{
+    0%{ transform: translateX(0); }
+    100%{ transform: translateX(-50%); }
+  }
+  .stormy .wave-back path{ fill:#2b3e4c; }
+  .stormy .wave-front path{ fill:#1d3341; }
+
+  .sand{
+    position:absolute; left:0; right:0; bottom:0; height:96px;
+    background:#eed9a4;
+    border-radius: 100% 80% 0 0 / 42px 26px 0 0;
+    transition: background-color 1.4s ease;
+  }
+  .stormy .sand{ background:#a2916b; }
+
+  .gull{
+    position:absolute; left:48%; top:70px; opacity:.9;
+    animation: glide 24s ease-in-out infinite;
+    transition: opacity 1s ease;
+  }
+  .gull svg path{ stroke:#546e7a; }
+  @keyframes glide{
+    0%{ transform: translate(0,0); }
+    50%{ transform: translate(-120px, 26px); }
+    100%{ transform: translate(0,0); }
+  }
+  .stormy .gull{ opacity:0; }
+
+  .cat{
+    position:absolute; right:170px; bottom:34px; width:110px;
+    transition: transform 1.4s ease;
+  }
+  .cat .tail{
+    transform-origin: 96px 122px;
+    animation: tail-sway 4s ease-in-out infinite;
+  }
+  @keyframes tail-sway{
+    0%,100%{ transform: rotate(0deg); }
+    50%{ transform: rotate(9deg); }
+  }
+  .stormy .cat{ transform: translateY(2px); }
+
+  .breach-msg{
+    position:absolute; right:120px; bottom:190px;
+    background:#fff; color:#000;
+    font-family:var(--mono); font-weight:700; font-size:13px;
+    letter-spacing:2px; text-transform:uppercase;
+    padding:12px 16px; border-radius:8px;
+    opacity:0; transform: translateY(8px) scale(.92);
+    transition: opacity .5s ease, transform .5s cubic-bezier(.34,1.56,.64,1);
+    transition-delay: 0s;
+    white-space:nowrap;
+    z-index:9;
+  }
+  .breach-msg::after{
+    content:''; position:absolute; left:38px; bottom:-8px;
+    border:8px solid transparent; border-top-color:#fff; border-bottom:0;
+  }
+  .stormy .breach-msg{
+    opacity:1; transform: translateY(0) scale(1);
+    transition-delay: 1.1s;
+  }
+
+  .crab{
+    position:absolute; bottom:26px; width:74px;
+  }
+  .crab.k1{ left:16%; animation: scuttle1 11s ease-in-out infinite; }
+  .crab.k2{ left:34%; bottom:14px; transform:scale(.72); animation: scuttle2 9s ease-in-out infinite; }
+  .stormy .crab.k1{ animation-duration: 4.5s; }
+  .stormy .crab.k2{ animation-duration: 3.5s; }
+  @keyframes scuttle1{
+    0%,100%{ margin-left:0; } 12%{ margin-top:-2px; }
+    50%{ margin-left:120px; } 62%{ margin-top:-2px; }
+  }
+  @keyframes scuttle2{
+    0%,100%{ margin-left:0; } 20%{ margin-top:-2px; }
+    50%{ margin-left:-90px; } 70%{ margin-top:-2px; }
+  }
+  .crab .claw-l{ transform-origin:14px 30px; animation: pinch 2.2s ease-in-out infinite; }
+  .crab .claw-r{ transform-origin:76px 30px; animation: pinch 2.2s ease-in-out infinite 1.1s; }
+  @keyframes pinch{
+    0%,100%{ transform: rotate(0deg); } 50%{ transform: rotate(-10deg); }
+  }
+
+  .rain{
+    opacity:0; transition: opacity 1.4s ease; pointer-events:none;
+    background-image: repeating-linear-gradient(
+      100deg,
+      rgba(190, 210, 230, 0.35) 0px,
+      rgba(190, 210, 230, 0.35) 1px,
+      transparent 1px,
+      transparent 26px
+    );
+  }
+  .stormy .rain{ opacity:.8; animation: rainfall .6s linear infinite; }
+  @keyframes rainfall{
+    0%{ background-position: 0 0; }
+    100%{ background-position: -88px 500px; }
+  }
+
+  .dim{
+    background: linear-gradient(rgba(12,17,26,.32), rgba(12,17,26,.12));
+    opacity:0; transition: opacity 1.4s ease; pointer-events:none;
+  }
+  .stormy .dim{ opacity:1; }
+
+  .scene-toggle{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    display:flex; gap:12px; z-index:12;
+  }
+  .scene-toggle button{
+    font-family:var(--mono); font-weight:700; font-size:14px;
+    letter-spacing:2.8px; text-transform:uppercase;
+    color:#fff; background:rgba(0,0,0,.38);
+    border:1px solid rgba(255,255,255,.75); border-radius:30px;
+    padding:13px 28px; cursor:pointer;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    transition: background .25s ease, color .25s ease, transform .15s ease;
+  }
+  .scene-toggle button:hover{ transform: translateY(-1px); }
+  .scene-toggle button.active{ background:#fff; color:#000; border-color:#fff; }
+  .scene-toggle button:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+
+  /* ============ Section 2: Computer carousel ============ */
+  .stage-wrap{ width:100%; }
+  .stage{ transform-origin: top left; position:relative; }
+  .computer-stage{ width:1320px; height:616px; }
+  .computer{
+    position:absolute; left:230.5px; top:0; width:859px; height:616px;
+  }
+  .monitor{
+    position:absolute; left:0; top:0; width:859px; height:500px;
+    background:#282621;
+  }
+  .monitor-inner{
+    position:absolute; left:20px; top:20px; width:819px; height:460px;
+    background:#000; border-radius:2px;
+  }
+  .screen{
+    position:absolute; left:25px; top:25px; width:809px; height:450px;
+    overflow:hidden; background:#000;
+  }
+  .screen .slide{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; opacity:0; transition: opacity .55s ease;
+  }
+  .screen .slide.active{ opacity:1; }
+  .stand{
+    position:absolute; left:349px; top:499px; width:160px; height:84px;
+    background: linear-gradient(to bottom, #141310, #1b1a16);
+  }
+  .base-img{
+    position:absolute; left:279px; top:583px; width:300px; height:24px;
+  }
+  .base-img img{ width:100%; height:100%; }
+  .base-bar{
+    position:absolute; left:279px; top:607px; width:300px; height:9px;
+    background:#282621;
+  }
+  .carousel-arrow{
+    position:absolute; top:516px; width:50px; height:50px;
+    border-radius:50%; background:#d9d9d9; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: transform .15s ease, background .2s ease;
+    z-index:5;
+  }
+  .carousel-arrow:hover{ background:#fff; transform:scale(1.06); }
+  .carousel-arrow:active{ transform:scale(.96); }
+  .carousel-arrow:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+  .carousel-arrow.prev{ left:510px; }
+  .carousel-arrow.next{ left:760px; }
+  .carousel-arrow svg{ display:block; }
+
+  /* ============ Section 3 & 4: square rows ============ */
+  .square-row{
+    display:flex; justify-content:space-between; align-items:center;
+    width:100%; gap:20px; flex-wrap:wrap;
+  }
+  .square{
+    width:410px; height:410px; flex-shrink:0; position:relative; overflow:hidden;
+  }
+  .square img{ width:100%; height:100%; object-fit:cover; }
+  .square.placeholder{
+    background:#d9d9d9; display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:40px;
+  }
+  .square.placeholder p{ color:#000; font-size:16px; line-height:normal; max-width:241px; }
+  .square.crop-shift img{
+    width:108.78%; height:100%; max-width:none; margin-left:-2.44%;
+  }
+
+  .coming-soon{
+    width:100%; height:646px; background:var(--frame-bg);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .coming-soon p{
+    font-family:var(--display); font-weight:400; font-size:24px;
+    letter-spacing:2.4px; text-transform:uppercase; color:#fff; text-align:center;
+  }
+  .event-media{ display:flex; flex-direction:column; gap:40px; }
+
+  /* ============ Section 5: Certificate & badges ============ */
+  .cert-stage{ width:1320px; height:568px; }
+  .cert-frame{
+    position:absolute; inset:0;
+    border-radius:10px;
+    background: linear-gradient(to bottom, #1f211b, #101010);
+    display:flex; align-items:center; padding:70px;
+  }
+  .cert-frame::before{
+    content:''; position:absolute; inset:0; border-radius:inherit;
+    background-image:
+      repeating-linear-gradient(to right, rgba(96,96,96,.12) 0px, rgba(96,96,96,.12) 1px, transparent 1px, transparent 30px),
+      repeating-linear-gradient(to bottom, rgba(96,96,96,.12) 0px, rgba(96,96,96,.12) 1px, transparent 1px, transparent 30px);
+    pointer-events:none;
+  }
+  .certificate{
+    width:642px; height:428px; flex-shrink:0; position:relative; z-index:1;
+  }
+  .certificate img{ width:100%; height:100%; object-fit:cover; }
+  .badge{
+    position:absolute; width:200px; height:200px;
+    cursor:grab; touch-action:none; z-index:2;
+    transition: filter .2s ease;
+    will-change: left, top;
+  }
+  .badge img{
+    width:100%; height:100%; object-fit:cover; pointer-events:none;
+    transition: transform .2s ease;
+  }
+  .badge.dragging{ cursor:grabbing; z-index:10; }
+  .badge.dragging img{
+    transform: scale(1.05) rotate(2deg);
+    filter: drop-shadow(0 14px 22px rgba(0,0,0,.5));
+  }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 900px){
+    :root{ --page-pad: 24px; }
+    .intro h1{ font-size:40px; }
+    .intro .sub{ font-size:16px; letter-spacing:3.2px; }
+    main{ margin-top:100px; gap:120px; }
+    .square-row{ justify-content:center; }
+    .square{ width:100%; max-width:410px; aspect-ratio:1/1; height:auto; }
+    nav{ gap:20px; }
+    .breach-msg{ right:60px; }
+    .cat{ right:80px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration:.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.2s !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="container">
+  <div class="header-inner">
+    <a class="logo" href="index.html">Dawn Dorville</a>
+    <nav>
+      <a class="nav-work" href="#">[ Work ]</a>
+      <a class="nav-resume" href="#">Resume</a>
+      <a class="nav-in" href="#">In</a>
+    </nav>
+  </div>
+</header>
+
+<section class="container intro">
+  <div>
+    <h1>VTL Capture the Flag</h1>
+    <p class="sub">campaign for the Varonis threat research team game</p>
+  </div>
+  <p class="blurb">Breach at the Beach is a story-driven CTF created by Varonis Threat Labs that drops security practitioners into a real-world cloud identity breach investigation.</p>
+</section>
+
+<main class="container">
+
+  <!-- ============ Section 1: Storm Scene Transition ============ -->
+  <section class="section">
+    <div class="section-details">
+      <span class="side-label">visuals</span>
+      <span class="rule"></span>
+      <div class="section-text">
+        <h2>Storm scene transition</h2>
+        <p>This scene was the basis for the look of the game. In this scene, Pixel (VTL team mascot and threat hunter), is visiting the beach when a storm rolls in and she gets a message about a breach.</p>
+      </div>
+    </div>
+
+    <div class="weather-frame" id="weatherFrame" aria-label="Interactive beach scene — toggle between sunny and stormy weather">
+      <div class="layer sky-sunny"></div>
+      <div class="layer sky-storm"></div>
+
+      <div class="sun"></div>
+
+      <div class="cloud c1">
+        <svg width="170" height="64" viewBox="0 0 170 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 64C17.9 64 0 52.6 0 42.5 0 32.4 12 26 24 27.5 26 12 40 0 58 0c16 0 29 9.6 33 22.5C95 19 101 17.5 108 17.5c17 0 30 10.4 31.5 23C152 40 170 45.5 170 53c0 6.1-13 11-30 11H40Z"/>
+        </svg>
+      </div>
+      <div class="cloud c2">
+        <svg width="170" height="64" viewBox="0 0 170 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 64C17.9 64 0 52.6 0 42.5 0 32.4 12 26 24 27.5 26 12 40 0 58 0c16 0 29 9.6 33 22.5C95 19 101 17.5 108 17.5c17 0 30 10.4 31.5 23C152 40 170 45.5 170 53c0 6.1-13 11-30 11H40Z"/>
+        </svg>
+      </div>
+      <div class="cloud c3">
+        <svg width="170" height="64" viewBox="0 0 170 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 64C17.9 64 0 52.6 0 42.5 0 32.4 12 26 24 27.5 26 12 40 0 58 0c16 0 29 9.6 33 22.5C95 19 101 17.5 108 17.5c17 0 30 10.4 31.5 23C152 40 170 45.5 170 53c0 6.1-13 11-30 11H40Z"/>
+        </svg>
+      </div>
+
+      <div class="storm-cloud s1">
+        <svg width="210" height="70" viewBox="0 0 170 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 64C17.9 64 0 52.6 0 42.5 0 32.4 12 26 24 27.5 26 12 40 0 58 0c16 0 29 9.6 33 22.5C95 19 101 17.5 108 17.5c17 0 30 10.4 31.5 23C152 40 170 45.5 170 53c0 6.1-13 11-30 11H40Z"/>
+        </svg>
+      </div>
+      <div class="storm-cloud s2">
+        <svg width="210" height="70" viewBox="0 0 170 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 64C17.9 64 0 52.6 0 42.5 0 32.4 12 26 24 27.5 26 12 40 0 58 0c16 0 29 9.6 33 22.5C95 19 101 17.5 108 17.5c17 0 30 10.4 31.5 23C152 40 170 45.5 170 53c0 6.1-13 11-30 11H40Z"/>
+        </svg>
+      </div>
+      <div class="storm-cloud s3">
+        <svg width="210" height="70" viewBox="0 0 170 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 64C17.9 64 0 52.6 0 42.5 0 32.4 12 26 24 27.5 26 12 40 0 58 0c16 0 29 9.6 33 22.5C95 19 101 17.5 108 17.5c17 0 30 10.4 31.5 23C152 40 170 45.5 170 53c0 6.1-13 11-30 11H40Z"/>
+        </svg>
+      </div>
+
+      <div class="bolt b1">
+        <svg width="46" height="96" viewBox="0 0 46 96" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="28,0 6,44 19,44 2,96 42,36 27,36 44,0" fill="#ffe873"/>
+        </svg>
+      </div>
+      <div class="bolt b2">
+        <svg width="46" height="96" viewBox="0 0 46 96" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="28,0 6,44 19,44 2,96 42,36 27,36 44,0" fill="#ffe873"/>
+        </svg>
+      </div>
+
+      <div class="gull">
+        <svg width="44" height="16" viewBox="0 0 44 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 12 Q11 2 21 12 Q31 2 42 12" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+
+      <div class="sea">
+        <svg class="wave-back" viewBox="0 0 1320 150" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,42 C110,18 220,18 330,42 C440,66 550,66 660,42 C770,18 880,18 990,42 C1100,66 1210,66 1320,42 L1320,150 L0,150 Z"/>
+        </svg>
+        <svg class="wave-front" viewBox="0 0 1320 150" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,64 C110,44 220,44 330,64 C440,84 550,84 660,64 C770,44 880,44 990,64 C1100,84 1210,84 1320,64 L1320,150 L0,150 Z"/>
+        </svg>
+      </div>
+
+      <div class="sand"></div>
+
+      <div class="crab k1">
+        <svg viewBox="0 0 90 60" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#c2483f" stroke-width="3" stroke-linecap="round">
+            <line x1="28" y1="44" x2="16" y2="54"/>
+            <line x1="36" y1="48" x2="28" y2="58"/>
+            <line x1="45" y1="50" x2="45" y2="59"/>
+            <line x1="62" y1="44" x2="74" y2="54"/>
+            <line x1="54" y1="48" x2="62" y2="58"/>
+          </g>
+          <g stroke="#c2483f" stroke-width="3" fill="none">
+            <path d="M28 32 Q18 26 14 30"/>
+            <path d="M62 32 Q72 26 76 30"/>
+          </g>
+          <g class="claw-l"><circle cx="12" cy="28" r="9" fill="#e2574c"/><path d="M8 22 L14 27 L7 30 Z" fill="#292922" opacity=".35"/></g>
+          <g class="claw-r"><circle cx="78" cy="28" r="9" fill="#e2574c"/><path d="M82 22 L76 27 L83 30 Z" fill="#292922" opacity=".35"/></g>
+          <line x1="38" y1="22" x2="35" y2="12" stroke="#c2483f" stroke-width="2.5"/>
+          <line x1="52" y1="22" x2="55" y2="12" stroke="#c2483f" stroke-width="2.5"/>
+          <circle cx="35" cy="10" r="4.5" fill="#e2574c"/><circle cx="35" cy="10" r="2" fill="#fff"/>
+          <circle cx="55" cy="10" r="4.5" fill="#e2574c"/><circle cx="55" cy="10" r="2" fill="#fff"/>
+          <ellipse cx="45" cy="36" rx="23" ry="15" fill="#e2574c"/>
+          <path d="M32 38 Q45 46 58 38" stroke="#c2483f" stroke-width="2" fill="none"/>
+        </svg>
+      </div>
+      <div class="crab k2">
+        <svg viewBox="0 0 90 60" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#c2483f" stroke-width="3" stroke-linecap="round">
+            <line x1="28" y1="44" x2="16" y2="54"/>
+            <line x1="36" y1="48" x2="28" y2="58"/>
+            <line x1="45" y1="50" x2="45" y2="59"/>
+            <line x1="62" y1="44" x2="74" y2="54"/>
+            <line x1="54" y1="48" x2="62" y2="58"/>
+          </g>
+          <g stroke="#c2483f" stroke-width="3" fill="none">
+            <path d="M28 32 Q18 26 14 30"/>
+            <path d="M62 32 Q72 26 76 30"/>
+          </g>
+          <g class="claw-l"><circle cx="12" cy="28" r="9" fill="#e2574c"/><path d="M8 22 L14 27 L7 30 Z" fill="#292922" opacity=".35"/></g>
+          <g class="claw-r"><circle cx="78" cy="28" r="9" fill="#e2574c"/><path d="M82 22 L76 27 L83 30 Z" fill="#292922" opacity=".35"/></g>
+          <line x1="38" y1="22" x2="35" y2="12" stroke="#c2483f" stroke-width="2.5"/>
+          <line x1="52" y1="22" x2="55" y2="12" stroke="#c2483f" stroke-width="2.5"/>
+          <circle cx="35" cy="10" r="4.5" fill="#e2574c"/><circle cx="35" cy="10" r="2" fill="#fff"/>
+          <circle cx="55" cy="10" r="4.5" fill="#e2574c"/><circle cx="55" cy="10" r="2" fill="#fff"/>
+          <ellipse cx="45" cy="36" rx="23" ry="15" fill="#e2574c"/>
+          <path d="M32 38 Q45 46 58 38" stroke="#c2483f" stroke-width="2" fill="none"/>
+        </svg>
+      </div>
+
+      <div class="cat">
+        <svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+          <path class="tail" d="M96 122 Q120 108 112 82" stroke="#1b1b1b" stroke-width="11" stroke-linecap="round" fill="none"/>
+          <ellipse cx="58" cy="112" rx="34" ry="27" fill="#1b1b1b"/>
+          <path d="M42 66 Q36 108 42 137 L78 137 Q84 102 76 64 Z" fill="#1b1b1b"/>
+          <circle cx="60" cy="44" r="25" fill="#1b1b1b"/>
+          <path d="M41 30 L36 4 L57 20 Z" fill="#1b1b1b"/>
+          <path d="M79 30 L84 4 L63 20 Z" fill="#1b1b1b"/>
+          <ellipse cx="51" cy="44" rx="3.6" ry="5.4" fill="#8fe388"/>
+          <ellipse cx="70" cy="44" rx="3.6" ry="5.4" fill="#8fe388"/>
+          <ellipse cx="48" cy="134" rx="9" ry="5" fill="#141414"/>
+          <ellipse cx="70" cy="134" rx="9" ry="5" fill="#141414"/>
+        </svg>
+      </div>
+      <div class="breach-msg">! Breach detected</div>
+
+      <div class="layer dim"></div>
+      <div class="layer rain"></div>
+      <div class="layer flash"></div>
+
+      <div class="scene-toggle" role="group" aria-label="Weather scene toggle">
+        <button type="button" id="btnSunny" class="active" aria-pressed="true">Sunny</button>
+        <button type="button" id="btnStormy" aria-pressed="false">Stormy</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Section 2: Game Branding ============ -->
+  <section class="section">
+    <div class="section-details">
+      <span class="side-label">UI</span>
+      <span class="rule"></span>
+      <div class="section-text">
+        <h2>Game branding</h2>
+        <p>This is where some text goes</p>
+      </div>
+    </div>
+
+    <div class="stage-wrap" id="computerWrap">
+      <div class="stage computer-stage" data-h="616">
+        <div class="computer">
+          <div class="monitor">
+            <div class="monitor-inner"></div>
+            <div class="screen" id="screen">
+              <img class="slide active" src="https://www.figma.com/api/mcp/asset/f39f67aa-ff21-414d-8040-2fc8176f0cd1" alt="Crab Dash game screen">
+              <img class="slide" src="https://www.figma.com/api/mcp/asset/b284a026-46f1-4906-9c62-a59452eff711" alt="Crab Dash challenges screen">
+              <img class="slide" src="https://www.figma.com/api/mcp/asset/14f5340c-228a-4144-a0ea-a6728d96a369" alt="CTF pop-up screen">
+              <img class="slide" src="https://www.figma.com/api/mcp/asset/448ab572-1a25-476f-a163-123d61f416f4" alt="CTF challenges screen">
+            </div>
+          </div>
+          <div class="stand"></div>
+          <div class="base-img"><img src="https://www.figma.com/api/mcp/asset/0cf7c28a-b5e8-496d-8bdd-d442a1c0b76b" alt=""></div>
+          <div class="base-bar"></div>
+        </div>
+        <button type="button" class="carousel-arrow prev" id="prevBtn" aria-label="Previous screen">
+          <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.5 2 L5 9 L11.5 16" stroke="#000" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button type="button" class="carousel-arrow next" id="nextBtn" aria-label="Next screen">
+          <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6.5 2 L13 9 L6.5 16" stroke="#000" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Section 3: Promo posts ============ -->
+  <section class="section">
+    <div class="section-details">
+      <span class="side-label">social</span>
+      <span class="rule"></span>
+      <div class="section-text">
+        <h2>Promo posts</h2>
+        <p>This is where some text goes</p>
+      </div>
+    </div>
+
+    <div class="square-row">
+      <div class="square">
+        <img src="https://www.figma.com/api/mcp/asset/dc397e7b-748d-4614-be90-963832575573" alt="Breach at the Beach game announcement post">
+      </div>
+      <div class="square">
+        <img src="https://www.figma.com/api/mcp/asset/4cb15fc4-8269-4cfc-af80-5b49b38bfbc8" alt="Breach at the Beach grand prize post">
+      </div>
+      <div class="square placeholder">
+        <p>Pixel in vegas</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Section 4: CTF @ Black Hat ============ -->
+  <section class="section">
+    <div class="section-details">
+      <span class="side-label">event</span>
+      <span class="rule"></span>
+      <div class="section-text">
+        <h2>CTF @ Black Hat</h2>
+        <p>The CTF was available to play at Black Hat and was shown in the space with a table wrap, staff outfits, floor decals, and themed swag.</p>
+      </div>
+    </div>
+
+    <div class="event-media">
+      <div class="coming-soon">
+        <p>coming soon</p>
+      </div>
+      <div class="square-row" style="align-items:flex-start;">
+        <div class="square crop-shift">
+          <img src="https://www.figma.com/api/mcp/asset/723f8ce1-ad82-4d15-ad98-e06634464c7c" alt="Event photo">
+        </div>
+        <div class="square">
+          <img src="https://www.figma.com/api/mcp/asset/03262e34-a70c-4f96-9e86-5fc0b2b31da8" alt="Breach at the Beach towel mockup">
+        </div>
+        <div class="square placeholder">
+          <p>Sticker mocked up on laptop</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Section 5: Certificate & Badges ============ -->
+  <section class="section">
+    <div class="section-details">
+      <span class="side-label">earnings</span>
+      <span class="rule"></span>
+      <div class="section-text">
+        <h2>Certificate &amp; Badges</h2>
+        <p>This is a description</p>
+      </div>
+    </div>
+
+    <div class="stage-wrap" id="certWrap">
+      <div class="stage cert-stage" data-h="568">
+        <div class="cert-frame" id="certFrame">
+          <div class="certificate">
+            <img src="https://www.figma.com/api/mcp/asset/4276a8fe-3539-4a95-ac2d-f8e890ba6754" alt="Breach at the Beach completion certificate">
+          </div>
+          <div class="badge" style="left:782px; top:26px;">
+            <img src="https://www.figma.com/api/mcp/asset/5256777c-4a75-490d-9915-0cbdb41151a6" alt="Oceanographer badge" draggable="false">
+          </div>
+          <div class="badge" style="left:934px; top:113px;">
+            <img src="https://www.figma.com/api/mcp/asset/c6f60790-4f6b-4ae0-9a71-e21cf9ff300b" alt="Treasure Hunter badge" draggable="false">
+          </div>
+          <div class="badge" style="left:1016px; top:334px;">
+            <img src="https://www.figma.com/api/mcp/asset/074282d6-c4e7-46f8-896e-e391c997f3dc" alt="Ultimate Crabber badge" draggable="false">
+          </div>
+          <div class="badge" style="left:796px; top:236px;">
+            <img src="https://www.figma.com/api/mcp/asset/26339f9d-7901-4145-883c-d69d50be2d57" alt="Ocean Explorer badge" draggable="false">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  /* ============ Storm scene toggle ============ */
+  (function(){
+    const frame = document.getElementById('weatherFrame');
+    const btnSunny = document.getElementById('btnSunny');
+    const btnStormy = document.getElementById('btnStormy');
+
+    function setScene(stormy){
+      frame.classList.toggle('stormy', stormy);
+      btnSunny.classList.toggle('active', !stormy);
+      btnStormy.classList.toggle('active', stormy);
+      btnSunny.setAttribute('aria-pressed', String(!stormy));
+      btnStormy.setAttribute('aria-pressed', String(stormy));
+    }
+    btnSunny.addEventListener('click', () => setScene(false));
+    btnStormy.addEventListener('click', () => setScene(true));
+  })();
+
+  /* ============ Computer carousel: auto every 3s, arrows reset the timer ============ */
+  (function(){
+    const slides = Array.from(document.querySelectorAll('#screen .slide'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let idx = 0;
+    let timer = null;
+
+    function show(i){
+      idx = (i + slides.length) % slides.length;
+      slides.forEach((s, n) => s.classList.toggle('active', n === idx));
+    }
+    function startAuto(){
+      stopAuto();
+      timer = setInterval(() => show(idx + 1), 3000);
+    }
+    function stopAuto(){
+      if (timer){ clearInterval(timer); timer = null; }
+    }
+    prevBtn.addEventListener('click', () => { show(idx - 1); startAuto(); });
+    nextBtn.addEventListener('click', () => { show(idx + 1); startAuto(); });
+
+    startAuto();
+    document.addEventListener('visibilitychange', () => {
+      document.hidden ? stopAuto() : startAuto();
+    });
+  })();
+
+  /* ============ Draggable sticker badges (max 30px past the frame edge) ============ */
+  (function(){
+    const frame = document.getElementById('certFrame');
+    const badges = Array.from(frame.querySelectorAll('.badge'));
+    const OVERHANG = 30;
+    const SIZE = 200;
+
+    badges.forEach(badge => {
+      let dragging = false;
+      let offX = 0, offY = 0;
+
+      badge.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        badge.setPointerCapture(e.pointerId);
+        const scale = frame.getBoundingClientRect().width / frame.offsetWidth;
+        const br = badge.getBoundingClientRect();
+        offX = (e.clientX - br.left) / scale;
+        offY = (e.clientY - br.top) / scale;
+        dragging = true;
+        badge.classList.add('dragging');
+      });
+
+      badge.addEventListener('pointermove', e => {
+        if (!dragging) return;
+        const fr = frame.getBoundingClientRect();
+        const scale = fr.width / frame.offsetWidth;
+        let x = (e.clientX - fr.left) / scale - offX;
+        let y = (e.clientY - fr.top) / scale - offY;
+        x = Math.max(-OVERHANG, Math.min(frame.offsetWidth - SIZE + OVERHANG, x));
+        y = Math.max(-OVERHANG, Math.min(frame.offsetHeight - SIZE + OVERHANG, y));
+        badge.style.left = x + 'px';
+        badge.style.top = y + 'px';
+      });
+
+      function release(e){
+        if (!dragging) return;
+        dragging = false;
+        badge.classList.remove('dragging');
+        if (badge.hasPointerCapture && badge.hasPointerCapture(e.pointerId)){
+          badge.releasePointerCapture(e.pointerId);
+        }
+      }
+      badge.addEventListener('pointerup', release);
+      badge.addEventListener('pointercancel', release);
+    });
+  })();
+
+  /* ============ Fixed-size stage scaler (computer + certificate) ============ */
+  (function(){
+    const DESIGN_W = 1320;
+    function fit(){
+      document.querySelectorAll('.stage-wrap').forEach(wrap => {
+        const stage = wrap.querySelector('.stage');
+        const s = Math.min(1, wrap.clientWidth / DESIGN_W);
+        stage.style.transform = s < 1 ? `scale(${s})` : '';
+        wrap.style.height = (parseFloat(stage.dataset.h) * s) + 'px';
+      });
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('load', fit);
+    fit();
+  })();
+</script>
+
+</body>
+</html>
