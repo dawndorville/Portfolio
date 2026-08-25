@@ -27,7 +27,6 @@
        portfolio — here it's the vertical dividers inside each panel */
     --warm-black: #282621;
     --panel: #101010;
-    --pink: #f956ff;
 
     --display: 'Special Gothic Expanded One', sans-serif;
     --mono: 'Atkinson Hyperlegible Mono', ui-monospace, monospace;
@@ -105,16 +104,16 @@
 
   .divider{ width:3px; flex-shrink:0; align-self:stretch; background:var(--warm-black); }
 
-  /* wide-tracked mono label — Contact / company names (5.6px tracking) */
+  /* wide-tracked mono label — Contact, company names, Skills/Tools, school name */
   .label-wide{
-    font-family:var(--mono); font-weight:700; font-size:28px;
-    letter-spacing:5.6px; text-transform:uppercase; line-height:1; color:#fff;
-  }
-
-  /* narrower mono label — Skills / Tools / school name (2.8px tracking) */
-  .label{
-    font-family:var(--mono); font-weight:700; font-size:28px;
-    letter-spacing:2.8px; text-transform:uppercase; line-height:1; color:#fff;
+    color:#fff;
+    font-family:var(--mono);
+    font-size:24px;
+    font-style:normal;
+    font-weight:700;
+    line-height:100%;
+    letter-spacing:4.8px;
+    text-transform:uppercase;
   }
 
   /* ---------- Bio (245:1221) ---------- */
@@ -135,7 +134,7 @@
 
   .skills-col{ flex:1 0 0; min-width:0; display:flex; flex-direction:column; gap:10px; }
 
-  .skills-col p{
+  .skills-col .skills-text{
     font-family:var(--body); font-weight:600; font-size:20px; line-height:1.8;
   }
 
@@ -160,9 +159,6 @@
     flex:1 0 0; min-width:0;
     font-family:var(--body); font-weight:400; font-size:16px; line-height:1.8;
   }
-
-  /* Figma placeholder copy for the Varonis row — pink, not yet written */
-  .exp-desc.placeholder{ color:var(--pink); }
 
   /* ---------- Education (245:1280) ---------- */
   .edu-panel{ display:flex; flex-direction:column; gap:10px; padding:50px; }
@@ -193,7 +189,7 @@
     .bio-contact, .exp-left{ width:100%; }
     .divider{ display:none; }
 
-    .label, .label-wide{ font-size:20px; }
+    .label-wide{ font-size:20px; }
   }
 
   @media (max-width:880px){
@@ -230,25 +226,23 @@
           <a href="mailto:dawnbalhorn@mac.com">dawnbalhorn@mac.com</a>
         </div>
         <div class="divider"></div>
-        <p class="bio-text">I am a hard working, versatile designer with extensive experience across
-          digital and print. I have a deep appreciation for thoughtful design, lettering and love how
-          the intersection of image, color, and typography can create an identity. I flourish on small
-          teams, working in a fast-paced environment, managing multiple projects spanning all types of
-          design. Problem solving and an earnest desire to jump head first into any project are my most
-          notable strengths.</p>
+        <p class="bio-text">I'm a designer with 10+ years across digital and print, focused on brand
+          experiences, identity systems, and where typography, color, and image meet. I flourish on
+          fast-paced, small teams where I can own a project end to end — from concepting a campaign to
+          building the design system that scales it.</p>
       </div>
     </section>
 
     <div class="panel skills-panel">
       <div class="skills-col">
-        <p class="label">Skills</p>
-        <p>Art Direction, Branding, Design systems, Template building, Illustration, Basic animation,
+        <p class="label-wide">Skills</p>
+        <p class="skills-text">Art Direction, Branding, Design systems, Template building, Illustration, Basic animation,
           Social &amp; ad campaigns, Conference booths</p>
       </div>
       <div class="divider"></div>
       <div class="skills-col">
-        <p class="label">Tools</p>
-        <p>Figma, Weavy/Figma Weave, Adobe Creative Suite [Illustrator, Photoshop, InDesign, Lightroom,
+        <p class="label-wide">Tools</p>
+        <p class="skills-text">Figma, Weavy/Figma Weave, Adobe Creative Suite [Illustrator, Photoshop, InDesign, Lightroom,
           After Effects, Substance], Claude, Asana, Monday</p>
       </div>
     </div>
@@ -265,7 +259,12 @@
           <p class="exp-role">Lead Designer</p>
         </div>
         <div class="divider"></div>
-        <p class="exp-desc placeholder">What do I even do?</p>
+        <p class="exp-desc">Leading the development and execution of scalable brand, digital, and visual
+          design initiatives. Partner with cross-functional stakeholders to create cohesive brand
+          experiences, establish design systems,
+          develop creative frameworks, and deliver high-impact campaigns that support business growth,
+          customer engagement, and thought leadership. Contribute to design operations, creative
+          strategy, and AI-enabled design innovation across the organization.</p>
       </div>
 
       <div class="panel exp-row">
@@ -301,7 +300,7 @@
     <section class="block">
       <h1>Education</h1>
       <div class="panel edu-panel">
-        <p class="label">Parsons school of design</p>
+        <p class="label-wide">Parsons school of design</p>
         <p class="edu-degrees">BFA, Communication Design <span class="sep">|</span> AAS, Fashion Design</p>
       </div>
     </section>
