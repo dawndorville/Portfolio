@@ -158,14 +158,18 @@
     width:100%; height:100%; object-fit:cover; display:block;
   }
 
-  /* -- VTL Branding: 1320x700 image pinned top-left of a 908x438 window --
-     object-position pins the crop itself to the top-left corner too. On
-     desktop the box's aspect exactly matches the source image's, so cover
-     never actually has anything to crop; on mobile, where the box's aspect
-     no longer matches, this is what stops the crop from eating into the
-     left edge (object-fit's default is to crop from the centre). */
-  .art-vtl{ left:0; top:0; width:145.3744%; height:159.8174%; }
-  .art-vtl img{ object-position:left top; }
+  /* -- VTL Branding: 908x438 cover that fills the whole window --
+     Exported from Figma at the frame's exact size, so it fills edge to
+     edge; on mobile, cover crops evenly from the centre, keeping the
+     centred logo in view. */
+  .art-vtl{ inset:0; container-type:inline-size; }
+  /* Inner glow from Figma: inset 0 4px 70px rgba(33,52,52,.8) on the 908px
+     frame. Sized in cqw (of the frame's width) so the glow keeps the same
+     proportions as the frame shrinks on smaller screens. */
+  .art-vtl::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    box-shadow:inset 0 0.4405cqw 7.7093cqw 0 rgba(33,52,52,.8);
+  }
 
   /* -- Social media: 1609x525 image at (40,40) -- */
   .art-social{ left:4.4053%; top:9.1324%; width:177.2026%; height:119.8630%; }
@@ -346,11 +350,6 @@
        centre in total: the original 60px, plus 50px more. */
     .storm .rocks-left { left:8.8105%; }
     .storm .rocks-right{ left:59.4714%; }
-    /* VTL Branding artwork fills the frame's full width, still pinned to
-       the top-left corner. Height keeps the same height:width proportion
-       as the base rule (159.8174/145.3744 ≈ 1.0994) so the crop framing
-       matches desktop, just scaled up to fill the narrower mobile frame. */
-    .art-vtl{ width:100%; height:109.94%; }
     /* The insects stay anchored to the thumbnail frame's edges, same as
        desktop — on mobile that means they're allowed to bleed off the
        edge of the screen rather than being pulled inward to stay clear
@@ -403,7 +402,7 @@
     <a class="thumb-link" href="vtl-portfolio.html" aria-label="VTL Branding — case study">
       <div class="thumb thumb-wide">
         <div class="fill art-vtl">
-          <img src="Assets/Work/VTLBrandElements.png" alt="Varonis Threat Labs brand elements — logo lockups, colour and type specimens.">
+          <img src="Assets/Work/VTLCover.jpg" alt="Varonis Threat Labs logo over a dimly lit threat research control room.">
         </div>
       </div>
     </a>
