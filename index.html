@@ -70,10 +70,15 @@
   /* `.container` sets a `padding` shorthand, and a class selector outranks a
      bare `header` one — so the top padding has to be set at matching
      specificity or it gets zeroed out. Same trap as `main.container` below. */
-  header.container{ padding-top:var(--page-pad); }
+  /* Figma 763:661: header row starts 50px from the top of the frame. */
+  header.container{ padding-top:min(50px, var(--page-pad)); }
   .header-inner{ display:flex; align-items:center; justify-content:space-between; }
+  /* Name set in the display face, uppercase, trimmed to cap height like
+     Figma's text box so it centres on the nav links. */
   .logo{
-    font-family:var(--body); font-weight:600; font-size:20px;
+    font-family:var(--display); font-weight:400; font-size:20px;
+    letter-spacing:2px; text-transform:uppercase; line-height:1;
+    text-box:trim-both cap alphabetic;
     color:#fff; text-decoration:none;
   }
   nav{ display:flex; align-items:center; gap:40px; }
@@ -94,9 +99,9 @@
   }
 
   /* ============ Content column ============ */
-  /* Header bottom sits 50px above the content frame. */
+  /* Header bottom sits 100px above the content frame (Figma 763:655). */
   main.container{
-    margin-top:50px;
+    margin-top:100px;
     padding-bottom:222px;      /* frame height 3936 - content bottom 3714 */
     display:flex; flex-direction:column; gap:100px;
   }
@@ -387,7 +392,7 @@
   <!-- ============ Intro ============ -->
   <section class="intro">
     <h1>Multi-disciplinary designer</h1>
-    <p>with a focus on problem solving, building systems, and expanding creative opportunities.</p>
+    <p>with a focus on problem solving, building systems, and expanding creative opportunities with AI.</p>
   </section>
 
   <!-- ============ VTL Branding ============ -->

@@ -42,7 +42,7 @@
   .page {
     max-width: calc(var(--content-w) + var(--page-pad) * 2);
     margin: 0 auto;
-    padding: var(--page-pad) var(--page-pad) 200px;
+    padding: min(50px, var(--page-pad)) var(--page-pad) 200px;
   }
 
   /* ---------- Header ---------- */
@@ -53,12 +53,11 @@
     gap: 24px;
   }
 
-  .logo {
-    font-family: var(--body);
-    font-weight: 600;
-    font-size: 20px;
-    color: #fff;
-    text-decoration: none;
+  .logo{
+    font-family:var(--display); font-weight:400; font-size:20px;
+    letter-spacing:2px; text-transform:uppercase; line-height:1;
+    text-box:trim-both cap alphabetic;   /* trim to cap height, as in Figma */
+    color:#fff; text-decoration:none;
   }
 
   nav {
@@ -206,6 +205,11 @@
 
   img { display: block; }
 
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
   .caption {
     font-family: var(--mono);
     font-weight: 400;
@@ -216,10 +220,10 @@
     color: var(--gray);
   }
 
-  /* Item 1 — brand elements */
+  /* Item 1 — brand elements (Figma 1320x913.5) */
   .brand-img {
     width: 100%;
-    aspect-ratio: 2640 / 1400;
+    aspect-ratio: 1320 / 913.5;
     object-fit: cover;
   }
 
@@ -230,7 +234,7 @@
   }
   .hoodie-img img { width: 100%; height: auto; }
 
-  /* Item 3 — research releases */
+  /* Items 2 & 3 — MCP report and blog research cards */
   .research-card {
     /* 30px grid pattern (#606060 @ 12%) over the gradient, matching the Figma pattern fill */
     background-image:
@@ -243,13 +247,103 @@
     width: 100%;
   }
 
-  .research-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 40px;
-    row-gap: 100px;
-    align-items: start;
+  /* MCP report: a monitor showing the live page, then the promo assets */
+  .mcp-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 100px;
   }
+
+  /* Monitor (Figma "Computer frame", 859x616). Every part is placed as a
+     percentage of that box so the monitor scales as one piece. Stand parts
+     come first in the markup so the monitor body overlaps the neck. */
+  .computer {
+    position: relative;
+    width: 100%;
+    max-width: 859px;
+    aspect-ratio: 859 / 616;
+  }
+  .computer > span,
+  .pc-screen { position: absolute; display: block; }
+  .pc-neck  { left: 40.6286%; top: 81.0373%; width: 18.6263%; height: 13.6143%; background: #000; }
+  .pc-base  { left: 32.4796%; top: 94.6510%; width: 34.9243%; height: 3.8898%;  background: #0f0f0f;
+              clip-path: polygon(23.1667% 0, 76.6667% 0, 100% 100%, 0 100%); }
+  .pc-foot  { left: 32.4796%; top: 98.5406%; width: 34.9243%; height: 1.4594%;  background: #000; }
+  .pc-body  { left: 0; top: 0; width: 100%; height: 81.1688%;
+              background: linear-gradient(to bottom, #0f0f0f, #000); }
+  .pc-bezel { left: 2.3283%; top: 3.2468%; width: 95.3434%; height: 74.6753%;
+              background: #000; border-radius: 2px; }
+  /* The screen scrolls, so visitors can read down the full page capture.
+     A thin dark scrollbar keeps it looking like part of the monitor. */
+  .pc-screen {
+    left: 2.9104%; top: 4.0584%; width: 94.1793%; height: 73.0519%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #55554a transparent;
+  }
+  .pc-screen::-webkit-scrollbar { width: 6px; }
+  .pc-screen::-webkit-scrollbar-track { background: transparent; }
+  .pc-screen::-webkit-scrollbar-thumb { background: #55554a; border-radius: 3px; }
+  .pc-screen:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  .pc-screen img { width: 100%; height: auto; }
+
+  /* "View live page": outlined button centred over the monitor's stand
+     (Figma: 1px #ff4c25 border, 8px radius, 6px/20px padding, 519.6px down
+     the 616px monitor frame — over the stand's neck — and 1px left of
+     centre). */
+  .live-link {
+    position: absolute;
+    left: calc(50% - 1px);
+    top: 84.3523%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 20px;
+    border: 1px solid #ff4c25;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    line-height: 1.8;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #ff4c25;
+    text-decoration: none;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .live-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+  .live-link:hover, .live-link:focus-visible { color: #fff; border-color: #fff; }
+  .live-link:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+  /* Promo assets: Figma columns 384 / 384 / 345 with 40px gutters */
+  .mcp-grid {
+    display: grid;
+    grid-template-columns: 384fr 384fr 345fr;
+    column-gap: 40px;
+    row-gap: 50px;
+    align-items: start;
+    width: 100%;
+    max-width: 1193px;
+  }
+
+  /* Blog research: one row per post — social, diagrams, blog hero */
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+  }
+  .blog-row {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+  }
+  .blog-social,
+  .blog-hero { flex: 1 1 0; min-width: 0; }
+  .blog-diagrams { flex: 0 0 330px; }
 
   .research-col {
     display: flex;
@@ -264,8 +358,6 @@
   }
 
   .asset img { width: 100%; height: auto; }
-
-  .asset-narrow { max-width: 318px; }
 
   /* Item 4 — threat report */
   /* Always three across — widths are the Figma tile widths (403/384/393)
@@ -374,7 +466,7 @@
     :root { --page-pad: 40px; }
     .page { padding: var(--page-pad) var(--page-pad) 120px; }
     .intro h1 { font-size: 46px; }
-    .research-grid { grid-template-columns: repeat(2, 1fr); }
+    .mcp-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (max-width: 880px) {
@@ -388,7 +480,14 @@
     .intro h1 { font-size: 32px; }
     .intro .subtitle { font-size: 16px; }
     .campaigns { margin-top: 80px; gap: 120px; }
-    .research-grid { grid-template-columns: 1fr; row-gap: 50px; }
+    .mcp-grid { grid-template-columns: 1fr; }
+    /* The stand is too small to hold the button on phones — it drops
+       below the monitor, still centred */
+    .computer { margin-bottom: 64px; }
+    .live-link { top: calc(100% + 20px); }
+    .mcp-card, .blog-card { gap: 80px; }
+    .blog-row { flex-direction: column; gap: 50px; }
+    .blog-diagrams { flex: none; width: 100%; }
     .research-card { padding: 20px; }
     .details { gap: 14px; }
     .quarter { font-size: 12px; }
@@ -433,10 +532,121 @@
           <p>The VTL sub-brand has it's own color palette, imagery, and unique graphics. The branding evokes a sense of urgency, depth, and mystery — common themes in VTL research.</p>
         </div>
       </div>
-      <img class="brand-img" src="Assets/VTL/VTLBrandElements_1.png" alt="Varonis Threat Labs brand elements overview">
+      <img class="brand-img" src="Assets/VTL/VTLBrandElements_2.png" alt="Varonis Threat Labs brand elements — logo lockups, colour palette, imagery and graphics">
     </section>
 
-    <!-- Item 2: Swag -->
+    <!-- Item 2: MCP report -->
+    <section class="item">
+      <div class="details">
+        <span class="quarter">q3 2026</span>
+        <span class="rule"></span>
+        <div class="heading">
+          <h2>MCP Report</h2>
+          <p>When this research was shared with me for design, I really wanted to avoid creating another PDF. I wanted to design something that would be more engaging and interactive — a more editorial version of the blog posts we publish for the majority of VTL research. I built this page in Figma, then used ChatGPT to build it in HTML, and hosted it on Webflow.</p>
+        </div>
+      </div>
+      <div class="research-card mcp-card">
+        <div class="computer">
+          <span class="pc-neck"></span>
+          <span class="pc-base"></span>
+          <span class="pc-foot"></span>
+          <span class="pc-body"></span>
+          <span class="pc-bezel"></span>
+          <div class="pc-screen" tabindex="0" role="region" aria-label="AI Trustfall page preview, scrollable">
+            <img src="Assets/VTL/MCP_Webpage.png" alt="The AI Trustfall research page on a desktop monitor — How Untrusted AI Agents Get Trusted Access Through MCP">
+          </div>
+          <a class="live-link" href="https://vtl-research.varonis.com/" target="_blank" rel="noopener">
+            View live page
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 18L5 16.6L14.6 7H6V5H18V17H16V8.4L6.4 18Z" fill="currentColor"/></svg>
+            <span class="sr-only">(opens in a new tab)</span>
+          </a>
+        </div>
+        <div class="mcp-grid">
+          <div class="research-col">
+            <div class="asset">
+              <img src="Assets/VTL/Social_VTL-MCP_202610.png" alt="AI Trustfall social post">
+              <span class="caption">Social</span>
+            </div>
+            <div class="asset">
+              <img src="Assets/VTL/Blog_VTL-AITrustfall_202610.png" alt="AI Trustfall blog hero">
+              <span class="caption">Blog Hero</span>
+            </div>
+          </div>
+          <div class="asset">
+            <img src="Assets/VTL/Social_VTL-MCP_Stat1_202610.png" alt="Social stat post: 61% of MCP authorization servers had at least one exploitable security gap">
+            <img src="Assets/VTL/Social_VTL-MCP_Stat2_202610.png" alt="Social stat post: 29% of servers honored MCP tokens at full API privilege">
+            <span class="caption">Social stats</span>
+          </div>
+          <div class="asset">
+            <img src="Assets/VTL/Blog_VTL-AITrustfall_Fig2.png" alt="AI Trustfall attack diagram: the same flow on the same server, for a legitimate app versus an attacker abusing open DCR">
+            <span class="caption">Attack diagram</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Item 3: Blog research -->
+    <section class="item">
+      <div class="details">
+        <span class="quarter">q3 2026</span>
+        <span class="rule"></span>
+        <div class="heading">
+          <h2>Blog research</h2>
+          <p>Varonis Threat Labs research moves quickly and often requires custom graphics featuring blog heroes, social posts, and diagrams.</p>
+        </div>
+      </div>
+      <div class="research-card blog-card">
+        <!-- Not2C -->
+        <div class="blog-row">
+          <div class="asset blog-social">
+            <img src="Assets/VTL/Social_VTL-Not2C_202610.png" alt="Not2C: Trusted by Default, Malicious by Design — social post">
+            <span class="caption">Social</span>
+          </div>
+          <div class="asset blog-diagrams">
+            <img src="Assets/VTL/Blog_VTL-Not2C_202610_Diagram2.png" alt="Not2C blog diagram: path calculations">
+            <img src="Assets/VTL/Blog_VTL-Not2C_202610_Diagram1.png" alt="Not2C blog diagram: post-compromise attack flow">
+            <span class="caption">Blog diagram</span>
+          </div>
+          <div class="asset blog-hero">
+            <img src="Assets/VTL/Blog_VTL-Not2C_202610.png" alt="Not2C blog hero">
+            <span class="caption">Blog Hero</span>
+          </div>
+        </div>
+        <!-- PHP2Shell -->
+        <div class="blog-row">
+          <div class="asset blog-social">
+            <img src="Assets/VTL/Social_VTL-PHP_202610.png" alt="PHP2Shell: One Upload, Full Server — social post">
+            <span class="caption">Social</span>
+          </div>
+          <div class="asset blog-diagrams">
+            <img src="Assets/VTL/Blog_VTL-PHP_Diagram-PrePhase.png" alt="PHP2Shell blog diagram: pre-phase">
+            <span class="caption">Blog diagram</span>
+          </div>
+          <div class="asset blog-hero">
+            <img src="Assets/VTL/Blog_VTL-PHP_202610.png" alt="PHP2Shell blog hero">
+            <span class="caption">Blog Hero</span>
+          </div>
+        </div>
+        <!-- Kubernetes -->
+        <div class="blog-row">
+          <div class="asset blog-social">
+            <img src="Assets/VTL/Social_VTL-GoogleKubernetesAccessFeature_202607.png" alt="It's Not a Bug, It's a Feature: Kubernetes Access to GCP Org Admin — social post">
+            <span class="caption">Social</span>
+          </div>
+          <div class="asset blog-diagrams">
+            <img src="Assets/VTL/Blog_VTL-GoogleKubernetes_Fig2.png" alt="Kubernetes blog diagram: one IAMPolicyMember turns namespace access into organization ownership">
+            <img src="Assets/VTL/Blog_VTL-GoogleKubernetes_Fig3.png" alt="Kubernetes blog diagram: each system checks its half of the request">
+            <span class="caption">Blog diagram</span>
+          </div>
+          <div class="asset blog-hero">
+            <img src="Assets/VTL/Blog_VTL-GoogleKubernetesAccessFeature_202607.png" alt="Kubernetes access blog hero">
+            <span class="caption">Blog Hero</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Item 4: Swag -->
     <section class="item item-swag">
       <div class="details">
         <span class="quarter">q1 2026</span>
@@ -450,63 +660,7 @@
       </div>
     </section>
 
-    <!-- Item 3: Research releases -->
-    <section class="item">
-      <div class="details">
-        <span class="quarter">q1/2 2026</span>
-        <span class="rule"></span>
-        <div class="heading">
-          <h2>Research releases</h2>
-          <p>Varonis Threat Labs research moves quickly and often requires custom graphics featuring blog heroes, social posts, and diagrams.</p>
-        </div>
-      </div>
-      <div class="research-card">
-        <div class="research-grid">
-          <!-- Row 1 -->
-          <div class="research-col">
-            <div class="asset">
-              <img src="Assets/VTL/Social_VTL-SearchLeak_202606_FNL2_1.png" alt="Search Leak social post">
-              <span class="caption">Social</span>
-            </div>
-            <div class="asset">
-              <img src="Assets/VTL/Blog_VTL-SearchLeak_202606_FNL2_1.png" alt="Search Leak blog hero">
-              <span class="caption">Blog Hero</span>
-            </div>
-          </div>
-          <div class="research-col">
-            <div class="asset">
-              <img src="Assets/VTL/Blog_VTL-SearchLeak_Diagram_202606_FNL_1.png" alt="Search Leak blog diagram">
-              <span class="caption">Blog diagram</span>
-            </div>
-          </div>
-          <div class="research-col">
-            <div class="asset">
-              <img src="Assets/VTL/VideoThumbnail_1.png" alt="Search Leak video thumbnail">
-              <span class="caption">Video thumbnail</span>
-            </div>
-            <div class="asset asset-narrow">
-              <img src="Assets/VTL/SearchLeak_VideoDiagram_1.png" alt="Search Leak social diagram">
-              <span class="caption">Social diagram</span>
-            </div>
-          </div>
-          <!-- Row 2 -->
-          <div class="asset">
-            <img src="Assets/VTL/Reprompt_Social_1.png" alt="Reprompt social post">
-            <span class="caption">Social</span>
-          </div>
-          <div class="asset">
-            <img src="Assets/VTL/Reprompt_Diagram_1.png" alt="Reprompt blog diagram">
-            <span class="caption">Blog diagram</span>
-          </div>
-          <div class="asset">
-            <img src="Assets/VTL/Reprompt_BlogHero_1.png" alt="Reprompt blog hero">
-            <span class="caption">Blog Hero</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Item 4: Threat report -->
+    <!-- Item 5: Threat report -->
     <section class="item">
       <div class="details">
         <span class="quarter">Q4 2025</span>

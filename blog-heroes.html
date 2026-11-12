@@ -67,16 +67,16 @@
   /* `.container` sets a `padding` shorthand and a class selector outranks a
      bare `header` one, so the top padding has to be applied at matching
      specificity or the shorthand zeroes it out. */
-  header.container{ padding-top:var(--page-pad); }
+  header.container{ padding-top:min(50px, var(--page-pad)); }
   /* Figma's Header component styles "Work" and "Resume" identically —
      both #919191, Inter Regular, no italic and no bracket decoration. */
   .header-inner{ display:flex; align-items:center; justify-content:space-between; }
 
   .logo{
-    font-family:var(--body);
-    font-weight:600;
-    font-size:20px;
-    color:#fff;
+    font-family:var(--display); font-weight:400; font-size:20px;
+    letter-spacing:2px; text-transform:uppercase; line-height:1;
+    text-box:trim-both cap alphabetic;   /* trim to cap height, as in Figma */
+    color:#fff; text-decoration:none;
   }
 
   nav{ display:flex; align-items:center; gap:40px; }

@@ -59,18 +59,17 @@
   .page {
     max-width: calc(var(--content-w) + var(--page-pad) * 2);
     margin: 0 auto;
-    padding: var(--page-pad) var(--page-pad) 200px;
+    padding: min(50px, var(--page-pad)) var(--page-pad) 200px;
   }
 
   /* ---------- Header ---------- */
   .header-inner { display: flex; align-items: center; justify-content: space-between; }
 
-  .logo {
-    font-family: var(--body);
-    font-weight: 600;
-    font-size: 20px;
-    color: #fff;
-    text-decoration: none;
+  .logo{
+    font-family:var(--display); font-weight:400; font-size:20px;
+    letter-spacing:2px; text-transform:uppercase; line-height:1;
+    text-box:trim-both cap alphabetic;   /* trim to cap height, as in Figma */
+    color:#fff; text-decoration:none;
   }
 
   nav { display: flex; align-items: center; gap: 40px; }
@@ -142,7 +141,7 @@
     display: flex;
     gap: 30px;
     align-items: stretch;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
   }
 
   /* Same rotated-label treatment as meetpixel.html / ctf_1.html: writing-mode
@@ -303,6 +302,62 @@
     object-fit: contain;
   }
 
+  /* ---------- Showcase cards (Atlas Week, DLM) ----------
+     Figma nodes 763:60342 / 763:59711: one 1286px gradient card holding
+     several captioned asset groups, instead of a drag-scroll row. Same
+     30px grid-over-gradient fill as .brand-assets-card. */
+  .showcase {
+    max-width: 1286px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    padding: 40px 35px;
+    border-radius: 10px;
+    background-image:
+      linear-gradient(rgba(96, 96, 96, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(96, 96, 96, 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, #1f211b, #101010);
+    background-size: 30px 30px, 30px 30px, 100% 100%;
+  }
+
+  .group { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+
+  .showcase img { width: 100%; height: auto; }
+
+  .caption {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 3.2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    line-height: 1.8;
+  }
+
+  /* Organic social: one square + three 4:5 posts sharing a height.
+     flex-grow equals each image's width/height ratio (basis 0), so the
+     row splits its width in proportion and every tile ends up equally
+     tall — 340px at the Figma width. */
+  .organic-row { display: flex; gap: 20px; align-items: flex-start; }
+  .organic-row img { flex: 1 1 0; min-width: 0; }
+  .organic-row img.portrait { flex-grow: .8; }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; }
+
+  .pair { display: flex; gap: 50px; align-items: flex-start; }
+  .pair > .group { flex: 1 1 0; }
+
+  /* DLM ads: a 3-up block and a 2-up block with a wider (≈65px) gutter
+     between them. The 4th grid track is an empty spacer column that every
+     4th/5th tile skips past. */
+  .dlm-ads {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) 26px repeat(2, minmax(0, 1fr));
+    gap: 19px 20px;
+  }
+  .dlm-ads > :nth-child(5n + 4) { grid-column: 5; }
+
   .bordered-light { border: 1px solid #303030; }
   .bordered-dark  { border: 1px solid #303030; }
 
@@ -350,6 +405,15 @@
        1454:958 aspect ratio instead, matching it exactly. */
     .brand-assets-card { height: auto; aspect-ratio: 1454 / 958; }
 
+    .showcase { padding: 24px 20px; gap: 40px; }
+    .organic-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pair { flex-direction: column; gap: 40px; }
+    .pair > .group { flex: none; width: 100%; }
+    .dlm-ads { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .dlm-ads > :nth-child(5n + 4) { grid-column: auto; }
+
     /* Keep a minimum 15px breathing room around the artwork instead of
        having it hug the card edge-to-edge. img is a replaced element, so
        inset alone won't stretch it to fill the gap the way it would a
@@ -368,6 +432,10 @@
 
   @media (max-width: 560px) {
     :root { --page-pad: 20px; }
+    .showcase { padding: 20px 14px; }
+    .grid-3 { grid-template-columns: minmax(0, 1fr); }
+    .grid-5, .dlm-ads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .caption { font-size: 13px; letter-spacing: 2.6px; }
   }
 </style>
 </head>
@@ -391,6 +459,94 @@
 </section>
 
 <div class="campaigns">
+
+  <!-- ============ Atlas Week launch (Figma 763:59696) ============ -->
+  <section class="campaign">
+    <div class="campaign-details">
+      <span class="side-label">Q4 2026</span>
+      <span class="rule"></span>
+      <div class="campaign-copy">
+        <h2>Atlas Product Launch</h2>
+        <p>Art Direction and production of creative assets for the Atlas Week launch spanning organic and paid social, blog heroes, video thumbnails, and email creative.</p>
+      </div>
+    </div>
+    <div class="showcase">
+      <div class="group">
+        <div class="organic-row">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_Social_V1-2.png" alt="Atlas Week social post: launching November 9">
+          <img class="portrait" src="Assets/Campaigns/Social_AtlasWeek_EA_FNL.png" alt="Atlas Week what's new social post listing the launch's product updates">
+          <img class="portrait" src="Assets/Campaigns/Campaign_AtlasWeek_Social_V1-1.png" alt="Atlas AI Detection and Response social post">
+          <img class="portrait" src="Assets/Campaigns/Campaign_AtlasWeek_Social_V1.png" alt="Atlas Agent Intent social post">
+        </div>
+        <span class="caption">Organic Social</span>
+      </div>
+      <div class="group">
+        <div class="grid-3">
+          <img src="Assets/Campaigns/Blog_AtlasWeek_Primary_FNL.png" alt="Atlas Week: what's new blog hero">
+          <img src="Assets/Campaigns/Blog_AtlasWeek_ThoughtLeadership_FNL.png" alt="Complete AI security starts with the agent blog hero">
+          <img src="Assets/Campaigns/Blog_Atlas-Browser_202611_FNL.png" alt="Varonis Browser Protection blog hero">
+          <img src="Assets/Campaigns/Blog_Atlas-AIGateway_202611_FNL.png" alt="Atlas AI Gateway blog hero">
+          <img src="Assets/Campaigns/Blog_Atlas-AIDR_202611_FNL.png" alt="AI Detection and Response (AIDR) blog hero">
+          <img src="Assets/Campaigns/Blog_Atlas-AgentIBAC_202611_FNL.png" alt="Agent IBAC blog hero">
+        </div>
+        <span class="caption">Blog Heroes</span>
+      </div>
+      <div class="group">
+        <div class="grid-5">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_PaidSocial_VarA-1_V1.png" alt="Paid social ad: Say yes to AI. Safely.">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_PaidSocial_VarA-2_V1.png" alt="Paid social ad: Got gaps in AI security?">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_PaidSocial_VarA-3_V1.png" alt="Paid social ad: Still trying to secure AI?">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_PaidSocial_VarA-4_V1.png" alt="Paid social ad: Shadow AI: Solved">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_PaidSocial_VarE-1_V1.png" alt="Paid social ad: You have a shadow AI problem">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_PaidSocial_VarF-2_V1.png" alt="Paid social ad: Who's pasting data into AI?">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_PaidSocial_VarH-4_V1.png" alt="Paid social ad: Every prompt. Every token. Every tool call.">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_PaidSocial_VarK-3_V1.png" alt="Paid social ad: Stop AI threats in real time.">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_PaidSocial_VarJ-4_V1.png" alt="Paid social ad: Your agents have too much agency">
+          <img src="Assets/Campaigns/Campaign_AtlasWeek_PaidSocial_VarG-3_V1.png" alt="Paid social ad: AI costs getting out of hand?">
+        </div>
+        <span class="caption">Social Ads</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DLM launch (Figma 763:60334) ============ -->
+  <section class="campaign">
+    <div class="campaign-details">
+      <span class="side-label">Q3 2026</span>
+      <span class="rule"></span>
+      <div class="campaign-copy">
+        <h2>DLM launch</h2>
+        <p>The DLM launch was a smaller announcement with few assets. Ads promoting Varonis Data Lifecycle Management. The ads created for this launch were designed to test the performance of image vs. text only variants, and basic vs. complex image variants.</p>
+      </div>
+    </div>
+    <div class="showcase">
+      <div class="pair">
+        <div class="group">
+          <img src="Assets/Campaigns/Blog_DLMLaunch_202609_FNL3.png" alt="Varonis Data Lifecycle Management blog hero">
+          <span class="caption">Blog hero</span>
+        </div>
+        <div class="group">
+          <img src="Assets/Campaigns/EmailHeader_DLM_202609_FNL3.png" alt="DLM email header: Your ROT data is costing you">
+          <span class="caption">Email header</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="dlm-ads">
+          <img src="Assets/Campaigns/PaidSocial_DLM_202609_VarA1.png" alt="Paid social ad: Stop paying for duplicative data">
+          <img src="Assets/Campaigns/PaidSocial_DLM_202609_VarA2.png" alt="Paid social ad: Your storage bill is hiding a ROT problem">
+          <img src="Assets/Campaigns/PaidSocial_DLM_202609_VarA3.png" alt="Paid social ad: ROT is risk you pay for">
+          <img src="Assets/Campaigns/PaidSocial_DLM_202609_VarA4.png" alt="Paid social ad, text only: Take back 21% of your data storage">
+          <img src="Assets/Campaigns/PaidSocial_DLM_202609_VarB5.png" alt="Paid social ad, text only: Your AI is only as right as your data">
+          <img src="Assets/Campaigns/PaidSocial_DLM_202609_VarB1.png" alt="Paid social ad: Your AI is learning from your trash">
+          <img src="Assets/Campaigns/PaidSocial_DLM_202609_VarB2.png" alt="Paid social ad: Old data makes your AI confidently wrong">
+          <img src="Assets/Campaigns/PaidSocial_DLM_202609_VarB3.png" alt="Paid social ad: Improve the model by improving the data it finds">
+          <img src="Assets/Campaigns/PaidSocial_DLM_202609_VarB4.png" alt="Paid social ad, text only: AI exposes every data problem you already have">
+          <img src="Assets/Campaigns/PaidSocial_DLM_202609_VarA5.png" alt="Paid social ad, text only: Why pay for duplicate data?">
+        </div>
+        <span class="caption">Social ads</span>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ Campaign 1: Atlas Product Launch ============ -->
   <section class="campaign">

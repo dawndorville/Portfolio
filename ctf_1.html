@@ -49,14 +49,15 @@
      bare `header` one — so the top padding has to be set at matching
      specificity or the shorthand zeroes it and the header sits flush against
      the top edge. Same fix as `main.container`'s margin-top below. */
-  header.container{ padding-top:var(--page-pad); }
+  header.container{ padding-top:min(50px, var(--page-pad)); }
   .header-inner{
     display:flex; align-items:center; justify-content:space-between;
   }
   .logo{
-    font-family:var(--body); font-weight:600; font-size:20px;
-    color:#fff;
-    text-decoration:none;
+    font-family:var(--display); font-weight:400; font-size:20px;
+    letter-spacing:2px; text-transform:uppercase; line-height:1;
+    text-box:trim-both cap alphabetic;   /* trim to cap height, as in Figma */
+    color:#fff; text-decoration:none;
   }
   nav{ display:flex; align-items:center; gap:40px; }
   nav a{ text-decoration:none; white-space:nowrap; }
