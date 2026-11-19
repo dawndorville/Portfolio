@@ -12,12 +12,12 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dawn Dorville — Varonis Threat Labs</title>
-<meta name="description" content="Branding for Varonis Threat Labs: brand elements, an MCP research report, blog heroes, social posts, diagrams, swag, and threat reports.">
+<meta name="description" content="Branding for Varonis Threat Labs: brand system, blog heroes, social posts, diagrams, swag, and threat reports.">
 <link rel="canonical" href="https://dawndorville.netlify.app/vtl-portfolio.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dawn Dorville">
 <meta property="og:title" content="Dawn Dorville — Varonis Threat Labs">
-<meta property="og:description" content="Branding for Varonis Threat Labs: brand elements, an MCP research report, blog heroes, social posts, diagrams, swag, and threat reports.">
+<meta property="og:description" content="Branding for Varonis Threat Labs: brand system, blog heroes, social posts, diagrams, swag, and threat reports.">
 <meta property="og:url" content="https://dawndorville.netlify.app/vtl-portfolio.html">
 <meta property="og:image" content="https://dawndorville.netlify.app/Assets/Work/VTLCover.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -99,43 +99,43 @@
   .nav-resume:hover, .nav-resume:focus-visible { color: #fff; }
 
   /* ---------- Project intro ---------- */
+  /* Figma 814:76892: eyebrow + headline stacked flush, then the summary
+     15px below. Header ends at y=69 and the intro starts at y=154 → 85px. */
   .intro {
-    margin-top: 50px;
+    margin-top: 85px;
     display: flex;
     flex-direction: column;
     gap: 15px;
-    max-width: 1248px;
+    max-width: 1050px;
+  }
+
+  .intro .eyebrow {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 4px;
+    line-height: 40px;   /* Figma box is 40px tall */
+    text-transform: uppercase;
+    color: var(--gray);
   }
 
   .intro h1 {
     font-family: var(--display);
     font-weight: 400;
     font-size: 60px;
-    line-height: 1;
-    color: var(--gray);
-  }
-
-  .intro .subtitle {
-    font-family: var(--mono);
-    font-weight: 700;
-    font-size: 20px;
-    letter-spacing: 4px;
-    line-height: 1.4;
-    margin-top: 2px;
-    text-transform: uppercase;
-    color: var(--gray);
+    line-height: 0.95;
+    color: #fff;
   }
 
   .intro .summary {
     font-size: 16px;
     line-height: 1.8;
     color: #fff;
-    max-width: 700px;
   }
 
   /* ---------- Campaign sections ---------- */
   .campaigns {
-    margin-top: 146px;
+    margin-top: 100px;   /* Figma: intro ends y=409, first item y=509 */
     display: flex;
     flex-direction: column;
     gap: 200px;
@@ -185,9 +185,12 @@
   .heading {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
     max-width: 660px;
   }
+  /* Wider copy blocks for the first two sections (Figma 1012px / 979px) */
+  .item-brand .heading { max-width: 1012px; }
+  .item-research .heading { max-width: 979px; }
 
   .heading h2 {
     font-family: var(--display);
@@ -243,7 +246,7 @@
   }
   .hoodie-img img { width: 100%; height: auto; }
 
-  /* Items 2 & 3 — MCP report and blog research cards */
+  /* Research section card */
   .research-card {
     /* 30px grid pattern (#606060 @ 12%) over the gradient, matching the Figma pattern fill */
     background-image:
@@ -254,89 +257,6 @@
     border-radius: 10px;
     padding: 40px;
     width: 100%;
-  }
-
-  /* MCP report: a monitor showing the live page, then the promo assets */
-  .mcp-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 100px;
-  }
-
-  /* Monitor (Figma "Computer frame", 859x616). Every part is placed as a
-     percentage of that box so the monitor scales as one piece. Stand parts
-     come first in the markup so the monitor body overlaps the neck. */
-  .computer {
-    position: relative;
-    width: 100%;
-    max-width: 859px;
-    aspect-ratio: 859 / 616;
-  }
-  .computer > span,
-  .pc-screen { position: absolute; display: block; }
-  .pc-neck  { left: 40.6286%; top: 81.0373%; width: 18.6263%; height: 13.6143%; background: #000; }
-  .pc-base  { left: 32.4796%; top: 94.6510%; width: 34.9243%; height: 3.8898%;  background: #0f0f0f;
-              clip-path: polygon(23.1667% 0, 76.6667% 0, 100% 100%, 0 100%); }
-  .pc-foot  { left: 32.4796%; top: 98.5406%; width: 34.9243%; height: 1.4594%;  background: #000; }
-  .pc-body  { left: 0; top: 0; width: 100%; height: 81.1688%;
-              background: linear-gradient(to bottom, #0f0f0f, #000); }
-  .pc-bezel { left: 2.3283%; top: 3.2468%; width: 95.3434%; height: 74.6753%;
-              background: #000; border-radius: 2px; }
-  /* The screen scrolls, so visitors can read down the full page capture.
-     A thin dark scrollbar keeps it looking like part of the monitor. */
-  .pc-screen {
-    left: 2.9104%; top: 4.0584%; width: 94.1793%; height: 73.0519%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #55554a transparent;
-  }
-  .pc-screen::-webkit-scrollbar { width: 6px; }
-  .pc-screen::-webkit-scrollbar-track { background: transparent; }
-  .pc-screen::-webkit-scrollbar-thumb { background: #55554a; border-radius: 3px; }
-  .pc-screen:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-  .pc-screen img { width: 100%; height: auto; }
-
-  /* "View live page": outlined button centred over the monitor's stand
-     (Figma: 1px #ff4c25 border, 8px radius, 6px/20px padding, 519.6px down
-     the 616px monitor frame — over the stand's neck — and 1px left of
-     centre). */
-  .live-link {
-    position: absolute;
-    left: calc(50% - 1px);
-    top: 84.3523%;
-    transform: translateX(-50%);
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 20px;
-    border: 1px solid #ff4c25;
-    border-radius: 8px;
-    font-family: var(--mono);
-    font-weight: 700;
-    font-size: 16px;
-    letter-spacing: 3.2px;
-    line-height: 1.8;
-    text-transform: uppercase;
-    white-space: nowrap;
-    color: #ff4c25;
-    text-decoration: none;
-    transition: color .15s ease, border-color .15s ease;
-  }
-  .live-link svg { width: 12px; height: 12px; flex-shrink: 0; }
-  .live-link:hover, .live-link:focus-visible { color: #fff; border-color: #fff; }
-  .live-link:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
-
-  /* Promo assets: Figma columns 384 / 384 / 345 with 40px gutters */
-  .mcp-grid {
-    display: grid;
-    grid-template-columns: 384fr 384fr 345fr;
-    column-gap: 40px;
-    row-gap: 50px;
-    align-items: start;
-    width: 100%;
-    max-width: 1193px;
   }
 
   /* Blog research: one row per post — social, diagrams, blog hero */
@@ -353,12 +273,6 @@
   .blog-social,
   .blog-hero { flex: 1 1 0; min-width: 0; }
   .blog-diagrams { flex: 0 0 330px; }
-
-  .research-col {
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
-  }
 
   .asset {
     display: flex;
@@ -475,7 +389,6 @@
     :root { --page-pad: 40px; }
     .page { padding: var(--page-pad) var(--page-pad) 120px; }
     .intro h1 { font-size: 46px; }
-    .mcp-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (max-width: 880px) {
@@ -486,15 +399,10 @@
     header { flex-wrap: wrap; gap: 16px; }
     nav { gap: 24px; }
     .intro { margin-top: 64px; }
-    .intro h1 { font-size: 32px; }
-    .intro .subtitle { font-size: 16px; }
+    .intro h1 { font-size: 32px; line-height: 1.1; }
+    .intro .eyebrow { font-size: 15px; letter-spacing: 3px; line-height: 1.8; }
     .campaigns { margin-top: 80px; gap: 120px; }
-    .mcp-grid { grid-template-columns: 1fr; }
-    /* The stand is too small to hold the button on phones — it drops
-       below the monitor, still centred */
-    .computer { margin-bottom: 64px; }
-    .live-link { top: calc(100% + 20px); }
-    .mcp-card, .blog-card { gap: 80px; }
+    .blog-card { gap: 80px; }
     .blog-row { flex-direction: column; gap: 50px; }
     .blog-diagrams { flex: none; width: 100%; }
     .research-card { padding: 20px; }
@@ -508,13 +416,32 @@
   @media (max-width: 560px) {
     :root { --page-pad: 20px; }
   }
+  /* ============ Mobile header (shared across pages) ============
+     Below 900px the name stacks — "Dawn" over "Dorville" — so Work and
+     Resume fit on one line beside it. Everything sits on the last baseline
+     of the row, i.e. the baseline of "Dorville". Placed last so it wins over
+     each page's older wrap rules. */
+  .logo-line{ display:inline; }
+  @media (max-width: 900px){
+    .header-inner, header:not(.container){
+      flex-wrap:nowrap; align-items:last baseline; gap:16px;
+    }
+    .logo .logo-line{ display:block; }
+    nav{ gap:24px; }
+  }
+  /* Smallest phones (≤380px): tighten the nav so Work + Resume still fit
+     beside the name without running off the edge. */
+  @media (max-width: 380px){
+    nav{ gap:16px; }
+    .nav-work, .nav-resume{ font-size:14px; letter-spacing:2.4px; }
+  }
 </style>
 </head>
 <body>
 <div class="page">
 
   <header>
-    <a class="logo" href="index.html">Dawn Dorville</a>
+    <a class="logo" href="index.html"><span class="logo-line">Dawn</span> <span class="logo-line">Dorville</span></a>
     <nav>
       <a class="nav-work" href="index.html">Work</a>
       <a class="nav-resume" href="resume.html">Resume</a>
@@ -523,85 +450,35 @@
 
   <section class="intro">
     <div>
-      <h1>Varonis Threat Labs</h1>
-      <p class="subtitle">Branding for the Varonis threat research team</p>
+      <p class="eyebrow">Varonis Threat Labs</p>
+      <h1>Build a visual language that carries across formats.</h1>
     </div>
-    <p class="summary">Branding for the internal threat research team differentiates it from the Varonis universe.</p>
+    <p class="summary">VTL needed a recognizable identity within the wider Varonis brand. Research also needed to work across different formats, from a technical diagram to a report cover or social post. The sub-brand brings together a dedicated palette, atmospheric imagery, and graphic framing. Urgency, depth, and mystery provide a shared direction for the work.</p>
   </section>
 
   <div class="campaigns">
 
-    <!-- Item 1: Brand elements -->
-    <section class="item">
+    <!-- Item 1: Brand system -->
+    <section class="item item-brand">
       <div class="details">
         <span class="quarter">q2 2026</span>
         <span class="rule"></span>
         <div class="heading">
-          <h2>Brand elements</h2>
-          <p>The VTL sub-brand has it's own color palette, imagery, and unique graphics. The branding evokes a sense of urgency, depth, and mystery — common themes in VTL research.</p>
+          <h2>The brand System</h2>
+          <p>The VTL sub-brand has it’s own color palette, imagery, and unique graphics. The branding evokes a sense of urgency, depth, and mystery — common themes in VTL research.</p>
         </div>
       </div>
       <img class="brand-img" src="Assets/VTL/VTLBrandElements_2.png" alt="Varonis Threat Labs brand elements — logo lockups, colour palette, imagery and graphics">
     </section>
 
-    <!-- Item 2: MCP report -->
-    <section class="item">
+    <!-- Item 2: Research applications (Figma 814:76969) -->
+    <section class="item item-research">
       <div class="details">
         <span class="quarter">q3 2026</span>
         <span class="rule"></span>
         <div class="heading">
-          <h2>MCP Report</h2>
-          <p>When this research was shared with me for design, I really wanted to avoid creating another PDF. I wanted to design something that would be more engaging and interactive — a more editorial version of the blog posts we publish for the majority of VTL research. I built this page in Figma, then used ChatGPT to build it in HTML, and hosted it on Webflow.</p>
-        </div>
-      </div>
-      <div class="research-card mcp-card">
-        <div class="computer">
-          <span class="pc-neck"></span>
-          <span class="pc-base"></span>
-          <span class="pc-foot"></span>
-          <span class="pc-body"></span>
-          <span class="pc-bezel"></span>
-          <div class="pc-screen" tabindex="0" role="region" aria-label="AI Trustfall page preview, scrollable">
-            <img src="Assets/VTL/MCP_Webpage.png" alt="The AI Trustfall research page on a desktop monitor — How Untrusted AI Agents Get Trusted Access Through MCP">
-          </div>
-          <a class="live-link" href="https://vtl-research.varonis.com/" target="_blank" rel="noopener">
-            View live page
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 18L5 16.6L14.6 7H6V5H18V17H16V8.4L6.4 18Z" fill="currentColor"/></svg>
-            <span class="sr-only">(opens in a new tab)</span>
-          </a>
-        </div>
-        <div class="mcp-grid">
-          <div class="research-col">
-            <div class="asset">
-              <img src="Assets/VTL/Social_VTL-MCP_202610.png" alt="AI Trustfall social post">
-              <span class="caption">Social</span>
-            </div>
-            <div class="asset">
-              <img src="Assets/VTL/Blog_VTL-AITrustfall_202610.png" alt="AI Trustfall blog hero">
-              <span class="caption">Blog Hero</span>
-            </div>
-          </div>
-          <div class="asset">
-            <img src="Assets/VTL/Social_VTL-MCP_Stat1_202610.png" alt="Social stat post: 61% of MCP authorization servers had at least one exploitable security gap">
-            <img src="Assets/VTL/Social_VTL-MCP_Stat2_202610.png" alt="Social stat post: 29% of servers honored MCP tokens at full API privilege">
-            <span class="caption">Social stats</span>
-          </div>
-          <div class="asset">
-            <img src="Assets/VTL/Blog_VTL-AITrustfall_Fig2.png" alt="AI Trustfall attack diagram: the same flow on the same server, for a legitimate app versus an attacker abusing open DCR">
-            <span class="caption">Attack diagram</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Item 3: Blog research -->
-    <section class="item">
-      <div class="details">
-        <span class="quarter">q3 2026</span>
-        <span class="rule"></span>
-        <div class="heading">
-          <h2>Blog research</h2>
-          <p>Varonis Threat Labs research moves quickly and often requires custom graphics featuring blog heroes, social posts, and diagrams.</p>
+          <h2>From visual identity to research experience</h2>
+          <p>The identity appears across research stories, reports, social content, and physical materials. These applications demonstrate how the sub-brand can extend beyond a single campaign.</p>
         </div>
       </div>
       <div class="research-card blog-card">

@@ -12,12 +12,12 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dawn Dorville — Work</title>
-<meta name="description" content="Portfolio of Dawn Dorville, a multi-disciplinary designer focused on branding, design systems, campaigns, and expanding creative opportunities with AI.">
+<meta name="description" content="Portfolio of Dawn Dorville, brand designer and art director for cybersecurity and tech: brand systems, campaigns, and AI-assisted creative production.">
 <link rel="canonical" href="https://dawndorville.netlify.app/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dawn Dorville">
 <meta property="og:title" content="Dawn Dorville — Work">
-<meta property="og:description" content="Portfolio of Dawn Dorville, a multi-disciplinary designer focused on branding, design systems, campaigns, and expanding creative opportunities with AI.">
+<meta property="og:description" content="Portfolio of Dawn Dorville, brand designer and art director for cybersecurity and tech: brand systems, campaigns, and AI-assisted creative production.">
 <meta property="og:url" content="https://dawndorville.netlify.app/">
 <meta property="og:image" content="https://dawndorville.netlify.app/Assets/Work/VTLCover.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -26,7 +26,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
 <style>
   /* ============================================================
-     Source: Figma node 23:2 "Work" (1440 x 3936)
+     Source: Figma node 814:17486 "Work" (1440 x 4008)
 
      Frame 1440 wide, content column 1320 inset 60px each side.
      (Figma draws the content frame at 1322 / inset 59 — the extra
@@ -43,6 +43,7 @@
 
     --gray: #878787;
     --nav-gray: #919191;
+    --accent: #7096ff;      /* eyebrow colour on the updated project rows */
 
     /* Every thumbnail frame shares this treatment */
     --card-radius: 10px;
@@ -111,18 +112,22 @@
   /* Header bottom sits 100px above the content frame (Figma 763:655). */
   main.container{
     margin-top:100px;
-    padding-bottom:222px;      /* frame height 3936 - content bottom 3714 */
+    padding-bottom:200px;      /* frame height 4008 - content bottom 3808 */
     display:flex; flex-direction:column; gap:100px;
   }
 
   /* ---- Intro ---- */
-  .intro{ display:flex; flex-direction:column; gap:10px; text-align:center; }
+  /* Figma 814:17494: left-aligned 50px headline over a 20px lede, both
+     978px wide, 20px apart. The lede is two paragraphs separated by a
+     blank line (24px, its own line height). */
+  .intro{ display:flex; flex-direction:column; gap:20px; max-width:1050px; }   /* headline at the shared 1050px hero width */
+  /* Hero style shared across pages (Figma 814:76548): 60px, 95% leading, white. */
   .intro h1{
     font-family:var(--display); font-weight:400;
-    font-size:44px; line-height:var(--title-lh); color:#fff;
-    letter-spacing:4.4px; text-transform:uppercase;
+    font-size:60px; line-height:.95; color:#fff;
   }
-  .intro p{ font-size:20px; line-height:1.8; color:#fff; }
+  .intro .lede{ display:flex; flex-direction:column; gap:24px; max-width:978px; }
+  .intro p{ font-size:20px; line-height:1.2; color:#fff; }
 
   /* ============ Shared text block ============ */
   .proj-text{ display:flex; flex-direction:column; gap:20px; }
@@ -135,6 +140,7 @@
     font-family:var(--mono); font-weight:700; font-size:16px; line-height:1.8;
     letter-spacing:3.2px; text-transform:uppercase; color:var(--gray);
   }
+  .eyebrow.accent{ color:var(--accent); }
   .proj-text > p{ font-size:20px; line-height:1.8; color:var(--gray); }
 
   /* ============ Row layouts ============ */
@@ -191,8 +197,67 @@
   /* -- RSAC: 908x605 image pulled up 114px -- */
   .art-rsac{ left:0; top:-26.0274%; width:100%; height:138.1279%; }
 
-  /* -- Ad templates: 640x438, exact fit -- */
-  .art-ad{ inset:0; width:100%; height:100%; }
+  /* -- MCP Report (Figma 837:98891) --
+     A 0.649-scale copy of the browser window on mcp-report.html, over the
+     card's grid-on-gradient fill with two blurred orange glows behind it.
+     Every size is in Figma pixels of the 640px card, multiplied by --u
+     (1/640 of the card's width) so the whole thing scales as one piece. */
+  .thumb-mcp{
+    container-type:inline-size;
+    background-image:
+      linear-gradient(rgba(96,96,96,.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(96,96,96,.12) 1px, transparent 1px),
+      var(--card-bg);
+    background-size:30px 30px, 30px 30px, 100% 100%;
+  }
+  .mcp-art{ --u:calc(100cqw / 640); position:absolute; inset:0; }
+  .mcp-glow{
+    position:absolute; width:calc(var(--u)*165); aspect-ratio:1; border-radius:50%;
+    background:radial-gradient(closest-side, #ff4c25, rgba(255,76,37,0));
+    filter:blur(calc(var(--u)*30));   /* Figma's 100 layer blur, tuned to match its render */
+  }
+  .mcp-glow.g1{ left:calc(var(--u)*-8);  top:calc(var(--u)*62); }
+  .mcp-glow.g2{ left:calc(var(--u)*481); top:calc(var(--u)*239); }
+  .mcp-browser{
+    position:absolute; left:calc(var(--u)*31); top:calc(var(--u)*41);
+    width:calc(var(--u)*579);
+    padding:calc(var(--u)*3.9) calc(var(--u)*5.2) calc(var(--u)*5.2);
+    background:#090b0a;
+    border:calc(var(--u)*.65) solid #20221c; border-radius:calc(var(--u)*6.49);
+    color:#343c35; font-family:var(--mono); font-size:calc(var(--u)*6.49);
+    line-height:1;
+  }
+  .mcp-tabs{ display:flex; align-items:stretch; gap:calc(var(--u)*5.2); height:calc(var(--u)*14.3); }
+  .mcp-dots{ display:flex; align-items:center; gap:calc(var(--u)*6.5); }
+  .mcp-dots i{
+    display:block; width:calc(var(--u)*7.8); aspect-ratio:1; border-radius:50%;
+    border:calc(var(--u)*.65) solid #20221c;
+  }
+  .mcp-tab{
+    display:flex; align-items:center; gap:calc(var(--u)*6.5);
+    padding:0 calc(var(--u)*6.5);
+    background:rgba(32,34,27,.5); border-radius:calc(var(--u)*3.25) calc(var(--u)*3.25) 0 0;
+    font-weight:700; letter-spacing:.1em; text-transform:uppercase; white-space:nowrap;
+  }
+  .mcp-tab svg{ width:calc(var(--u)*6.3); height:calc(var(--u)*6.3); }
+  .mcp-toolbar{
+    display:flex; align-items:center; gap:calc(var(--u)*2);
+    height:calc(var(--u)*18.2); padding:0 calc(var(--u)*2) 0 calc(var(--u)*1.3);
+    background:rgba(32,34,27,.5);
+  }
+  .mcp-toolbar .icons{ display:flex; flex-shrink:0; }
+  .mcp-toolbar .icons svg{ width:calc(var(--u)*13); height:calc(var(--u)*15); }
+  .mcp-address{
+    flex:1; height:calc(var(--u)*14.4); padding:0 calc(var(--u)*6.5);
+    display:flex; align-items:center;
+    background:#090b0a; border-radius:calc(var(--u)*13);
+    letter-spacing:-.06em; white-space:nowrap; overflow:hidden;
+  }
+  .mcp-screen{
+    height:calc(var(--u)*313.6); overflow:hidden;
+    border:calc(var(--u)*.65) solid #20221b; border-radius:0 0 calc(var(--u)*2.6) calc(var(--u)*2.6);
+  }
+  .mcp-screen img{ width:100%; height:auto; }
 
   /* -- Campaigns: video fills the card -- */
   .art-campaigns{ inset:0; width:100%; height:100%; }
@@ -327,7 +392,11 @@
   /* ============ Responsive ============ */
   @media (max-width:1100px){
     :root{ --page-pad:40px; }
+    .intro h1{ font-size:46px; }
     .row-wide{ grid-template-columns:300px 1fr; gap:32px; }
+  }
+  @media (max-width:760px){
+    .intro h1{ font-size:32px; line-height:1.1; }
   }
   @media (max-width:880px){
     :root{ --page-pad:28px; }
@@ -336,8 +405,10 @@
     .row-wide{ grid-template-columns:1fr; gap:24px; }
     .row-cards{ grid-template-columns:1fr; gap:64px; }
     main.container{ gap:80px; padding-bottom:120px; }
-    .intro h1, .proj-head h2, .card-cap h2{ font-size:32px; }
-    .intro p, .proj-text > p{ font-size:17px; }
+    .proj-head h2, .card-cap h2{ font-size:32px; }
+    .intro p{ font-size:17px; line-height:1.5; }
+    .intro .lede{ gap:16px; }
+    .proj-text > p{ font-size:17px; }
     /* Thumbnail leads, title follows; the longer blurb is dropped entirely
        so the mobile card reads as image + title + eyebrow only. Visual
        order only (via `order`) — DOM order is untouched, so the title
@@ -371,7 +442,7 @@
   }
   @media (max-width:560px){
     :root{ --page-pad:20px; }
-    .intro h1, .proj-head h2, .card-cap h2{ font-size:26px; }
+    .proj-head h2, .card-cap h2{ font-size:26px; }
     .eyebrow{ font-size:13px; letter-spacing:2.4px; }
   }
 
@@ -382,13 +453,32 @@
     .art-blog{ transition:none; }
     a.thumb-link{ transition:none; }
   }
+  /* ============ Mobile header (shared across pages) ============
+     Below 900px the name stacks — "Dawn" over "Dorville" — so Work and
+     Resume fit on one line beside it. Everything sits on the last baseline
+     of the row, i.e. the baseline of "Dorville". Placed last so it wins over
+     each page's older wrap rules. */
+  .logo-line{ display:inline; }
+  @media (max-width: 900px){
+    .header-inner, header:not(.container){
+      flex-wrap:nowrap; align-items:last baseline; gap:16px;
+    }
+    .logo .logo-line{ display:block; }
+    nav{ gap:24px; }
+  }
+  /* Smallest phones (≤380px): tighten the nav so Work + Resume still fit
+     beside the name without running off the edge. */
+  @media (max-width: 380px){
+    nav{ gap:16px; }
+    .nav-work, .nav-resume{ font-size:14px; letter-spacing:2.4px; }
+  }
 </style>
 </head>
 <body>
 
 <header class="container">
   <div class="header-inner">
-    <a class="logo" href="index.html">Dawn Dorville</a>
+    <a class="logo" href="index.html"><span class="logo-line">Dawn</span> <span class="logo-line">Dorville</span></a>
     <nav>
       <a class="nav-work" href="index.html">Work</a>
       <a class="nav-resume" href="resume.html">Resume</a>
@@ -400,20 +490,23 @@
 
   <!-- ============ Intro ============ -->
   <section class="intro">
-    <h1>Multi-disciplinary designer</h1>
-    <p>with a focus on problem solving, building systems, and expanding creative opportunities with AI.</p>
+    <h1>Brand designer &amp; art director for cybersecurity and tech.</h1>
+    <div class="lede">
+      <p>I turn complex ideas into distinctive brand experiences, build systems that help teams scale production with creative consistency, and use AI to bring new creative possibilities into production.</p>
+      <p>Currently Lead Designer at Varonis.</p>
+    </div>
   </section>
 
   <!-- ============ VTL Branding ============ -->
   <section class="row-wide">
     <div class="proj-text">
       <div class="proj-head">
-        <h2>VTL Branding</h2>
-        <p class="eyebrow">Branding for Varonis Threat Labs</p>
+        <h2>Varonis Threat Labs</h2>
+        <p class="eyebrow accent">Brand identity system</p>
       </div>
-      <p>Branding for the internal threat research team differentiates it from the Varonis universe.</p>
+      <p>Real-world implications, visually communicating highly technical concepts.</p>
     </div>
-    <a class="thumb-link" href="vtl-portfolio.html" aria-label="VTL Branding — case study">
+    <a class="thumb-link" href="vtl-portfolio.html" aria-label="Varonis Threat Labs — brand identity system case study">
       <div class="thumb thumb-wide">
         <div class="fill art-vtl">
           <img src="Assets/Work/VTLCover.jpg" alt="Varonis Threat Labs logo over a dimly lit threat research control room.">
@@ -427,12 +520,12 @@
     <div class="proj-text">
       <div class="proj-head">
         <h2>Breach at the Beach</h2>
-        <p class="eyebrow">CTF game</p>
+        <p class="eyebrow accent">Brand experience</p>
       </div>
-      <p>A fun beach-themed Capture the Flag game that features Pixel, the VTL mascot.</p>
+      <p>A beach-themed Capture the Flag experience for Varonis Threat Labs, connecting pixel art, game screens, social promotion, and event materials.</p>
     </div>
 
-    <a class="thumb-link" href="ctf_1.html" aria-label="Breach at the Beach — CTF game case study">
+    <a class="thumb-link" href="ctf_1.html" aria-label="Breach at the Beach — brand experience case study">
       <div class="thumb thumb-wide">
         <div class="storm" id="storm">
           <div class="storm-stage" id="stormStage">
@@ -472,10 +565,98 @@
     </a>
   </section>
 
-  <!-- ============ Meet Pixel + Campaigns ============ -->
+  <!-- ============ MCP Report + Campaigns ============ -->
   <section class="row-cards">
     <div class="card">
-      <a class="thumb-link" href="meetpixel.html" aria-label="Meet Pixel — brand character social debut case study">
+      <a class="thumb-link" href="mcp-report.html" aria-label="MCP Report — digital storytelling with AI case study">
+        <div class="thumb thumb-card thumb-mcp">
+          <div class="mcp-art" aria-hidden="true">
+            <span class="mcp-glow g1"></span>
+            <span class="mcp-glow g2"></span>
+            <div class="mcp-browser">
+              <div class="mcp-tabs">
+                <div class="mcp-dots"><i></i><i></i><i></i></div>
+                <div class="mcp-tab">AI Trustfall
+                  <svg viewBox="0 0 10 10" fill="none"><path d="M2.0083 2.00836L7.63163 7.63169M7.63163 2.00836L2.0083 7.63169" stroke="#343C35" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+              <div class="mcp-toolbar">
+                <div class="icons">
+                  <svg viewBox="0 0 20 23" fill="none"><path d="M13.3534 11.5H6.64697M9.52117 14.3742L6.64697 11.5L9.52117 8.62579" stroke="#343C35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg viewBox="0 0 20 23" fill="none"><path d="M6.64648 11.5H13.3529M10.4787 14.3742L13.3529 11.5L10.4787 8.62579" stroke="#343C35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg viewBox="0 0 20 23" fill="none"><path d="M13.8322 7.66772V10.0629H11.437" stroke="#343C35" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.4998 9.50001L12.5865 8.6737C11.9377 8.08013 11.1045 7.72775 10.2267 7.67567C9.34888 7.6236 8.47986 7.87499 7.76542 8.38769C7.05098 8.90038 6.5346 9.64318 6.3029 10.4915C6.0712 11.3397 6.13829 12.2419 6.49289 13.0466C6.8475 13.8513 7.46806 14.5095 8.25047 14.9109C9.03287 15.3123 9.92952 15.4324 10.79 15.2511C11.6504 15.0698 12.4224 14.598 12.9763 13.9151C13.2509 13.5764 13.4636 13.1961 13.6083 12.7914" stroke="#343C35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="mcp-address">vtl-research.varonis.com</div>
+              </div>
+              <div class="mcp-screen">
+                <img src="Assets/VTL/MCP_Webpage.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+      <div class="card-cap">
+        <h2>MCP Report</h2>
+        <p class="eyebrow accent">Digital storytelling with AI</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <a class="thumb-link" href="campaigns.html" aria-label="Campaigns — art direction and production case study">
+        <div class="thumb thumb-card">
+          <div class="fill art-campaigns">
+            <video src="Assets/Work/Thumbnail_Campaigns.mp4" autoplay muted loop playsinline
+                   aria-label="Campaign key visuals for acquisitions and product launches"></video>
+          </div>
+        </div>
+      </a>
+      <div class="card-cap">
+        <h2>Campaigns</h2>
+        <p class="eyebrow accent">Art direction &amp; production</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Templates (links to the social media page for now) ============ -->
+  <section class="row-wide">
+    <div class="proj-text">
+      <div class="proj-head">
+        <h2>Templates</h2>
+        <p class="eyebrow accent">Systems &amp; team enablement</p>
+      </div>
+      <p>Coming soon</p>
+    </div>
+    <a class="thumb-link" href="social-media.html" aria-label="Templates — systems and team enablement">
+      <div class="thumb thumb-wide">
+        <div class="fill art-social">
+          <img src="Assets/Work/SocialMedia.png" alt="A grid of social media templates for webinars, quotes and case studies.">
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ============ RSAC ============ -->
+  <section class="row-wide">
+    <div class="proj-text">
+      <div class="proj-head">
+        <h2>RSAC</h2>
+        <p class="eyebrow accent">Flagship booth graphics</p>
+      </div>
+      <p>Flagship booth graphics developed at scale, explored in 3D, and carried into the built conference environment.</p>
+    </div>
+    <a class="thumb-link" href="rsac.html" aria-label="RSAC — flagship booth graphics case study">
+      <div class="thumb thumb-wide">
+        <div class="fill art-rsac">
+          <img src="Assets/Work/RSAC.jpg" alt="The Varonis flagship booth at RSA Conference.">
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ============ Meet Pixel + Blog heroes ============ -->
+  <section class="row-cards">
+    <div class="card">
+      <a class="thumb-link" href="meetpixel.html" aria-label="Meet Pixel — AI art direction and motion for social case study">
         <div class="thumb thumb-card thumb-pixel">
           <div class="pixel-clip">
             <div class="fill art-pixel">
@@ -490,66 +671,12 @@
       </a>
       <div class="card-cap">
         <h2>Meet Pixel</h2>
-        <p class="eyebrow">Social activation</p>
+        <p class="eyebrow accent">AI art direction &amp; motion for social</p>
       </div>
     </div>
 
     <div class="card">
-      <a class="thumb-link" href="campaigns.html" aria-label="Campaigns — for acquisitions + product launches case study">
-        <div class="thumb thumb-card">
-          <div class="fill art-campaigns">
-            <video src="Assets/Work/Thumbnail_Campaigns.mp4" autoplay muted loop playsinline
-                   aria-label="Campaign key visuals for acquisitions and product launches"></video>
-          </div>
-        </div>
-      </a>
-      <div class="card-cap">
-        <h2>Campaigns</h2>
-        <p class="eyebrow">For acquisitions + product launches</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ Social media ============ -->
-  <section class="row-wide">
-    <div class="proj-text">
-      <div class="proj-head">
-        <h2>Social media</h2>
-        <p class="eyebrow">Templates built to scale</p>
-      </div>
-      <p>Easy to use templates built in Canva for frequently posted content, alleviating production work for the creative team.</p>
-    </div>
-    <a class="thumb-link" href="social-media.html" aria-label="Social media — templates built to scale case study">
-      <div class="thumb thumb-wide">
-        <div class="fill art-social">
-          <img src="Assets/Work/SocialMedia.png" alt="A grid of social media templates for webinars, quotes and case studies.">
-        </div>
-      </div>
-    </a>
-  </section>
-
-  <!-- ============ RSAC ============ -->
-  <section class="row-wide">
-    <div class="proj-text">
-      <div class="proj-head">
-        <h2>RSAC</h2>
-        <p class="eyebrow">Flagship booth graphics</p>
-      </div>
-      <p>Graphics for the 2024 &ndash; 2026 flagship booths.</p>
-    </div>
-    <a class="thumb-link" href="rsac.html" aria-label="RSAC — flagship booth graphics case study">
-      <div class="thumb thumb-wide">
-        <div class="fill art-rsac">
-          <img src="Assets/Work/RSAC.jpg" alt="The Varonis flagship booth at RSA Conference.">
-        </div>
-      </div>
-    </a>
-  </section>
-
-  <!-- ============ Blog heroes + Ad templates ============ -->
-  <section class="row-cards">
-    <div class="card">
-      <a class="thumb-link" href="blog-heroes.html" aria-label="Blog heroes — custom illustrations case study">
+      <a class="thumb-link" href="blog-heroes.html" aria-label="Blog heroes — custom illustrations at scale case study">
       <div class="thumb thumb-card" id="blogThumb">
         <div class="fill art-blog is-on"><img src="Assets/Work/Blog_StormStealer.png" alt="Blog hero illustration: Storm Stealer."></div>
         <div class="fill art-blog"><img src="Assets/Work/Blog_WhatIsIAM.png" alt=""></div>
@@ -563,21 +690,7 @@
       </a>
       <div class="card-cap">
         <h2>Blog heroes</h2>
-        <p class="eyebrow">Custom illustrations</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <a class="thumb-link" href="ad-templates.html" aria-label="Ad templates — Figma Buzz templates case study">
-        <div class="thumb thumb-card">
-          <div class="fill art-ad">
-            <img src="Assets/Work/AdTemplates.png" alt="Figma Buzz ad templates.">
-          </div>
-        </div>
-      </a>
-      <div class="card-cap">
-        <h2>Ad templates</h2>
-        <p class="eyebrow">Figma Buzz Templates</p>
+        <p class="eyebrow accent">Custom illustrations at scale</p>
       </div>
     </div>
   </section>

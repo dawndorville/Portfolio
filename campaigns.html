@@ -112,30 +112,32 @@
      vtl-portfolio.html / ctf_1.html, where both are wrapped in a plain
      div with no gap; the 15px gap on those pages only separates that
      pair from a third blurb paragraph this page doesn't have. */
+  /* Figma: header ends at y=69, intro starts at y=154 → 85px. Drops back
+     to 40px at the 900px breakpoint. */
   .intro {
-    margin-top: 50px;
+    margin-top: 85px;
     max-width: 969px;
     display: flex;
     flex-direction: column;
   }
 
-  .intro h1 {
-    font-family: var(--display);
-    font-weight: 400;
-    font-size: 60px;
-    color: var(--gray);
-    line-height: 1;
-  }
-
-  .intro .sub {
+  /* Figma 814:76553: mono eyebrow above a two-line display headline. */
+  .intro .eyebrow {
     font-family: var(--mono);
     font-weight: 700;
     font-size: 20px;
     letter-spacing: 4px;
     text-transform: uppercase;
     color: var(--gray);
-    line-height: 1.4;
-    margin-top: 2px;
+    line-height: 1.8;
+  }
+
+  .intro h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 60px;
+    color: #fff;
+    line-height: 0.95;   /* shared hero style, Figma 814:76548 */
   }
 
   /* ---------- Campaigns ---------- */
@@ -143,7 +145,7 @@
     display: flex;
     flex-direction: column;
     gap: 200px;
-    margin-top: 146px;
+    margin-top: 90px;   /* Figma: intro ends y=318, first campaign y=408 */
   }
 
   .campaign-details {
@@ -183,7 +185,7 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
-    max-width: 660px;
+    max-width: 979px;   /* Figma 814:76561 — copy column in the 1050px details frame */
   }
 
   .campaign-copy h2 {
@@ -377,20 +379,27 @@
     letter-spacing: 2.4px;
     text-transform: uppercase;
     color: #4a4a4a;
-    padding-top: 14px;
+    /* Sits between the campaign copy and the Interceptor row, so it
+       spaces itself from the assets below rather than above. */
+    margin-top: -20px;
+    padding-bottom: 14px;
   }
 
   @media (max-width: 1100px) {
     :root { --page-pad: 40px; }
     .page { padding: var(--page-pad) var(--page-pad) 120px; }
+    .intro h1 { font-size: 46px; }
+  }
+
+  @media (max-width: 760px) {
+    .intro h1 { font-size: 32px; line-height: 1.1; }
   }
 
   @media (max-width: 900px) {
     .header-inner { flex-wrap: wrap; }
     nav { gap: 24px; }
     .intro { margin-top: 40px; }
-    .intro h1 { font-size: 40px; }
-    .intro .sub { font-size: 15px; letter-spacing: 3px; }
+    .intro .eyebrow { font-size: 15px; letter-spacing: 3px; }
     .campaigns { margin-top: 90px; gap: 120px; }
 
     /* Same asset-description treatment as ctf_1.html / meetpixel.html /
@@ -446,6 +455,25 @@
     .grid-5, .dlm-ads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .caption { font-size: 13px; letter-spacing: 2.6px; }
   }
+  /* ============ Mobile header (shared across pages) ============
+     Below 900px the name stacks — "Dawn" over "Dorville" — so Work and
+     Resume fit on one line beside it. Everything sits on the last baseline
+     of the row, i.e. the baseline of "Dorville". Placed last so it wins over
+     each page's older wrap rules. */
+  .logo-line{ display:inline; }
+  @media (max-width: 900px){
+    .header-inner, header:not(.container){
+      flex-wrap:nowrap; align-items:last baseline; gap:16px;
+    }
+    .logo .logo-line{ display:block; }
+    nav{ gap:24px; }
+  }
+  /* Smallest phones (≤380px): tighten the nav so Work + Resume still fit
+     beside the name without running off the edge. */
+  @media (max-width: 380px){
+    nav{ gap:16px; }
+    .nav-work, .nav-resume{ font-size:14px; letter-spacing:2.4px; }
+  }
 </style>
 </head>
 <body>
@@ -454,7 +482,7 @@
 
 <header>
   <div class="header-inner">
-    <a class="logo" href="index.html">Dawn Dorville</a>
+    <a class="logo" href="index.html"><span class="logo-line">Dawn</span> <span class="logo-line">Dorville</span></a>
     <nav>
       <a class="nav-work" href="index.html">Work</a>
       <a class="nav-resume" href="resume.html">Resume</a>
@@ -463,8 +491,8 @@
 </header>
 
 <section class="intro">
-  <h1>Campaigns</h1>
-  <p class="sub">for acquisitions and product launches</p>
+  <p class="eyebrow">Campaign art direction &amp; production</p>
+  <h1>Distinct campaigns.<br>Clear product stories.</h1>
 </section>
 
 <div class="campaigns">
@@ -475,8 +503,8 @@
       <span class="side-label">Q4 2026</span>
       <span class="rule"></span>
       <div class="campaign-copy">
-        <h2>Atlas Product Launch</h2>
-        <p>Art Direction and production of creative assets for the Atlas Week launch spanning organic and paid social, blog heroes, video thumbnails, and email creative.</p>
+        <h2>Atlas week: One launch, multiple stories</h2>
+        <p>Atlas Week brought multiple product updates into one launch. The creative needed to establish a shared campaign presence while giving individual topics and messages their own expression. The work spans a primary launch story, individual product topics, and paid-social messages, with visual continuity across the set.</p>
       </div>
     </div>
     <div class="showcase">
@@ -525,7 +553,7 @@
       <span class="rule"></span>
       <div class="campaign-copy">
         <h2>DLM launch</h2>
-        <p>The DLM launch was a smaller announcement with few assets. Ads promoting Varonis Data Lifecycle Management. The ads created for this launch were designed to test the performance of image vs. text only variants, and basic vs. complex image variants.</p>
+        <p>The Data Lifecycle Management launch called for a focused announcement and a deliberate approach to paid social. Alongside blog and email creative, I developed ad variations to explore how image-led and text-only treatments performed, and how simpler imagery compared with more complex scenes.</p>
       </div>
     </div>
     <div class="showcase">
@@ -564,7 +592,7 @@
       <span class="rule"></span>
       <div class="campaign-copy">
         <h2>Atlas Product Launch</h2>
-        <p>Social posts and product branding materials for the Varonis Atlas launch (product of AllTrue.ai acquisition).</p>
+        <p>Following the AllTrue.ai acquisition, Atlas needed to be introduced as a Varonis product. I created product branding materials and social assets for both the brand account and employee advocacy, giving the launch a distinct visual presence within the broader Varonis identity.</p>
       </div>
     </div>
     <div class="scroll-row">
@@ -598,7 +626,7 @@
       <span class="rule"></span>
       <div class="campaign-copy">
         <h2>AllTrue Acquisition</h2>
-        <p>Social posts and Nasdaq billboard announcing the acquisition of AllTrue.ai. Video and image assets generated with Nano Banana / Google Veo 3. Voiceover and Nasdaq animation by Blair Dobbs.</p>
+        <p>The AllTrue.ai acquisition announcement spanned brand social, employee advocacy, and a Nasdaq billboard. I used Nano Banana and Google Veo 3 to generate image and video assets, extending the campaign’s visual idea into both still and moving executions. I partnered with Blair Dobbs on this project who contributed the voiceover and Nasdaq animation.</p>
       </div>
     </div>
     <div class="scroll-row">
@@ -634,9 +662,10 @@
       <span class="rule"></span>
       <div class="campaign-copy">
         <h2>Interceptor product launch</h2>
-        <p>Complete promotional package for Interceptor launch (product of SlashNext acquisition). Social video created with Google Veo 3, special effects added by Blair Dobbs.</p>
+        <p>Interceptor introduced AI-native email security following the SlashNext acquisition. I created the promotional package across social, paid ads, blog, and email, combining a distinctive launch identity with messages about phishing, data breaches, and the product’s capabilities. Social video created with Google Veo 3, special effects added by Blair Dobbs.</p>
       </div>
     </div>
+    <div class="drag-hint">Drag to explore →</div>
     <div class="scroll-row">
       <div class="row-track">
         <div class="asset" style="width:520px">
@@ -673,7 +702,6 @@
         </div>
       </div>
     </div>
-    <div class="drag-hint">Drag to explore →</div>
   </section>
 
   <!-- ============ Campaign 4: SlashNext Acquisition ============ -->
@@ -683,7 +711,7 @@
       <span class="rule"></span>
       <div class="campaign-copy">
         <h2>Slashnext acquisition</h2>
-        <p>Basic launch graphics for the acquisition of SlashNext.</p>
+        <p>The SlashNext acquisition needed a focused announcement across social and editorial channels. I created a compact set of graphics that put the acquisition message first, alongside a performance chart communicating the technology’s threat-detection capabilities.</p>
       </div>
     </div>
     <div class="scroll-row">

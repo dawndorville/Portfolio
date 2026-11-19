@@ -84,19 +84,20 @@
   }
 
   /* ============ Project intro ============
-     Unlike the CTF page, Meet Pixel's title and subtitle sit flush against
-     each other in Figma (the subtitle's top edge is the title's bottom edge,
-     zero gap) and there is no third blurb line, so the intro block is a
-     plain stack with no extra spacing. */
-  .intro{ margin-top:50px; display:flex; flex-direction:column; }
+     Figma 814:37379: mono eyebrow above a display headline, the same
+     pattern as campaigns.html. */
+  /* Figma: header ends at y=69, intro starts at y=154 → 85px. Scales down
+     on narrower screens (see the 900px breakpoint). */
+  .intro{ margin-top:85px; display:flex; flex-direction:column; }
+  .intro .eyebrow{
+    font-family:var(--mono); font-weight:700;
+    font-size:20px; line-height:40px; letter-spacing:4px;   /* Figma box is 40px tall */
+    text-transform:uppercase; color:var(--gray);
+  }
   .intro h1{
     font-family:var(--display); font-weight:400;
-    font-size:60px; line-height:1; color:var(--gray);
-  }
-  .intro .sub{
-    font-family:var(--mono); font-weight:700;
-    font-size:20px; line-height:1.4; margin-top:2px; letter-spacing:4px;
-    text-transform:uppercase; color:var(--gray);
+    font-size:60px; line-height:.95; color:#fff;   /* shared hero style, Figma 814:76548 */
+    max-width:1050px;
   }
 
   /* ============ Sections ============
@@ -107,10 +108,25 @@
      leaves a consistent margin, which the grid reproduces on its own once
      the 77px column gap and the media's own width are fixed, exactly as
      laid out in the source file. */
-  main.container{ margin-top:140px; padding-bottom:160px; display:flex; flex-direction:column; gap:200px; }
+  /* Figma 814:37372 spacing: 90px intro → video, 60px video → approach
+     card, 100px card → monitor. Gaps are set per block below. */
+  main.container{ margin-top:90px; padding-bottom:160px; display:flex; flex-direction:column; }
   .section-row{
-    display:grid; grid-template-columns: 521px 1fr; gap:77px; align-items:start;
+    display:grid; grid-template-columns: 521px 1fr; gap:77px; align-items:center;
   }
+  /* Section 1: the copy sits vertically centred on the video, which now
+     runs flush to the container's right edge. */
+  .section-intro .section-row{ grid-template-columns: 599px 1fr; gap:30px; }
+  .section-intro .section-text{ max-width:528px; }
+  .approach{ margin-top:60px; }
+  .section-game{ margin-top:100px; }
+  /* Section 2: the copy centres on the monitor itself (378 of the mockup's
+     466px), so the stand hangs below the row instead of counting toward
+     its height. */
+  .section-game .computer-box{ margin-bottom:-88px; }
+  .section-game .section-text{ max-width:447px; }
+  .section-game .media{ justify-self:start; }
+  .section-game{ padding-bottom:88px; }
   .detail{ display:flex; gap:30px; align-items:stretch; }
   .side-label{
     writing-mode: vertical-rl;
@@ -126,10 +142,10 @@
     width:3px; margin:0 -1.5px; background:#282621;
     align-self:stretch; flex-shrink:0;
   }
-  .section-text{ display:flex; flex-direction:column; gap:3px; max-width:450px; }
+  .section-text{ display:flex; flex-direction:column; gap:15px; max-width:450px; }
   .section-text h2{
     font-family:var(--display); font-weight:400;
-    font-size:24px; line-height:1.25; letter-spacing:2.4px;
+    font-size:24px; line-height:1; letter-spacing:2.4px;
     text-transform:uppercase; color:#fff;
   }
   .section-text p{ font-size:16px; line-height:1.8; color:#fff; }
@@ -139,21 +155,59 @@
   .media.square img,
   .media.square video{ width:100%; height:100%; object-fit:cover; display:block; }
 
+  /* ============ The approach ============
+     Figma 816:78415: a gradient card (#1F211B at 80% fading to clear,
+     top to bottom) holding an eyebrow + heading and three numbered
+     decision cards. Cap-height trimming matches Figma's text boxes, so
+     the gaps below are the same numbers as the auto-layout spacing. */
+  .approach{
+    display:flex; flex-direction:column; gap:30px;
+    padding:30px; border:1px solid #1F211B; border-radius:10px;
+    background:linear-gradient(to bottom, rgba(31,33,27,.8), rgba(31,33,27,0));
+  }
+  .approach-head{ display:flex; flex-direction:column; gap:24px; }
+  .approach-eyebrow{ display:flex; align-items:center; gap:16px; }
+  .approach-eyebrow svg{ width:16px; height:16px; flex-shrink:0; }
+  .approach-eyebrow span{
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; text-transform:uppercase; color:#7096FF;
+    line-height:1; text-box:trim-both cap alphabetic;
+  }
+  .approach h2{
+    font-family:var(--display); font-weight:400; font-size:24px;
+    line-height:1; color:#fff; text-box:trim-both cap alphabetic;
+  }
+  .decisions{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:24px; }
+  .decision{
+    display:flex; flex-direction:column; gap:10px;
+    padding:30px; border:1px solid #20221C; border-radius:10px;
+    min-height:243px;
+  }
+  .decision .num{
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; color:#343C35;
+    line-height:1; text-box:trim-both cap alphabetic;
+  }
+  .decision h3{ font-family:var(--body); font-weight:400; font-size:26px; line-height:34px; color:#7096FF; }
+  .decision p{ font-size:16px; line-height:1.8; color:var(--gray); }
+
   /* ============ Computer mockup ============
      Rebuilt from the Figma "Game images" group (node 614:126300), a scaled
      down version of the CTF page's monitor with no carousel controls. All
      children are positioned as percentages of the 650x466 frame so the
      whole mockup scales as one unit, the same technique the CTF page's
      weather scene uses. */
-  .computer-box{ position:relative; width:100%; aspect-ratio:650/466; }
+  /* Figma 814:37389: the device is drawn as 1px #343C35 outlines with
+     no fills, other than the black screen bezel. */
+  .computer-box{ position:relative; width:100%; aspect-ratio:650/466; --device-line:#343C35; }
   .computer-box .monitor{
     position:absolute; left:0; top:0; width:100%; height:81.1687%;
-    background:#282621;
+    border:1px solid var(--device-line);
   }
   .computer-box .monitor-inner{
     position:absolute; left:2.3277%; top:3.2467%;
     width:95.3182%; height:74.6752%;
-    background:#000; border-radius:2px;
+    background:#000; border:1px solid var(--device-line); border-radius:1.5px;
   }
   .computer-box .screen{
     position:absolute; left:2.9228%; top:4.0584%;
@@ -168,28 +222,37 @@
   .computer-box .stand{
     position:absolute; left:40.6311%; top:81.0332%;
     width:18.6214%; height:13.6142%;
-    background: linear-gradient(to bottom, #141310, #1b1a16);
+    border:1px solid var(--device-line);
   }
   .computer-box .base-foot{
     position:absolute; left:32.4843%; top:94.6301%;
     width:34.9151%; height:3.8901%;
   }
-  .computer-box .base-foot svg{ display:block; width:100%; height:100%; }
+  .computer-box .base-foot svg{ display:block; width:100%; height:100%; overflow:visible; }
   .computer-box .base-bar{
     position:absolute; left:32.4843%; top:98.5416%;
     width:34.9151%; height:1.4586%;
-    background:#282621;
+    border:1px solid var(--device-line);
   }
 
   /* ============ Responsive ============ */
   @media (max-width: 1100px){
     :root{ --page-pad: 40px; }
+    .intro h1{ font-size:46px; }
   }
   @media (max-width: 900px){
-    .intro h1{ font-size:40px; }
-    .intro .sub{ font-size:16px; letter-spacing:3.2px; }
-    main.container{ margin-top:110px; gap:100px; padding-bottom:120px; }
-    .section-row{ grid-template-columns:1fr; gap:32px; }
+    .intro{ margin-top:50px; }
+    .intro .eyebrow{ font-size:15px; letter-spacing:3px; }
+    main.container{ margin-top:80px; padding-bottom:120px; }
+    .section-row,
+    .section-intro .section-row{ grid-template-columns:1fr; gap:32px; }
+    .section-game .computer-box{ margin-bottom:0; }
+    .section-game{ padding-bottom:0; }
+    .approach{ margin-top:80px; padding:24px 20px; }
+    .section-game{ margin-top:100px; }
+    .decisions{ grid-template-columns:1fr; gap:16px; }
+    .decision{ min-height:0; padding:24px; }
+    .decision h3{ font-size:22px; line-height:30px; }
     .media{ justify-self:stretch; width:100%; }
     .section-text{ max-width:none; }
     nav{ gap:24px; }
@@ -208,11 +271,31 @@
      110px to 80px at this width, so it doesn't read wider than the 100px
      gap between the sections below it. */
   @media (max-width: 760px){
-    main.container{ margin-top:80px; }
+    main.container{ margin-top:60px; }
+    .intro h1{ font-size:32px; line-height:1.1; }
   }
 
   @media (max-width: 560px){
     :root{ --page-pad: 20px; }
+  }
+  /* ============ Mobile header (shared across pages) ============
+     Below 900px the name stacks — "Dawn" over "Dorville" — so Work and
+     Resume fit on one line beside it. Everything sits on the last baseline
+     of the row, i.e. the baseline of "Dorville". Placed last so it wins over
+     each page's older wrap rules. */
+  .logo-line{ display:inline; }
+  @media (max-width: 900px){
+    .header-inner, header:not(.container){
+      flex-wrap:nowrap; align-items:last baseline; gap:16px;
+    }
+    .logo .logo-line{ display:block; }
+    nav{ gap:24px; }
+  }
+  /* Smallest phones (≤380px): tighten the nav so Work + Resume still fit
+     beside the name without running off the edge. */
+  @media (max-width: 380px){
+    nav{ gap:16px; }
+    .nav-work, .nav-resume{ font-size:14px; letter-spacing:2.4px; }
   }
 </style>
 </head>
@@ -220,7 +303,7 @@
 
 <header class="container">
   <div class="header-inner">
-    <a class="logo" href="index.html">Dawn Dorville</a>
+    <a class="logo" href="index.html"><span class="logo-line">Dawn</span> <span class="logo-line">Dorville</span></a>
     <nav>
       <a class="nav-work" href="index.html">Work</a>
       <a class="nav-resume" href="resume.html">Resume</a>
@@ -229,21 +312,21 @@
 </header>
 
 <section class="container intro">
-  <h1>Meet Pixel</h1>
-  <p class="sub">Brand character social debut</p>
+  <p class="eyebrow">Meet Pixel</p>
+  <h1>Bringing a brand character to life with motion.</h1>
 </section>
 
 <main class="container">
 
   <!-- ============ Section 1: Social debut ============ -->
-  <section class="section">
+  <section class="section section-intro">
     <div class="section-row">
       <div class="detail">
         <span class="side-label">Q3 2025</span>
         <span class="rule"></span>
         <div class="section-text">
-          <h2>social</h2>
-          <p>This was the first public-facing project that AI was used for. The social team came to us with an opportunity to formally introduce one of our brand characters, Pixel, to our social account in a fun way and this was the end result. The goal was to make this feel like an upbeat reality show-like character introduction. I used Nano Banana to create the first frame for each of the cuts, then dropped them into Midjourney for motion. I created the voiceover in Eleven Labs and compiled all the animated pieces together with sound effects and music.<br><br>Visuals: Nano Banana, Midjourney<br>Voiceover: Eleven Labs</p>
+          <h2>Character introduction for social</h2>
+          <p>This was the first public-facing project that AI was used for. The social team came to us with a request to formally introduce one of our brand characters, Pixel, to our social account in a fun way. The result was a reality-show-inspired introduction, assembled from generated imagery, animation, voiceover, sound effects, and music.</p>
         </div>
       </div>
 
@@ -255,15 +338,46 @@
     </div>
   </section>
 
+  <!-- ============ The approach (Figma 816:78415) ============ -->
+  <section class="approach" aria-labelledby="approach-title">
+    <div class="approach-head">
+      <div class="approach-eyebrow">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6.03107 3.76725C6.19215 3.33194 6.80785 3.33194 6.96893 3.76725L8.1758 7.02879C8.22645 7.16565 8.33435 7.27355 8.47121 7.3242L11.7327 8.53107C12.1681 8.69215 12.1681 9.30785 11.7327 9.46893L8.47121 10.6758C8.33435 10.7264 8.22645 10.8344 8.1758 10.9712L6.96893 14.2327C6.80785 14.6681 6.19215 14.6681 6.03107 14.2327L4.8242 10.9712C4.77355 10.8344 4.66565 10.7264 4.52879 10.6758L1.26725 9.46893C0.831943 9.30785 0.831944 8.69215 1.26725 8.53107L4.52879 7.3242C4.66565 7.27355 4.77355 7.16565 4.8242 7.02879L6.03107 3.76725Z" fill="#7096FF"/>
+          <path d="M12.0409 1.06334C12.2147 0.660907 12.7853 0.660906 12.959 1.06334L13.3549 1.98027C13.4123 2.11331 13.5247 2.21489 13.6628 2.2587L14.4973 2.5234C14.9625 2.67092 14.9625 3.32908 14.4973 3.4766L13.6628 3.7413C13.5247 3.78511 13.4123 3.88669 13.3549 4.01973L12.9591 4.93666C12.7853 5.33909 12.2147 5.33909 12.041 4.93666L11.6451 4.01973C11.5877 3.88669 11.4753 3.78511 11.3372 3.7413L10.5027 3.4766C10.0376 3.32908 10.0375 2.67092 10.5027 2.5234L11.3372 2.2587C11.4753 2.21489 11.5877 2.11331 11.6451 1.98027L12.0409 1.06334Z" fill="#7096FF"/>
+        </svg>
+        <span>The approach</span>
+      </div>
+      <h2 id="approach-title">Direct the sequence across tools.</h2>
+    </div>
+    <div class="decisions">
+      <article class="decision">
+        <span class="num">01</span>
+        <h3>Set the visual direction</h3>
+        <p>Using Nano Banana in Figma, I created the starting frame for each cut, highlighting one aspect of Pixel’s character.</p>
+      </article>
+      <article class="decision">
+        <span class="num">02</span>
+        <h3>Build the motion and voice</h3>
+        <p>I brought the first frames to Midjourney to add animation and created the voiceover in ElevenLabs.</p>
+      </article>
+      <article class="decision">
+        <span class="num">03</span>
+        <h3>Shape the finished piece</h3>
+        <p>Finally in After Effects, I brought the animated cuts together with music and sound effects to form the final social introduction.</p>
+      </article>
+    </div>
+  </section>
+
   <!-- ============ Section 2: Threat hunting cat game ============ -->
-  <section class="section">
+  <section class="section section-game">
     <div class="section-row">
       <div class="detail">
         <span class="side-label">giveaway</span>
         <span class="rule"></span>
         <div class="section-text">
           <h2>threat hunting cat game</h2>
-          <p>We wanted to take this campaign another step further and create a quick, digital giveaway. The idea was to create a screensaver that would function as a threat-hunting game for cats. Unfortunately, it wasn't possible to set a video as a screensaver so we pivoted and uploaded the video to Youtube. Cats loved it.</p>
+          <p>We wanted to take this campaign another step further and create a quick, digital giveaway. A threat-hunting video for cats extended the campaign as a digital giveaway. When the initial idea of a custom screensaver did not work for the project, the team published the video on YouTube.</p>
         </div>
       </div>
 
@@ -280,7 +394,7 @@
           <!-- Flared foot of the monitor stand, geometry taken from Figma's Rectangle 2684 (node 614:126303) -->
           <div class="base-foot">
             <svg viewBox="0 0 226.948 18.1264" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M52.5763 0H173.994L226.948 18.1264H0L52.5763 0Z" fill="#201E19"/>
+              <path d="M52.5763 0H173.994L226.948 18.1264H0L52.5763 0Z" fill="none" stroke="#343C35" stroke-width="1" vector-effect="non-scaling-stroke"/>
             </svg>
           </div>
           <div class="base-bar"></div>

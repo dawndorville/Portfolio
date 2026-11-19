@@ -12,12 +12,12 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RSAC — Dawn Dorville</title>
-<meta name="description" content="RSAC flagship booth graphics for Varonis, 2024 to 2026: panel design in Illustrator and 3D mockups in SketchUp alongside the built booth.">
+<meta name="description" content="RSAC flagship booth graphics for Varonis, 2024 to 2026: large-format panels designed to scale in Illustrator and tested on the 3D booth in SketchUp, alongside the built booth.">
 <link rel="canonical" href="https://dawndorville.netlify.app/rsac.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dawn Dorville">
 <meta property="og:title" content="RSAC — Dawn Dorville">
-<meta property="og:description" content="RSAC flagship booth graphics for Varonis, 2024 to 2026: panel design in Illustrator and 3D mockups in SketchUp alongside the built booth.">
+<meta property="og:description" content="RSAC flagship booth graphics for Varonis, 2024 to 2026: large-format panels designed to scale in Illustrator and tested on the 3D booth in SketchUp, alongside the built booth.">
 <meta property="og:url" content="https://dawndorville.netlify.app/rsac.html">
 <meta property="og:image" content="https://dawndorville.netlify.app/Assets/Work/RSAC.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -98,17 +98,19 @@
   }
 
   /* ============ Project intro ============
-     Title and subtitle sit flush in Figma (subtitle top edge == title bottom
-     edge), so the intro is a plain stack with no gap, same as Meet Pixel. */
-  .intro{ margin-top:50px; display:flex; flex-direction:column; }
+     Figma 814:37400: mono eyebrow above the shared hero headline, stacked
+     flush. Header ends y=69, intro starts y=154 → 85px. */
+  .intro{ margin-top:85px; display:flex; flex-direction:column; }
+  .intro .eyebrow{
+    font-family:var(--mono); font-weight:700;
+    font-size:20px; line-height:40px; letter-spacing:4px;
+    text-transform:uppercase; color:var(--gray);
+  }
+  /* Hero style shared across pages (Figma 814:76548): 60px, 95% leading, white. */
   .intro h1{
     font-family:var(--display); font-weight:400;
-    font-size:60px; line-height:1; color:var(--gray);
-  }
-  .intro .sub{
-    font-family:var(--mono); font-weight:700;
-    font-size:20px; line-height:1.4; margin-top:2px; letter-spacing:4px;
-    text-transform:uppercase; color:var(--gray);
+    font-size:60px; line-height:.95; color:#fff;
+    max-width:1248px;   /* Figma's text box — breaks after "show" */
   }
 
   /* ============ Sections ============ */
@@ -116,10 +118,8 @@
      out to the full viewport width so the third card can bleed off the right
      edge the way it does in Figma. Text blocks get their own `.container`. */
   main{
-    /* 143, not 146: the leading-normal pill makes the header 3px taller than
-       the line-height:1 version, and this keeps the first section on Figma's
-       y=412 rather than pushing the whole grid down with it. */
-    margin-top:143px; padding-bottom:160px;
+    /* Figma: intro ends y=308, first section y=412. */
+    margin-top:104px; padding-bottom:200px;   /* Figma frame ends 200px below the content */
     display:flex; flex-direction:column; gap:200px;
   }
   .proj-section{ display:flex; flex-direction:column; gap:50px; }
@@ -139,7 +139,7 @@
     width:3px; margin:0 -1.5px; background:var(--warm-black);
     align-self:stretch; flex-shrink:0;
   }
-  .section-text{ display:flex; flex-direction:column; gap:3px; max-width:660px; }
+  .section-text{ display:flex; flex-direction:column; gap:3px; max-width:979px; }
   .section-text h2{
     font-family:var(--display); font-weight:400;
     font-size:24px; line-height:1.25; letter-spacing:2.4px;
@@ -335,11 +335,11 @@
   /* ============ Responsive ============ */
   @media (max-width: 1100px){
     :root{ --page-pad: 40px; }
+    .intro h1{ font-size:46px; }
     .booth-card{ width:600px; height:400px; }
   }
   @media (max-width: 900px){
-    .intro h1{ font-size:40px; }
-    .intro .sub{ font-size:16px; letter-spacing:3.2px; }
+    .intro .eyebrow{ font-size:15px; letter-spacing:3px; line-height:1.8; }
     main{ margin-top:110px; gap:120px; padding-bottom:120px; }
     .header-inner{ flex-wrap:wrap; gap:16px; }
     nav{ gap:24px; }
@@ -347,6 +347,9 @@
   }
   @media (max-width: 880px){
     :root{ --page-pad: 28px; }
+  }
+  @media (max-width: 760px){
+    .intro h1{ font-size:32px; line-height:1.1; }
   }
   @media (max-width: 560px){
     :root{ --page-pad: 20px; }
@@ -368,13 +371,32 @@
   @media (prefers-reduced-motion: reduce){
     .strip, .strip .slide, .glow, .booth-card img{ transition:none; }
   }
+  /* ============ Mobile header (shared across pages) ============
+     Below 900px the name stacks — "Dawn" over "Dorville" — so Work and
+     Resume fit on one line beside it. Everything sits on the last baseline
+     of the row, i.e. the baseline of "Dorville". Placed last so it wins over
+     each page's older wrap rules. */
+  .logo-line{ display:inline; }
+  @media (max-width: 900px){
+    .header-inner, header:not(.container){
+      flex-wrap:nowrap; align-items:last baseline; gap:16px;
+    }
+    .logo .logo-line{ display:block; }
+    nav{ gap:24px; }
+  }
+  /* Smallest phones (≤380px): tighten the nav so Work + Resume still fit
+     beside the name without running off the edge. */
+  @media (max-width: 380px){
+    nav{ gap:16px; }
+    .nav-work, .nav-resume{ font-size:14px; letter-spacing:2.4px; }
+  }
 </style>
 </head>
 <body>
 
 <header class="container">
   <div class="header-inner">
-    <a class="logo" href="index.html">Dawn Dorville</a>
+    <a class="logo" href="index.html"><span class="logo-line">Dawn</span> <span class="logo-line">Dorville</span></a>
     <nav>
       <a class="nav-work" href="index.html">Work</a>
       <a class="nav-resume" href="resume.html">Resume</a>
@@ -383,8 +405,8 @@
 </header>
 
 <section class="container intro">
-  <h1>RSAC</h1>
-  <p class="sub">Flagship booth graphics</p>
+  <p class="eyebrow">Flagship booth graphics</p>
+  <h1>Taking the brand onto the show floor.</h1>
 </section>
 
 <main>
@@ -397,7 +419,7 @@
         <span class="rule"></span>
         <div class="section-text">
           <h2>Booth design</h2>
-          <p>This updated booth design ran from 2024 &ndash; 2026. Panel graphics were created in Illustrator to scale, then added to the 3d structure in Sketchup for a better understanding of how they&rsquo;d translate to the new booth design. The 3d mockup and realized booth is shown below.</p>
+          <p>Large-format graphics needed to work on a dimensional booth structure. The design had to be evaluated in context before production. I created the panel graphics to scale in Illustrator, then placed them on the 3D structure in SketchUp to understand how they would translate to the booth.</p>
         </div>
       </div>
     </div>

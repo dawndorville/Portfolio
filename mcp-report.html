@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E20SQZZ01G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-E20SQZZ01G');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dawn Dorville — AI Trustfall: MCP Report</title>
+<meta name="description" content="AI Trustfall: an interactive editorial research page for Varonis Threat Labs, designed in Figma and built for the web with AI-assisted implementation, plus its social and blog graphics.">
+<link rel="canonical" href="https://dawndorville.netlify.app/mcp-report.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dawn Dorville">
+<meta property="og:title" content="Dawn Dorville — AI Trustfall: MCP Report">
+<meta property="og:description" content="AI Trustfall: an interactive editorial research page for Varonis Threat Labs, designed in Figma and built for the web with AI-assisted implementation, plus its social and blog graphics.">
+<meta property="og:url" content="https://dawndorville.netlify.app/mcp-report.html">
+<meta property="og:image" content="https://dawndorville.netlify.app/Assets/VTL/MCPPreviewImage.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&family=Atkinson+Hyperlegible+Mono:wght@400;700&family=Inter:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Source: Figma node 814:77400 "MCP Report" (1440 x 3608).
+     Same 1320px content column, header and intro pattern as
+     vtl-portfolio.html.
+     ============================================================ */
+  :root {
+    --page-pad: 60px;
+    --content-w: 1320px;
+    --gray: #878787;
+    --nav-gray: #919191;
+    --line: #20221c;        /* browser-mockup strokes */
+    --chrome: #343c35;      /* browser-mockup text + icons */
+    --accent: #ff4c25;
+    --display: 'Special Gothic Expanded One', sans-serif;
+    --mono: 'Atkinson Hyperlegible Mono', monospace;
+    --body: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #000;
+    color: #fff;
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img { display: block; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  .page {
+    max-width: calc(var(--content-w) + var(--page-pad) * 2);
+    margin: 0 auto;
+    padding: min(50px, var(--page-pad)) var(--page-pad) 200px;
+  }
+
+  /* ---------- Header (same as every page) ---------- */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .logo {
+    font-family: var(--display); font-weight: 400; font-size: 20px;
+    letter-spacing: 2px; text-transform: uppercase; line-height: 1;
+    text-box: trim-both cap alphabetic;
+    color: #fff; text-decoration: none;
+  }
+  nav { display: flex; align-items: center; gap: 40px; }
+  nav a {
+    text-decoration: none; font-size: 16px; letter-spacing: 3.2px;
+    text-transform: uppercase; white-space: nowrap; transition: color .15s ease;
+  }
+  .nav-work, .nav-resume { font-family: var(--body); color: var(--nav-gray); font-weight: 400; }
+  .nav-work:hover, .nav-work:focus-visible,
+  .nav-resume:hover, .nav-resume:focus-visible { color: #fff; }
+
+  /* ---------- Intro (Figma 814:77401) ---------- */
+  .intro {
+    margin-top: 85px;            /* header ends y=69, intro starts y=154 */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 1050px;
+  }
+  .intro .eyebrow {
+    font-family: var(--mono); font-weight: 700; font-size: 20px;
+    letter-spacing: 4px; line-height: 40px; text-transform: uppercase;
+    color: var(--gray);
+  }
+  .intro h1 {
+    font-family: var(--display); font-weight: 400;
+    font-size: 60px; line-height: 0.95; color: #fff;
+  }
+  .intro .summary { font-size: 16px; line-height: 1.8; color: #fff; }
+
+  /* ---------- Sections ---------- */
+  .sections {
+    margin-top: 100px;           /* intro ends y=352, first section y=452 */
+    display: flex;
+    flex-direction: column;
+    gap: 200px;
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 1050px;
+  }
+  .heading h2 {
+    font-family: var(--display); font-weight: 400; font-size: 24px;
+    letter-spacing: 2.4px; text-transform: uppercase; line-height: normal;
+  }
+  @supports (text-box: trim-both cap alphabetic) {
+    .heading h2 { text-box: trim-both cap alphabetic; }
+  }
+  .heading p { font-size: 16px; line-height: 1.8; color: #fff; }
+
+  .caption {
+    font-family: var(--mono); font-weight: 400; font-size: 16px;
+    letter-spacing: 3.2px; line-height: 1.8; text-transform: uppercase;
+    color: var(--gray);
+  }
+  .asset { display: flex; flex-direction: column; gap: 10px; }
+  .asset img { width: 100%; height: auto; }
+
+  /* ---------- 1. Designed experience: browser mockup ---------- */
+  .experience { display: flex; flex-direction: column; gap: 50px; }
+  .showcase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  /* Figma "Computer frame" 814:77577: an outlined browser window, 892px
+     wide, 6/8/8/8 padding, tab strip + address bar above a scrolling
+     screen that shows the full page capture. */
+  .browser {
+    width: 100%;
+    max-width: 892px;
+    padding: 6px 8px 8px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(31, 33, 27, .4), rgba(31, 33, 27, 0));
+  }
+  .tabs { display: flex; align-items: flex-end; gap: 8px; height: 22px; }
+  .dots { display: flex; gap: 10px; padding: 5px 0; }
+  .dots span {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 1px solid var(--line);
+  }
+  .tab {
+    display: flex; align-items: center; gap: 10px;
+    height: 22px; padding: 0 10px;
+    background: rgba(32, 34, 27, .5);
+    border-radius: 5px 5px 0 0;
+    font-family: var(--mono); font-weight: 700; font-size: 10px;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--chrome);
+    white-space: nowrap;
+  }
+  .tab svg { width: 10px; height: 10px; flex-shrink: 0; }
+  .toolbar {
+    display: flex; align-items: center; gap: 2px;
+    height: 28px; padding: 0 3px 0 2px;
+    background: rgba(32, 34, 27, .5);
+  }
+  .toolbar .nav-icons { display: flex; flex-shrink: 0; }
+  .toolbar .nav-icons svg { width: 20px; height: 23px; }
+  .address {
+    flex: 1; min-width: 0;
+    height: 23px; padding: 0 10px;
+    display: flex; align-items: center;
+    background: #090b0a; border-radius: 20px;
+    font-family: var(--mono); font-weight: 400; font-size: 10px;
+    letter-spacing: -0.6px; color: var(--chrome);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  /* 874 x 486 viewport onto the 874px-wide page capture; it scrolls so
+     visitors can read down the whole page. */
+  .screen {
+    aspect-ratio: 874 / 486;
+    border: 1px solid #20221b;
+    border-radius: 0 0 4px 4px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #55554a transparent;
+  }
+  .screen::-webkit-scrollbar { width: 6px; }
+  .screen::-webkit-scrollbar-track { background: transparent; }
+  .screen::-webkit-scrollbar-thumb { background: #55554a; border-radius: 3px; }
+  .screen:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  .screen img { width: 100%; height: auto; }
+
+  /* "View live page" — Figma 814:77446: 1px #ff4c25 outline, 8px radius,
+     6/20 padding, 10px gap to the arrow. */
+  .live-link {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 6px 20px;
+    border: 1px solid var(--accent); border-radius: 8px;
+    font-family: var(--mono); font-weight: 700; font-size: 16px;
+    letter-spacing: 3.2px; line-height: 1.8; text-transform: uppercase;
+    color: var(--accent); text-decoration: none; white-space: nowrap;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .live-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+  .live-link:hover, .live-link:focus-visible { color: #fff; border-color: #fff; }
+  .live-link:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+  /* ---------- 2. Entry points card (Figma 814:77976) ---------- */
+  /* Same 30px grid-over-gradient fill as the VTL research card. */
+  .entry-card {
+    display: flex; flex-direction: column; gap: 40px;
+    padding: 40px;
+    border-radius: 10px;
+    background-image:
+      linear-gradient(rgba(96, 96, 96, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(96, 96, 96, 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, #1f211b, #101010);
+    background-size: 30px 30px, 30px 30px, 100% 100%;
+  }
+  .entry-card .heading { max-width: none; }
+  /* Social row (Figma 838:98969): three posts plus one shared caption,
+     inset 4px inside the card. */
+  .entry-social { padding-left: 4px; }
+  .entry-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 384px));
+    gap: 40px;
+    align-items: start;
+  }
+  .entry-grid img { width: 100%; height: auto; }
+
+  /* Report assets (Figma 814:78018): 610px column (blog hero + preview
+     image), 100px gutter, 530px attack diagram — the card's full 1240px. */
+  .report-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 610fr) minmax(0, 530fr);
+    column-gap: 100px;
+    align-items: start;
+  }
+  .report-col { display: flex; flex-direction: column; gap: 30px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1100px) {
+    :root { --page-pad: 40px; }
+    .page { padding: var(--page-pad) var(--page-pad) 100px; }
+    .intro h1 { font-size: 46px; }
+    .report-grid { column-gap: 50px; }
+  }
+  @media (max-width: 880px) {
+    :root { --page-pad: 28px; }
+  }
+  @media (max-width: 760px) {
+    header { flex-wrap: wrap; gap: 16px; }
+    nav { gap: 24px; }
+    .intro { margin-top: 64px; }
+    .intro h1 { font-size: 32px; line-height: 1.1; }
+    .intro .eyebrow { font-size: 15px; letter-spacing: 3px; line-height: 1.8; }
+    .sections { margin-top: 80px; gap: 120px; }
+    .heading h2 { font-size: 20px; }
+    .experience { gap: 32px; }
+    .showcase { gap: 28px; }
+    .tab { display: none; }         /* keep the chrome to one tidy bar on phones */
+    .tabs { height: 12px; align-items: center; }
+    .dots { padding: 0; gap: 6px; }
+    .dots span { width: 8px; height: 8px; }
+    .toolbar { margin-top: 6px; }
+    .entry-card { padding: 20px; gap: 28px; }
+    .entry-social { padding-left: 0; }
+    .entry-grid { grid-template-columns: 1fr; gap: 24px; }
+    .report-grid { grid-template-columns: 1fr; row-gap: 30px; }
+  }
+  @media (max-width: 560px) {
+    :root { --page-pad: 20px; }
+  }
+  /* ============ Mobile header (shared across pages) ============
+     Below 900px the name stacks — "Dawn" over "Dorville" — so Work and
+     Resume fit on one line beside it. Everything sits on the last baseline
+     of the row, i.e. the baseline of "Dorville". Placed last so it wins over
+     each page's older wrap rules. */
+  .logo-line{ display:inline; }
+  @media (max-width: 900px){
+    .header-inner, header:not(.container){
+      flex-wrap:nowrap; align-items:last baseline; gap:16px;
+    }
+    .logo .logo-line{ display:block; }
+    nav{ gap:24px; }
+  }
+  /* Smallest phones (≤380px): tighten the nav so Work + Resume still fit
+     beside the name without running off the edge. */
+  @media (max-width: 380px){
+    nav{ gap:16px; }
+    .nav-work, .nav-resume{ font-size:14px; letter-spacing:2.4px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <a class="logo" href="index.html"><span class="logo-line">Dawn</span> <span class="logo-line">Dorville</span></a>
+    <nav>
+      <a class="nav-work" href="index.html">Work</a>
+      <a class="nav-resume" href="resume.html">Resume</a>
+    </nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <p class="eyebrow">AI Trustfall: MCP Report</p>
+      <h1>Making complex research easier to explore.</h1>
+    </div>
+    <p class="summary">An interactive editorial experience for Varonis Threat Labs, designed in Figma and brought to the web with AI-assisted implementation.</p>
+  </section>
+
+  <div class="sections">
+
+    <!-- 1. Designed experience (Figma 814:78017) -->
+    <section class="experience">
+      <div class="heading">
+        <h2>A designed experience, carried into production.</h2>
+        <p>The research needed room for findings, attack sequences, and technical detail. I proposed an interactive editorial page instead of another PDF, with multiple ways to enter and explore the story. I wanted to design something that would be engaging and interactive — a more editorial version of the blog posts we publish for the majority of VTL research. I built this page in Figma, used ChatGPT to build it in HTML, and hosted it on Webflow.</p>
+      </div>
+
+      <div class="showcase">
+        <div class="browser">
+          <div class="tabs" aria-hidden="true">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <div class="tab">
+              AI Trustfall
+              <svg viewBox="0 0 10 10" fill="none"><path d="M2.0083 2.00836L7.63163 7.63169M7.63163 2.00836L2.0083 7.63169" stroke="#343C35" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+          <div class="toolbar" aria-hidden="true">
+            <div class="nav-icons">
+              <svg viewBox="0 0 20 23" fill="none"><path d="M13.3534 11.5H6.64697M9.52117 14.3742L6.64697 11.5L9.52117 8.62579" stroke="#343C35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg viewBox="0 0 20 23" fill="none"><path d="M6.64648 11.5H13.3529M10.4787 14.3742L13.3529 11.5L10.4787 8.62579" stroke="#343C35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg viewBox="0 0 20 23" fill="none"><path d="M13.8322 7.66772V10.0629H11.437" stroke="#343C35" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.4998 9.50001L12.5865 8.6737C11.9377 8.08013 11.1045 7.72775 10.2267 7.67567C9.34888 7.6236 8.47986 7.87499 7.76542 8.38769C7.05098 8.90038 6.5346 9.64318 6.3029 10.4915C6.0712 11.3397 6.13829 12.2419 6.49289 13.0466C6.8475 13.8513 7.46806 14.5095 8.25047 14.9109C9.03287 15.3123 9.92952 15.4324 10.79 15.2511C11.6504 15.0698 12.4224 14.598 12.9763 13.9151C13.2509 13.5764 13.4636 13.1961 13.6083 12.7914" stroke="#343C35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="address">vtl-research.varonis.com</div>
+          </div>
+          <div class="screen" tabindex="0" role="region" aria-label="AI Trustfall page preview, scrollable">
+            <img src="Assets/VTL/MCP_Webpage.png" alt="The AI Trustfall research page — How Untrusted AI Agents Get Trusted Access Through MCP">
+          </div>
+        </div>
+
+        <a class="live-link" href="https://vtl-research.varonis.com/" target="_blank" rel="noopener">
+          View live page
+          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1.33317 11.5L0.166504 10.3333L8.1665 2.33329H0.999837V0.666626H10.9998V10.6666H9.33317V3.49996L1.33317 11.5Z" fill="currentColor"/></svg>
+          <span class="sr-only">(opens in a new tab)</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 2. Entry points (Figma 814:77969) -->
+    <section class="entry-card">
+      <div class="heading">
+        <h2>One research story, several entry points.</h2>
+        <p>Supporting graphics carry the research into social and editorial channels while maintaining the VTL identity.</p>
+      </div>
+      <div class="asset entry-social">
+        <div class="entry-grid">
+          <img src="Assets/VTL/Social_VTL-MCP_202610.png" alt="AI Trustfall social post: How Untrusted AI Agents Get Trusted Access Through MCP">
+          <img src="Assets/VTL/Social_VTL-MCP_Stat1_202610.png" alt="Social stat post: 61% of MCP authorization servers had at least one exploitable security gap">
+          <img src="Assets/VTL/Social_VTL-MCP_Stat2_202610.png" alt="Social stat post: 29% of servers honored MCP tokens at full API privilege">
+        </div>
+        <span class="caption">Social promotion</span>
+      </div>
+      <div class="report-grid">
+        <div class="report-col">
+          <div class="asset">
+            <img src="Assets/VTL/Blog_VTL-AITrustfall_202610.png" alt="AI Trustfall blog hero">
+            <span class="caption">Blog Hero</span>
+          </div>
+          <div class="asset">
+            <img src="Assets/VTL/MCPPreviewImage.png" alt="AI Trustfall preview image: a glowing red wireframe globe over a dark control room, with the Varonis Threat Labs logo">
+            <span class="caption">Preview image</span>
+          </div>
+        </div>
+        <div class="asset">
+          <img src="Assets/VTL/Blog_VTL-AITrustfall_Fig2.png" alt="AI Trustfall attack diagram: the same flow on the same server, for a legitimate app versus an attacker abusing open DCR">
+          <span class="caption">Attack diagram</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+</body>
+</html>

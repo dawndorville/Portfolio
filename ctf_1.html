@@ -12,12 +12,12 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VTL Capture the Flag — Dawn Dorville</title>
-<meta name="description" content="Breach at the Beach: visuals, scene design, and campaign assets for a story-driven Capture the Flag game by Varonis Threat Labs.">
+<meta name="description" content="Breach at the Beach: scene and character development, game UI, promotion, and event assets for a story-driven Capture the Flag game by Varonis Threat Labs.">
 <link rel="canonical" href="https://dawndorville.netlify.app/ctf_1.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dawn Dorville">
 <meta property="og:title" content="VTL Capture the Flag — Dawn Dorville">
-<meta property="og:description" content="Breach at the Beach: visuals, scene design, and campaign assets for a story-driven Capture the Flag game by Varonis Threat Labs.">
+<meta property="og:description" content="Breach at the Beach: scene and character development, game UI, promotion, and event assets for a story-driven Capture the Flag game by Varonis Threat Labs.">
 <meta property="og:url" content="https://dawndorville.netlify.app/ctf_1.html">
 <meta property="og:image" content="https://dawndorville.netlify.app/Assets/CTF/Social_VTLBreachattheBeach_GameAnnouncement_202606_FNL.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -85,51 +85,59 @@
     color:#fff;
   }
 
-  /* ============ Project intro ============ */
-  .intro{ margin-top:50px; display:flex; flex-direction:column; gap:15px; }
-  .intro h1{
-    font-family:var(--display); font-weight:400;
-    font-size:60px; line-height:1; color:var(--gray);
-  }
-  .intro .sub{
+  /* ============ Project intro ============
+     Figma 814:76546: eyebrow + headline stacked flush, the blurb 15px
+     below. Header ends y=69, intro starts y=154 → 85px. */
+  .intro{ margin-top:85px; display:flex; flex-direction:column; gap:15px; }
+  .intro .eyebrow{
     font-family:var(--mono); font-weight:700;
-    font-size:20px; line-height:1.4; margin-top:2px; letter-spacing:4px;
+    font-size:20px; line-height:40px; letter-spacing:4px;
     text-transform:uppercase; color:var(--gray);
   }
-  .intro .blurb{
-    font-size:16px; line-height:1.8; color:#fff; max-width:700px;
+  .intro h1{
+    font-family:var(--display); font-weight:400;
+    font-size:60px; line-height:.95; color:#fff; max-width:1050px;   /* shared hero style, Figma 814:76548 */
   }
+  .intro .blurb{
+    font-size:16px; line-height:1.8; color:#fff; max-width:1050px;
+  }
+
+  /* ============ Stats bar (Figma 817:78715) ============
+     40px under the intro. #1F211B at 80% over black, with a 1px stroke
+     fading #343C35 → #1F211B; the solid padding-box layer is that 80% fill
+     pre-composited on black so the gradient border doesn't show through. */
+  .stats{
+    margin-top:25px;   /* + the intro's 15px gap = 40px */
+    display:flex; align-items:center; gap:30px;
+    padding:20px 30px;
+    border:1px solid transparent; border-radius:10px;
+    background:
+      linear-gradient(#191a16, #191a16) padding-box,
+      linear-gradient(to right, #343c35, #1f211b) border-box;
+  }
+  .stat{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:10px; }
+  .stat-label{
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; text-transform:uppercase; color:#7096ff;
+    line-height:1; text-box:trim-both cap alphabetic;
+  }
+  .stat-value{ font-size:16px; line-height:1.8; color:#fff; }
+  .stat-divider{ width:2px; align-self:stretch; background:rgba(52,60,53,.7); flex-shrink:0; }
 
   /* ============ Sections ============ */
   /* main also carries .container, whose `margin:0 auto` shorthand outranks a bare
      `main` selector — so the top margin has to be set at matching specificity. */
-  main.container{ margin-top:140px; padding-bottom:200px; display:flex; flex-direction:column; gap:200px; }
+  main.container{ margin-top:100px; padding-bottom:200px; display:flex; flex-direction:column; gap:200px; }
   .section{ display:flex; flex-direction:column; gap:40px; }
-  .section-details{ display:flex; gap:30px; align-items:stretch; }
-  .side-label{
-    writing-mode: vertical-rl;
-    font-family:var(--mono); font-weight:700; font-size:16px;
-    letter-spacing:3.2px; text-transform:uppercase; color:var(--gray);
-    /* In vertical writing mode line-height sets the column's width. Figma's
-       label column is 11px (the cap-height of the rotated text), not the 16px
-       a full em box would give — the extra 5px pushed the rule and the whole
-       text column out of alignment. */
-    line-height:11px; flex-shrink:0;
-  }
-  /* Figma draws this as a zero-width vector with a 3px stroke, so the stroke
-     bleeds 1.5px either side and the line sits centred on the 30px gutter
-     rather than consuming width of its own. */
-  .rule{
-    width:3px; margin:0 -1.5px; background:#282621;
-    align-self:stretch; flex-shrink:0;
-  }
-  .section-text{ display:flex; flex-direction:column; gap:3px; max-width:660px; }
+  /* Section headings no longer carry the rotated side label + rule; title
+     and copy sit straight on the content column, 15px apart, with the
+     title trimmed to its cap height like Figma's 17px text box. */
+  .section-text{ display:flex; flex-direction:column; gap:15px; max-width:1050px; }
   .section-text h2{
     font-family:var(--display); font-weight:400;
-    /* 1.25 == Figma's 30px title box at 24px. Pinned rather than left as
-       `normal`, which resolves off the font metrics and drifts by platform. */
     font-size:24px; line-height:1.25; letter-spacing:2.4px;
     text-transform:uppercase; color:#fff;
+    text-box:trim-both cap alphabetic;
   }
   .section-text p{ font-size:16px; line-height:1.8; color:#fff; }
 
@@ -246,6 +254,42 @@
       rgba(140,240,180,0) 100%);
   }
   .sky-flash.on{ opacity:1; transition-duration:.03s; }
+  /* ============ The approach (Figma 815:78138) ============
+     Same card as meetpixel.html, plus a supporting paragraph under the
+     heading. */
+  .approach{
+    display:flex; flex-direction:column; gap:30px;
+    padding:30px; border:1px solid #1F211B; border-radius:10px;
+    background:linear-gradient(to bottom, rgba(31,33,27,.8), rgba(31,33,27,0));
+  }
+  .approach-head{ display:flex; flex-direction:column; gap:24px; }
+  .approach-eyebrow{ display:flex; align-items:center; gap:16px; }
+  .approach-eyebrow svg{ width:16px; height:16px; flex-shrink:0; }
+  .approach-eyebrow span{
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; text-transform:uppercase; color:#7096FF;
+    line-height:1; text-box:trim-both cap alphabetic;
+  }
+  .approach-copy{ display:flex; flex-direction:column; gap:16px; max-width:1050px; }
+  .approach h3{
+    font-family:var(--display); font-weight:400; font-size:24px;
+    line-height:1; color:#fff; text-box:trim-both cap alphabetic;
+  }
+  .approach-copy p{ font-size:16px; line-height:1.8; color:#fff; }
+  .decisions{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:24px; }
+  .decision{
+    display:flex; flex-direction:column; gap:10px;
+    padding:30px; border:1px solid #20221C; border-radius:10px;
+    min-height:272px;
+  }
+  .decision .num{
+    font-family:var(--mono); font-weight:700; font-size:16px;
+    letter-spacing:3.2px; color:#343C35;
+    line-height:1; text-box:trim-both cap alphabetic;
+  }
+  .decision h4{ font-family:var(--body); font-weight:400; font-size:26px; line-height:34px; color:#7096FF; }
+  .decision p{ font-size:16px; line-height:1.8; color:var(--gray); }
+
   /* ============ Section 2: Computer carousel ============ */
   .stage-wrap{ width:100%; }
   .stage{ transform-origin: top left; position:relative; }
@@ -253,13 +297,15 @@
   .computer{
     position:absolute; left:230.5px; top:0; width:859px; height:616px;
   }
+  /* Figma 814:76492: black shapes outlined in 1px #343C35 (centre-aligned
+     strokes, so each box is nudged half a pixel out). */
   .monitor{
-    position:absolute; left:0; top:0; width:859px; height:500px;
-    background:#282621;
+    position:absolute; left:-0.5px; top:-0.5px; width:860px; height:501px;
+    background:#000; border:1px solid #343C35;
   }
   .monitor-inner{
     position:absolute; left:20px; top:20px; width:819px; height:460px;
-    background:#000; border-radius:2px;
+    background:#000; border:1px solid #343C35; border-radius:2px;
   }
   .screen{
     position:absolute; left:25px; top:25px; width:809px; height:450px;
@@ -271,26 +317,26 @@
   }
   .screen .slide.active{ opacity:1; }
   .stand{
-    position:absolute; left:349px; top:499px; width:160px; height:84px;
-    background: linear-gradient(to bottom, #141310, #1b1a16);
+    position:absolute; left:348.5px; top:498.7px; width:161px; height:84.9px;
+    background:#000; border:1px solid #343C35;
   }
   .base-img{
     position:absolute; left:279px; top:583px; width:300px; height:24px;
   }
-  .base-img svg{ display:block; width:100%; height:100%; }
+  .base-img svg{ display:block; width:100%; height:100%; overflow:visible; }
   .base-bar{
-    position:absolute; left:279px; top:607px; width:300px; height:9px;
-    background:#282621;
+    position:absolute; left:278.5px; top:606.5px; width:301px; height:10px;
+    background:#000; border:1px solid #343C35;
   }
   .carousel-arrow{
     position:absolute; top:516px; width:50px; height:50px;
-    /* #282621 is the same warm near-black the section rules use */
-    border-radius:50%; background:#282621; border:none; cursor:pointer;
+    /* Figma 814:76503: #1F211B disc, #878787 chevron */
+    border-radius:50%; background:#1F211B; border:none; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
     transition: transform .15s ease, background .2s ease;
     z-index:5;
   }
-  .carousel-arrow:hover{ background:#3b382f; transform:scale(1.06); }
+  .carousel-arrow:hover{ background:#2c2f27; transform:scale(1.06); }
   .carousel-arrow:active{ transform:scale(.96); }
   .carousel-arrow:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
   .carousel-arrow.prev{ left:510px; }
@@ -318,20 +364,22 @@
   }
   .vegas-square img{ width:100%; height:100%; object-fit:cover; }
 
+  .promo-row{ gap:3.2522%; }
+  .promo-row .square{ width:33.3333%; flex:0 0 33.3333%; }
+  .promo-row .vegas-square{ width:26.6667%; flex:0 0 26.6667%; aspect-ratio:352/440; }
+
+  /* Event photo (Figma 815:78378): a 1320x488 window onto the 1320x713
+     photo, pulled up 225px. */
   .event-photo-frame{
-    width:100%; height:646px; background:var(--frame-bg);
+    width:100%; aspect-ratio:1320/488; background:var(--frame-bg);
     position:relative; overflow:hidden;
   }
-  .coming-soon-fallback{
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    font-family:var(--display); font-weight:400; font-size:24px;
-    letter-spacing:2.4px; text-transform:uppercase; color:#fff; text-align:center;
-  }
   .event-photo-crop{
-    position:absolute; left:0; top:-58px; width:100%; height:713px; overflow:hidden;
+    position:absolute; left:0; top:-46.1066%; width:100%; height:146.1066%; overflow:hidden;
   }
   .event-photo-crop img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .event-media{ display:flex; flex-direction:column; gap:40px; }
+  .event-media{ display:flex; flex-direction:column; gap:30px; }
+  .section-promo{ gap:30px; }
 
   /* ============ Section 5: Certificate & badges ============ */
   .cert-stage{ width:1320px; height:568px; }
@@ -377,18 +425,18 @@
   /* ============ Responsive ============ */
   @media (max-width: 1100px){
     :root{ --page-pad: 40px; }
+    .intro h1{ font-size:46px; }
   }
   @media (max-width: 900px){
-    .intro h1{ font-size:40px; }
-    .intro .sub{ font-size:16px; letter-spacing:3.2px; }
-    main.container{ margin-top:140px; gap:120px; }
+    .intro .eyebrow{ font-size:15px; letter-spacing:3px; line-height:1.8; }
+    main.container{ margin-top:80px; gap:120px; }
     /* The image rows stay three across at every size — they scale, never stack. */
-    .event-photo-frame{ height:auto; aspect-ratio:1320/646; }
-    .event-photo-crop{ top:0; height:100%; }
     nav{ gap:24px; }
-    .section-details{ gap:14px; }
-    .side-label{ font-size:12px; }
     .section-text h2{ font-size:20px; }
+    .approach{ padding:24px 20px; }
+    .decisions{ grid-template-columns:1fr; gap:16px; }
+    .decision{ min-height:0; padding:24px; }
+    .decision h4{ font-size:22px; line-height:30px; }
   }
   @media (max-width: 880px){
     :root{ --page-pad: 28px; }
@@ -399,7 +447,11 @@
      Holding 140px here left the gap wider than the 120px between the sections
      below it, so the spacing read bigger than the hierarchy warranted. */
   @media (max-width: 760px){
-    main.container{ margin-top:80px; }
+    main.container{ margin-top:60px; }
+    .intro h1{ font-size:32px; line-height:1.1; }
+    /* Stats stack, with the dividers turned horizontal */
+    .stats{ flex-direction:column; align-items:stretch; gap:16px; padding:20px; }
+    .stat-divider{ width:auto; height:2px; }
   }
 
   /* ============ Mobile ============
@@ -464,13 +516,32 @@
       transition-duration:.2s !important;
     }
   }
+  /* ============ Mobile header (shared across pages) ============
+     Below 900px the name stacks — "Dawn" over "Dorville" — so Work and
+     Resume fit on one line beside it. Everything sits on the last baseline
+     of the row, i.e. the baseline of "Dorville". Placed last so it wins over
+     each page's older wrap rules. */
+  .logo-line{ display:inline; }
+  @media (max-width: 900px){
+    .header-inner, header:not(.container){
+      flex-wrap:nowrap; align-items:last baseline; gap:16px;
+    }
+    .logo .logo-line{ display:block; }
+    nav{ gap:24px; }
+  }
+  /* Smallest phones (≤380px): tighten the nav so Work + Resume still fit
+     beside the name without running off the edge. */
+  @media (max-width: 380px){
+    nav{ gap:16px; }
+    .nav-work, .nav-resume{ font-size:14px; letter-spacing:2.4px; }
+  }
 </style>
 </head>
 <body>
 
 <header class="container">
   <div class="header-inner">
-    <a class="logo" href="index.html">Dawn Dorville</a>
+    <a class="logo" href="index.html"><span class="logo-line">Dawn</span> <span class="logo-line">Dorville</span></a>
     <nav>
       <a class="nav-work" href="index.html">Work</a>
       <a class="nav-resume" href="resume.html">Resume</a>
@@ -480,23 +551,35 @@
 
 <section class="container intro">
   <div>
-    <h1>VTL Capture the Flag</h1>
-    <p class="sub">campaign for the Varonis threat research team game</p>
+    <p class="eyebrow">Breach at the Beach</p>
+    <h1>A security challenge with a world of its own.</h1>
   </div>
-  <p class="blurb">Breach at the Beach is a story-driven CTF created by Varonis Threat Labs that drops security practitioners into a real-world cloud identity breach investigation.</p>
+  <p class="blurb">Breach at the Beach is a highly technical story-driven Capture the Flag game created by Varonis Threat Labs that drops security practitioners into a real-world cloud identity breach investigation.</p>
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-label">Reach</span>
+      <span class="stat-value">2,356 total players in the first 3 months</span>
+    </div>
+    <span class="stat-divider" aria-hidden="true"></span>
+    <div class="stat">
+      <span class="stat-label">Completion</span>
+      <span class="stat-value">64 teams completed the 4+ hour game</span>
+    </div>
+    <span class="stat-divider" aria-hidden="true"></span>
+    <div class="stat">
+      <span class="stat-label">Total submissions</span>
+      <span class="stat-value">18,957 recorded submissions across all levels</span>
+    </div>
+  </div>
 </section>
 
 <main class="container">
 
   <!-- ============ Section 1: Storm Scene Transition ============ -->
   <section class="section">
-    <div class="section-details">
-      <span class="side-label">visuals</span>
-      <span class="rule"></span>
-      <div class="section-text">
-        <h2>Storm scene transition</h2>
-        <p>This scene was the basis for the look of the game. In this scene, Pixel (VTL team mascot and threat hunter), is visiting the beach when a storm rolls in. The characters were drawn pixel by pixel and the more complex scenery elements were created with Nano Banana, then running the visuals through a Figma Make program I created that would turn them into vectorized pixels and provide SVG downloads.</p>
-      </div>
+    <div class="section-text">
+      <h2>Scene and character development</h2>
+      <p>This scene establishes the game’s world: Pixel, the VTL team mascot and threat hunter, is visiting the beach when a storm rolls in. I created the individual elements as SVGs, then used Claude Code to translate my visual direction into the CTF’s scene transition, shaping the timing, animation, and effects together.</p>
     </div>
 
     <div class="weather-frame" id="weatherFrame" role="img" aria-label="Pixel-art beach scene that cycles between sunny weather and a rolling storm">
@@ -539,17 +622,47 @@
       <!-- Lightning flash, over everything -->
       <div class="sky-flash" id="skyFlash"></div>
     </div>
+
+    <!-- The approach (Figma 815:78138) -->
+    <div class="approach">
+      <div class="approach-head">
+        <div class="approach-eyebrow">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6.03107 3.76725C6.19215 3.33194 6.80785 3.33194 6.96893 3.76725L8.1758 7.02879C8.22645 7.16565 8.33435 7.27355 8.47121 7.3242L11.7327 8.53107C12.1681 8.69215 12.1681 9.30785 11.7327 9.46893L8.47121 10.6758C8.33435 10.7264 8.22645 10.8344 8.1758 10.9712L6.96893 14.2327C6.80785 14.6681 6.19215 14.6681 6.03107 14.2327L4.8242 10.9712C4.77355 10.8344 4.66565 10.7264 4.52879 10.6758L1.26725 9.46893C0.831943 9.30785 0.831944 8.69215 1.26725 8.53107L4.52879 7.3242C4.66565 7.27355 4.77355 7.16565 4.8242 7.02879L6.03107 3.76725Z" fill="#7096FF"/>
+            <path d="M12.0409 1.06334C12.2147 0.660907 12.7853 0.660906 12.959 1.06334L13.3549 1.98027C13.4123 2.11331 13.5247 2.21489 13.6628 2.2587L14.4973 2.5234C14.9625 2.67092 14.9625 3.32908 14.4973 3.4766L13.6628 3.7413C13.5247 3.78511 13.4123 3.88669 13.3549 4.01973L12.9591 4.93666C12.7853 5.33909 12.2147 5.33909 12.041 4.93666L11.6451 4.01973C11.5877 3.88669 11.4753 3.78511 11.3372 3.7413L10.5027 3.4766C10.0376 3.32908 10.0375 2.67092 10.5027 2.5234L11.3372 2.2587C11.4753 2.21489 11.5877 2.11331 11.6451 1.98027L12.0409 1.06334Z" fill="#7096FF"/>
+          </svg>
+          <span>The approach</span>
+        </div>
+        <div class="approach-copy">
+          <h3>Combine hand-crafted characters with a repeatable production workflow.</h3>
+          <p>I drew the characters pixel by pixel. For more complex scenery, I used Nano Banana and a Figma Make tool I created to convert imagery into vectorized pixels with SVG downloads.</p>
+        </div>
+      </div>
+      <div class="decisions">
+        <article class="decision">
+          <span class="num">01</span>
+          <h4>Draw the characters</h4>
+          <p>Pixel the cat was brought over from a previously created game. Additional hand-created pixel characters establish the personality and detail of the game world.</p>
+        </article>
+        <article class="decision">
+          <span class="num">02</span>
+          <h4>Generate the scenery</h4>
+          <p>I created stylized scenery with a set color palette in Figma Weave using Nano Banana, rapidly creating background elements for the scenery.</p>
+        </article>
+        <article class="decision">
+          <span class="num">03</span>
+          <h4>Build a conversion tool</h4>
+          <p>I created a custom Figma Make program allowing me to upload rasterized image for conversion to vectorized pixels with an adjustable scale. The vector could then be downloaded as an SVG for editing.</p>
+        </article>
+      </div>
+    </div>
   </section>
 
   <!-- ============ Section 2: Game Branding ============ -->
   <section class="section">
-    <div class="section-details">
-      <span class="side-label">UI</span>
-      <span class="rule"></span>
-      <div class="section-text">
-        <h2>Game branding</h2>
-        <p>Breach at the Beach featured a fully designed game experience complete with characters and it's own maze chase arcade style mini game.</p>
-      </div>
+    <div class="section-text">
+      <h2>A visual system inside the game</h2>
+      <p>The world extends across the arcade-style mini-game and challenge interface, all designed in Figma then brought to Claude Code for development.</p>
     </div>
 
     <div class="stage-wrap" id="computerWrap">
@@ -568,7 +681,7 @@
           <!-- Rectangle 2684 — the flared foot of the monitor stand (Figma node 221:189858) -->
           <div class="base-img">
             <svg viewBox="0 0 300 23.9611" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M69.5 0H230L300 23.9611H0L69.5 0Z" fill="#201E19"/>
+              <path d="M69.5 0H230L300 23.9611H0L69.5 0Z" fill="#000" stroke="#343C35" stroke-width="1" vector-effect="non-scaling-stroke"/>
             </svg>
           </div>
           <div class="base-bar"></div>
@@ -579,58 +692,39 @@
              the arrow its shape. -->
         <button type="button" class="carousel-arrow prev" id="prevBtn" aria-label="Previous screen">
           <svg viewBox="0 0 50 50" width="50" height="50" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
-            <path d="M31 13L19 24.6394L31 37" stroke="#fff" stroke-width="5" fill="none"/>
+            <path d="M30 13L18 25L30 37" stroke="#878787" stroke-width="3" fill="none"/>
           </svg>
         </button>
         <button type="button" class="carousel-arrow next" id="nextBtn" aria-label="Next screen">
           <svg viewBox="0 0 50 50" width="50" height="50" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 13L31 24.6394L19 37" stroke="#fff" stroke-width="5" fill="none"/>
+            <path d="M20 13L32 25L20 37" stroke="#878787" stroke-width="3" fill="none"/>
           </svg>
         </button>
       </div>
     </div>
   </section>
 
-  <!-- ============ Section 3: Promo posts ============ -->
-  <section class="section">
-    <div class="section-details">
-      <span class="side-label">social</span>
-      <span class="rule"></span>
-      <div class="section-text">
-        <h2>Promo posts</h2>
-        <p>Animated social posts carried the 8bit game style through the promotional assets.</p>
-      </div>
+  <!-- ============ Section 3: The world beyond the game (Figma 814:76507) ============ -->
+  <section class="section section-promo">
+    <div class="section-text">
+      <h2>The world beyond the game.</h2>
+      <p>Social posts and fun swag carried the 8bit game style through the promotional assets and Black Hat presence.</p>
     </div>
-
-    <div class="square-row promo-row">
-      <div class="square">
-        <img src="Assets/CTF/Social_VTLBreachattheBeach_GameAnnouncement_202606_FNL.png" alt="Breach at the Beach game announcement post">
-      </div>
-      <div class="square">
-        <img src="Assets/CTF/Social_VTLBreachattheBeach_GrandPrize_202606_FNL.gif" alt="Breach at the Beach grand prize post">
-      </div>
-      <div class="vegas-square">
-        <img src="Assets/CTF/Social_VTLBreachattheBeach_Vegas_202606_FNL.png" alt="Pixel is coming to Las Vegas post">
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ Section 4: CTF @ Black Hat ============ -->
-  <section class="section">
-    <div class="section-details">
-      <span class="side-label">event</span>
-      <span class="rule"></span>
-      <div class="section-text">
-        <h2>CTF @ Black Hat</h2>
-        <p>The CTF was available to play at Black Hat and was shown in the space with a table wrap, staff t-shirts, floor decals, and themed swag including a "breach" towel.</p>
-      </div>
-    </div>
-
     <div class="event-media">
+      <div class="square-row promo-row">
+        <div class="square">
+          <img src="Assets/CTF/Social_VTLBreachattheBeach_GameAnnouncement_202606_FNL.png" alt="Breach at the Beach game announcement post">
+        </div>
+        <div class="square">
+          <img src="Assets/CTF/Social_VTLBreachattheBeach_GrandPrize_202606_FNL.gif" alt="Breach at the Beach grand prize post">
+        </div>
+        <div class="vegas-square">
+          <img src="Assets/CTF/Social_VTLBreachattheBeach_Vegas_202606_FNL.png" alt="Pixel is coming to Las Vegas post">
+        </div>
+      </div>
       <div class="event-photo-frame">
-        <p class="coming-soon-fallback">coming soon</p>
         <div class="event-photo-crop">
-          <img src="Assets/CTF/CTFatBlackHat.png" alt="Event photo from the CTF at Black Hat">
+          <img src="Assets/CTF/CTFatBlackHat.png" alt="Players at the Breach at the Beach table at Black Hat">
         </div>
       </div>
       <div class="square-row">
@@ -649,13 +743,9 @@
 
   <!-- ============ Section 5: Certificate & Badges ============ -->
   <section class="section">
-    <div class="section-details">
-      <span class="side-label">earnings</span>
-      <span class="rule"></span>
-      <div class="section-text">
-        <h2>Certificate &amp; Badges</h2>
-        <p>Players received themed badges for each level of the CTF they completed and a certificate once they made it through the entire game.</p>
-      </div>
+    <div class="section-text">
+      <h2>Certificate &amp; Badges</h2>
+      <p>Players received themed badges for each level of the CTF they completed and a certificate once they made it through the entire game.</p>
     </div>
 
     <div class="stage-wrap" id="certWrap">
